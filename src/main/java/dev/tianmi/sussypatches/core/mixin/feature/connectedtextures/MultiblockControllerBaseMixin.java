@@ -1,21 +1,24 @@
 package dev.tianmi.sussypatches.core.mixin.feature.connectedtextures;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.tianmi.sussypatches.api.metatileentity.IConnectable;
-import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
-import dev.tianmi.sussypatches.client.renderer.textures.custom.VisualStateRenderer;
-import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.multiblock.IMultiblockPart;
-import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
-import gregtech.client.renderer.ICubeRenderer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
+import dev.tianmi.sussypatches.api.metatileentity.IConnectable;
+import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
+import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
+import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.client.renderer.ICubeRenderer;
 
 @Mixin(value = MultiblockControllerBase.class, remap = false)
 public abstract class MultiblockControllerBaseMixin extends MetaTileEntity implements IConnectable {
@@ -61,8 +64,8 @@ public abstract class MultiblockControllerBaseMixin extends MetaTileEntity imple
                    at = @At(value = "INVOKE",
                             target = "Lgregtech/api/metatileentity/multiblock/MultiblockControllerBase;getBaseTexture(Lgregtech/api/metatileentity/multiblock/IMultiblockPart;)Lgregtech/client/renderer/ICubeRenderer;"))
     private ICubeRenderer overridesBaseTexture(
-            MultiblockControllerBase self, IMultiblockPart part,
-            Operation<ICubeRenderer> method) {
+                                               MultiblockControllerBase self, IMultiblockPart part,
+                                               Operation<ICubeRenderer> method) {
         ICubeRenderer renderer = ConnectedTextures.get(metaTileEntityId, part);
         if (renderer != null) {
             return renderer;

@@ -1,19 +1,25 @@
 package dev.tianmi.sussypatches.core.mixin.feature.connectedtextures;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockRenderLayer;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
 import dev.tianmi.sussypatches.api.metatileentity.IConnectable;
 import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
-import dev.tianmi.sussypatches.client.renderer.textures.custom.VisualStateRenderer;
+import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockPart;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockRenderLayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(value = MetaTileEntityMultiblockPart.class, remap = false)
 public abstract class MultiblockPartMixin extends MetaTileEntity implements IMultiblockPart, IConnectable {
@@ -38,8 +44,8 @@ public abstract class MultiblockPartMixin extends MetaTileEntity implements IMul
             return stateRenderer.getVisualState();
         } else if (controller != null &&
                 ConnectedTextures.get(controller.metaTileEntityId, this) instanceof VisualStateRenderer stateRenderer) {
-            return stateRenderer.getVisualState();
-        }
+                    return stateRenderer.getVisualState();
+                }
         return null;
     }
 
@@ -57,5 +63,19 @@ public abstract class MultiblockPartMixin extends MetaTileEntity implements IMul
             }
         }
         return false;
+    }
+
+    @WrapOperation(method = "renderMetaTileEntity",
+                   at = @At(value = "INVOKE",
+                            target = "Lgregtech/common/metatileentities/multi/multiblockpart/MetaTileEntityMultiblockPart;getBaseTexture()Lgregtech/client/renderer/ICubeRenderer;"))
+    private ICubeRenderer overridesBaseTexture(MetaTileEntityMultiblockPart self, Operation<ICubeRenderer> method) {
+        var controller = getController();
+        if (controller != null) {
+            ICubeRenderer renderer = ConnectedTextures.get(controller.metaTileEntityId, this);
+            if (renderer != null) {
+                return renderer;
+            }
+        }
+        return method.call(self);
     }
 }

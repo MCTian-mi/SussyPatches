@@ -1,15 +1,15 @@
 package dev.tianmi.sussypatches.core;
 
-import zone.rong.mixinbooter.ILateMixinLoader;
-
 import java.util.Arrays;
 import java.util.List;
+
+import zone.rong.mixinbooter.ILateMixinLoader;
 
 public class LateMixinLoader implements ILateMixinLoader {
 
     @Override
     public List<String> getMixinConfigs() {
-        return List.of(
+        return Arrays.asList(
                 "sussypatches/feature/connectedtextures/mixins.gregtech.json");
     }
 }

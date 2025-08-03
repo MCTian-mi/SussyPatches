@@ -1,15 +1,18 @@
 package dev.tianmi.sussypatches.core.mixin.feature.connectedtextures;
 
-import codechicken.lib.vec.Matrix4;
+import net.minecraft.util.EnumFacing;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+
 import com.llamalad7.mixinextras.sugar.Local;
+
+import codechicken.lib.vec.Matrix4;
 import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.SimpleOverlayRenderer;
 import gregtech.client.utils.RenderUtil;
-import net.minecraft.util.EnumFacing;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(value = SimpleOverlayRenderer.class, remap = false)
 public abstract class SimpleOverlayRendererMixin implements ICubeRenderer {

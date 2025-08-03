@@ -1,6 +1,29 @@
 package dev.tianmi.sussypatches.client.renderer.textures;
 
-import dev.tianmi.sussypatches.client.renderer.textures.custom.VisualStateRenderer;
+import static dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer.from;
+import static gregicality.multiblocks.api.utils.GCYMUtil.gcymId;
+import static gregicality.multiblocks.common.block.GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING;
+import static gregtech.api.util.GTUtility.gregtechId;
+import static gregtech.common.blocks.BlockCleanroomCasing.CasingType.PLASCRETE;
+import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.*;
+import static gregtech.common.blocks.BlockMachineCasing.MachineCasingType.ULV;
+import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.*;
+import static gregtech.common.blocks.BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING;
+import static gregtech.common.blocks.BlockTurbineCasing.TurbineCasingType.*;
+import static gregtech.common.blocks.MetaBlocks.*;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.minecraft.util.ResourceLocation;
+
+import org.jetbrains.annotations.Nullable;
+
+import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
 import gregicality.multiblocks.api.render.GCYMTextures;
 import gregicality.multiblocks.common.block.blocks.BlockLargeMultiblockCasing;
 import gregtech.api.capability.IDataAccessHatch;
@@ -17,26 +40,6 @@ import gregtech.common.blocks.BlockSteamCasing;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockPart;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-
-import static dev.tianmi.sussypatches.client.renderer.textures.custom.VisualStateRenderer.from;
-import static gregicality.multiblocks.api.utils.GCYMUtil.gcymId;
-import static gregicality.multiblocks.common.block.GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING;
-import static gregtech.api.util.GTUtility.gregtechId;
-import static gregtech.common.blocks.BlockCleanroomCasing.CasingType.PLASCRETE;
-import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.*;
-import static gregtech.common.blocks.BlockMachineCasing.MachineCasingType.ULV;
-import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.*;
-import static gregtech.common.blocks.BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING;
-import static gregtech.common.blocks.BlockTurbineCasing.TurbineCasingType.*;
-import static gregtech.common.blocks.MetaBlocks.*;
 
 @ParametersAreNonnullByDefault
 public class ConnectedTextures {
@@ -150,7 +153,7 @@ public class ConnectedTextures {
                                                 ICubeRenderer casing,
                                                 ICubeRenderer firebox,
                                                 ICubeRenderer fireboxActive) {
-        if (part instanceof IMultiblockAbilityPart<?> ability &&
+        if (part instanceof IMultiblockAbilityPart<?>ability &&
                 ability.getAbility() == MultiblockAbility.EXPORT_FLUIDS) {
             return casing;
         } else if (part instanceof MetaTileEntityMultiblockPart actualPart) {
@@ -263,7 +266,7 @@ public class ConnectedTextures {
         final boolean useSteel = ConfigHolder.machines.steelSteamMultiblocks;
 
         registerCustomOverride(gregtechId("steam_oven"), part -> {
-            if (part instanceof IMultiblockAbilityPart<?> abilityPart &&
+            if (part instanceof IMultiblockAbilityPart<?>abilityPart &&
                     abilityPart.getAbility() == MultiblockAbility.STEAM) {
                 if (part instanceof MetaTileEntityMultiblockPart actualPart) {
                     boolean active = actualPart.getController().isActive();

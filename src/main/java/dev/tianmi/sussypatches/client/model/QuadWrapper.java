@@ -1,5 +1,9 @@
 package dev.tianmi.sussypatches.client.model;
 
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+
 import codechicken.lib.lighting.LC;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.consumer.UnpackingVertexConsumer;
@@ -8,9 +12,6 @@ import codechicken.lib.render.pipeline.attribute.AttributeKey;
 import codechicken.lib.render.pipeline.attribute.LightCoordAttribute;
 import codechicken.lib.render.pipeline.attribute.SideAttribute;
 import codechicken.lib.vec.Vertex5;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 
 public class QuadWrapper implements IVertexSource {
 
@@ -40,8 +41,7 @@ public class QuadWrapper implements IVertexSource {
                             vertices[v].uv.set(data[0], data[1]);
                         }
                     }
-                    default -> {
-                    }
+                    default -> {}
                 }
             }
             lightCoords[v].compute(vertices[v].vec, side);

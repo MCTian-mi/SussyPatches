@@ -1,8 +1,9 @@
 package dev.tianmi.sussypatches.api.core.mixin.extension;
 
+import net.minecraft.util.math.BlockPos;
+
 import dev.tianmi.sussypatches.api.core.mixin.MixinExtension;
 import gregtech.client.renderer.CubeRendererState;
-import net.minecraft.util.math.BlockPos;
 
 /// A Mixin extension interface for [CubeRendererState]
 /// to allow getting the position of the block being rendered.

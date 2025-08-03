@@ -1,19 +1,12 @@
-package dev.tianmi.sussypatches.client.renderer.textures.custom;
+package dev.tianmi.sussypatches.client.renderer.textures.cube;
 
-import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.pipeline.IVertexOperation;
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Matrix4;
-import dev.tianmi.sussypatches.api.core.mixin.extension.CRSExtension;
-import dev.tianmi.sussypatches.client.model.QuadWrapper;
-import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
-import gregtech.client.renderer.CubeRendererState;
-import gregtech.client.renderer.ICubeRenderer;
-import gregtech.client.renderer.cclop.ColourOperation;
-import gregtech.client.renderer.cclop.LightMapOperation;
-import gregtech.client.renderer.texture.Textures;
-import gregtech.client.utils.BloomEffectUtil;
-import gregtech.common.ConfigHolder;
+import static gregtech.api.block.VariantActiveBlock.ACTIVE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -29,15 +22,25 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.render.pipeline.IVertexOperation;
+import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Matrix4;
+import dev.tianmi.sussypatches.api.core.mixin.extension.CRSExtension;
+import dev.tianmi.sussypatches.client.model.QuadWrapper;
+import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
+import gregtech.client.renderer.CubeRendererState;
+import gregtech.client.renderer.ICubeRenderer;
+import gregtech.client.renderer.cclop.ColourOperation;
+import gregtech.client.renderer.cclop.LightMapOperation;
+import gregtech.client.renderer.texture.Textures;
+import gregtech.client.utils.BloomEffectUtil;
+import gregtech.common.ConfigHolder;
 import team.chisel.ctm.client.state.CTMExtendedState;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.List;
-
-import static gregtech.api.block.VariantActiveBlock.ACTIVE;
 
 @ParametersAreNonnullByDefault
 public class VisualStateRenderer implements ICubeRenderer {
@@ -97,8 +100,7 @@ public class VisualStateRenderer implements ICubeRenderer {
 
             if (this.isActive) try {
                 state = ((IExtendedBlockState) state).withProperty(ACTIVE, true);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
 
             quads.addAll(model.getQuads(state, null, 0));
 
@@ -116,21 +118,18 @@ public class VisualStateRenderer implements ICubeRenderer {
 
             try {
                 state = state.getActualState(world, pos);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
 
             IBakedModel model = brd.getModelForState(state);
 
             try {
                 state = state.getBlock().getExtendedState(state, world, pos);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
 
             if (this.isActive) try {
                 var extendedState = ((IExtendedBlockState) state).withProperty(ACTIVE, true);
                 state = new CTMExtendedState(extendedState, world, pos);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
 
             boolean emissive = ConfigHolder.client.machinesEmissiveTextures &&
                     layer == BloomEffectUtil.getEffectiveBloomLayer();

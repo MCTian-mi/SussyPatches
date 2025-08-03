@@ -1,9 +1,10 @@
 package dev.tianmi.sussypatches.api.core;
 
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import java.util.Map;
 
 import javax.annotation.Nullable;
-import java.util.Map;
+
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 /// A utility interface giving the default impl for [IFMLLoadingPlugin].
 public interface ILoadingPlugin extends IFMLLoadingPlugin {

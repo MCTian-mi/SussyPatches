@@ -1,10 +1,12 @@
 package dev.tianmi.sussypatches.core.mixin.feature.connectedtextures;
 
-import dev.tianmi.sussypatches.api.core.mixin.extension.CRSExtension;
-import gregtech.client.renderer.CubeRendererState;
 import net.minecraft.util.math.BlockPos;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+
+import dev.tianmi.sussypatches.api.core.mixin.extension.CRSExtension;
+import gregtech.client.renderer.CubeRendererState;
 
 @Mixin(value = CubeRendererState.class, remap = false)
 public abstract class CubeRendererStateMixin implements CRSExtension {
