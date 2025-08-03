@@ -52,6 +52,15 @@ dependencies {
     compileOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.700'
     compileOnly 'appeng:ae2-uel:v0.56.7' transitive false
 
+
+    // # Optional dependencies. Uncomment the ones you need
+//    runtimeOnlyNonPublishable 'com.cleanroommc:configanytime:3.0'
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:lolasm-460609:6333774")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6598523")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:vintagefix-871198:6609247")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:alfheim-lighting-engine-910715:6687458")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:red-core-873867:6230904")
+
     // # OptiFine
 //    // Copied from GTCEu, originally used to download latest Vintagium from GitHub
 //    // Using Gradle's Ant integration seems to be the least hacky way to download an arbitrary file without a plugin

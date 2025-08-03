@@ -14,6 +14,8 @@ import gregtech.api.util.Mods;
 public enum SusMods implements BoolSupplier {
 
     GCyM("gcym"),
+    LoliASM("loliasm"),
+    VintageFix("vintagefix"),
     FluidloggedAPI_2("fluidlogged_api", self -> self.version().startsWith("2")),
     FluidloggedAPI_3("fluidlogged_api", self -> self.version().startsWith("3")),
     ;

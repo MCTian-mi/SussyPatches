@@ -1,5 +1,6 @@
 package dev.tianmi.sussypatches.core;
 
+import static gregtech.api.util.Mods.Alfheim;
 import static gregtech.api.util.Mods.CTM;
 
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ public class LateMixinLoader implements ILateMixinLoader {
 
     static {
         add(Type.FEATURE, "connectedtextures", SusMods.of(CTM), () -> SusConfig.FEAT.CTM);
+        add(Type.COMPAT, "loliasm.ondemandanimation", SusMods.LoliASM, () -> SusConfig.COMPAT.ON_DEMAND);
+        add(Type.COMPAT, "alfheim.dummyworldcrash", SusMods.of(Alfheim));
+        add(Type.COMPAT, "vintagefix.lampbakedmodel", SusMods.VintageFix);
     }
 
     private static void add(Type type, String name, BoolSupplier... conditions) {
@@ -48,6 +52,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE,
         BUGFIX,
         TWEAK,
+        COMPAT,
         ;
 
         @Override

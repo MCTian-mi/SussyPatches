@@ -3,7 +3,7 @@ package dev.tianmi.sussypatches.api.core.mixin;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/// A marker interface for Interfaces that are used in Mixins
+/// A marker interface for Interfaces that are used in Mixins.
 @Target(ElementType.TYPE)
 public @interface MixinExtension {
 
