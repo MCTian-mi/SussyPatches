@@ -74,6 +74,7 @@ local.properties
 /classes/
 /out/
 /build/
+!.idea/icon.png
 
 # Linux
 *~
