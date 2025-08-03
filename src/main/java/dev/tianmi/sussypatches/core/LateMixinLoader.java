@@ -1,17 +1,17 @@
 package dev.tianmi.sussypatches.core;
 
-import dev.tianmi.sussypatches.Tags;
-import dev.tianmi.sussypatches.api.util.BoolSupplier;
-import dev.tianmi.sussypatches.api.util.SusMods;
-import dev.tianmi.sussypatches.common.SusConfig;
-import zone.rong.mixinbooter.ILateMixinLoader;
+import static gregtech.api.util.Mods.CTM;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static gregtech.api.util.Mods.CTM;
+import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.api.util.BoolSupplier;
+import dev.tianmi.sussypatches.api.util.SusMods;
+import dev.tianmi.sussypatches.common.SusConfig;
+import zone.rong.mixinbooter.ILateMixinLoader;
 
 public class LateMixinLoader implements ILateMixinLoader {
 
@@ -44,6 +44,7 @@ public class LateMixinLoader implements ILateMixinLoader {
     }
 
     private enum Type {
+
         FEATURE,
         BUGFIX,
         TWEAK,

@@ -1,12 +1,14 @@
 [{
     "modid": "${modid}",
     "name": "${modname}",
-    "description": "A sussy mod that patches GregTechCEu",
+    "description": "A sussy mod that patches GregTechCEu for ya",
     "version": "${version}",
     "mcversion": "${mcversion}",
-    "logoFile": "",
-    "url": "",
-    "authorList": [],
+    "logoFile": "assets/sussypatches/textures/logo.png",
+    "url": "https://github.com/MCTian-mi/SussyPatches",
+    "authorList": [
+        "Tian_mi"
+    ],
     "credits": "",
     "dependencies": [
         "gregtech",

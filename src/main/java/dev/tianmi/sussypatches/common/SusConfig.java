@@ -1,7 +1,8 @@
 package dev.tianmi.sussypatches.common;
 
-import dev.tianmi.sussypatches.Tags;
 import net.minecraftforge.common.config.Config;
+
+import dev.tianmi.sussypatches.Tags;
 
 @Config(modid = Tags.MODID)
 public class SusConfig {
@@ -20,6 +21,5 @@ public class SusConfig {
         @Config.Name("Connected Textures for Multiblocks")
         @Config.RequiresMcRestart
         public boolean CTM = true;
-
     }
 }
