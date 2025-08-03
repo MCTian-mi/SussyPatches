@@ -1,8 +1,6 @@
 package dev.tianmi.sussypatches.client.renderer.textures;
 
 import static dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer.from;
-import static gregicality.multiblocks.api.utils.GCYMUtil.gcymId;
-import static gregicality.multiblocks.common.block.GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING;
 import static gregtech.api.util.GTUtility.gregtechId;
 import static gregtech.common.blocks.BlockCleanroomCasing.CasingType.PLASCRETE;
 import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.*;
@@ -23,11 +21,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.Nullable;
 
+import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
-import gregicality.multiblocks.api.render.GCYMTextures;
-import gregicality.multiblocks.common.block.blocks.BlockLargeMultiblockCasing;
 import gregtech.api.capability.IDataAccessHatch;
-import gregtech.api.capability.IMufflerHatch;
 import gregtech.api.capability.IObjectHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -53,85 +49,38 @@ public class ConnectedTextures {
     public static final Map<ResourceLocation, Function<@Nullable IMultiblockPart, @Nullable ICubeRenderer>> REPLACEMENTS = new Object2ObjectArrayMap<>();
 
     // GTCEu
-    public static final VisualStateRenderer PRIMITIVE_BRICKS_CTM = from(METAL_CASING.getState(PRIMITIVE_BRICKS));
-    public static final VisualStateRenderer HEAT_PROOF_CASING_CTM = from(METAL_CASING.getState(INVAR_HEATPROOF));
-    public static final VisualStateRenderer FROST_PROOF_CASING_CTM = from(METAL_CASING.getState(ALUMINIUM_FROSTPROOF));
-    public static final VisualStateRenderer SOLID_STEEL_CASING_CTM = from(METAL_CASING.getState(STEEL_SOLID));
-    public static final VisualStateRenderer VOLTAGE_CASING_ULV_CTM = from(MACHINE_CASING.getState(ULV));
-    public static final VisualStateRenderer CLEAN_STAINLESS_STEEL_CASING_CTM = from(
-            METAL_CASING.getState(STAINLESS_CLEAN));
-    public static final VisualStateRenderer STABLE_TITANIUM_CASING_CTM = from(METAL_CASING.getState(TITANIUM_STABLE));
-    public static final VisualStateRenderer ROBUST_TUNGSTENSTEEL_CASING_CTM = from(
-            METAL_CASING.getState(TUNGSTENSTEEL_ROBUST));
-    public static final VisualStateRenderer STEEL_TURBINE_CASING_CTM = from(
-            TURBINE_CASING.getState(STEEL_TURBINE_CASING));
-    public static final VisualStateRenderer STAINLESS_TURBINE_CASING_CTM = from(
-            TURBINE_CASING.getState(STAINLESS_TURBINE_CASING));
-    public static final VisualStateRenderer TITANIUM_TURBINE_CASING_CTM = from(
-            TURBINE_CASING.getState(TITANIUM_TURBINE_CASING)); // Unused
-    public static final VisualStateRenderer TUNGSTENSTEEL_TURBINE_CASING_CTM = from(
-            TURBINE_CASING.getState(TUNGSTENSTEEL_TURBINE_CASING));
-    public static final VisualStateRenderer BRONZE_PLATED_BRICKS_CTM = from(METAL_CASING.getState(BRONZE_BRICKS));
-    public static final VisualStateRenderer BRONZE_FIREBOX_CTM = from(BOILER_FIREBOX_CASING.getState(BRONZE_FIREBOX));
-    public static final VisualStateRenderer BRONZE_FIREBOX_ACTIVE_CTM = from(
-            BOILER_FIREBOX_CASING.getState(BRONZE_FIREBOX));
-    public static final VisualStateRenderer STEEL_FIREBOX_CTM = from(BOILER_FIREBOX_CASING.getState(STEEL_FIREBOX));
-    public static final VisualStateRenderer STEEL_FIREBOX_ACTIVE_CTM = from(
-            BOILER_FIREBOX_CASING.getState(STEEL_FIREBOX));
-    public static final VisualStateRenderer TITANIUM_FIREBOX_CTM = from(
-            BOILER_FIREBOX_CASING.getState(TITANIUM_FIREBOX));
-    public static final VisualStateRenderer TITANIUM_FIREBOX_ACTIVE_CTM = from(
-            BOILER_FIREBOX_CASING.getState(TITANIUM_FIREBOX));
-    public static final VisualStateRenderer TUNGSTENSTEEL_FIREBOX_CTM = from(
-            BOILER_FIREBOX_CASING.getState(TUNGSTENSTEEL_FIREBOX));
-    public static final VisualStateRenderer TUNGSTENSTEEL_FIREBOX_ACTIVE_CTM = from(
-            BOILER_FIREBOX_CASING.getState(TUNGSTENSTEEL_FIREBOX));
-    public static final VisualStateRenderer COKE_BRICKS_CTM = from(METAL_CASING.getState(COKE_BRICKS));
-    public static final VisualStateRenderer GRATE_CASING_STEEL_FRONT_CTM = from(
-            MULTIBLOCK_CASING.getState(GRATE_CASING));
-    public static final VisualStateRenderer INERT_PTFE_CASING_CTM = from(METAL_CASING.getState(PTFE_INERT_CASING));
-    public static final VisualStateRenderer STURDY_HSSE_CASING_CTM = from(METAL_CASING.getState(HSSE_STURDY));
-    public static final VisualStateRenderer PLASCRETE_CTM = from(CLEANROOM_CASING.getState(PLASCRETE));
-    public static final VisualStateRenderer COMPUTER_CASING_CTM = from(
-            COMPUTER_CASING.getState(BlockComputerCasing.CasingType.COMPUTER_CASING));
-    public static final VisualStateRenderer HIGH_POWER_CASING_CTM = from(
-            COMPUTER_CASING.getState(BlockComputerCasing.CasingType.HIGH_POWER_CASING));
-    public static final VisualStateRenderer ADVANCED_COMPUTER_CASING_CTM = from(
-            COMPUTER_CASING.getState(BlockComputerCasing.CasingType.ADVANCED_COMPUTER_CASING));
-    public static final VisualStateRenderer PALLADIUM_SUBSTATION_CASING_CTM = from(
-            METAL_CASING.getState(PALLADIUM_SUBSTATION));
-    public static final VisualStateRenderer WOOD_WALL_CTM = from(
-            STEAM_CASING.getState(BlockSteamCasing.SteamCasingType.WOOD_WALL));
-    public static final VisualStateRenderer PRIMITIVE_PUMP_CTM = from(
-            STEAM_CASING.getState(BlockSteamCasing.SteamCasingType.PUMP_DECK));
-
-    // GCyM
-    public static final VisualStateRenderer MACERATOR_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.MACERATOR_CASING));
-    public static final VisualStateRenderer BLAST_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.HIGH_TEMPERATURE_CASING));
-    public static final VisualStateRenderer ASSEMBLING_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.ASSEMBLING_CASING));
-    public static final VisualStateRenderer STRESS_PROOF_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.STRESS_PROOF_CASING));
-    public static final VisualStateRenderer CORROSION_PROOF_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.CORROSION_PROOF_CASING));
-    public static final VisualStateRenderer VIBRATION_SAFE_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.VIBRATION_SAFE_CASING));
-    public static final VisualStateRenderer WATERTIGHT_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.WATERTIGHT_CASING));
-    public static final VisualStateRenderer CUTTER_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.CUTTER_CASING));
-    public static final VisualStateRenderer NONCONDUCTING_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.NONCONDUCTING_CASING));
-    public static final VisualStateRenderer MIXER_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.MIXER_CASING));
-    public static final VisualStateRenderer ENGRAVER_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.ENGRAVER_CASING));
-    public static final VisualStateRenderer ATOMIC_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.ATOMIC_CASING)); // Unused
-    public static final VisualStateRenderer STEAM_CASING_CTM = from(
-            LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.STEAM_CASING));
+    public static final VisualStateRenderer PRIMITIVE_BRICKS_CTM;
+    public static final VisualStateRenderer HEAT_PROOF_CASING_CTM;
+    public static final VisualStateRenderer FROST_PROOF_CASING_CTM;
+    public static final VisualStateRenderer SOLID_STEEL_CASING_CTM;
+    public static final VisualStateRenderer VOLTAGE_CASING_ULV_CTM;
+    public static final VisualStateRenderer CLEAN_STAINLESS_STEEL_CASING_CTM;
+    public static final VisualStateRenderer STABLE_TITANIUM_CASING_CTM;
+    public static final VisualStateRenderer ROBUST_TUNGSTENSTEEL_CASING_CTM;
+    public static final VisualStateRenderer STEEL_TURBINE_CASING_CTM;
+    public static final VisualStateRenderer STAINLESS_TURBINE_CASING_CTM;
+    public static final VisualStateRenderer TITANIUM_TURBINE_CASING_CTM; // Unused
+    public static final VisualStateRenderer TUNGSTENSTEEL_TURBINE_CASING_CTM;
+    public static final VisualStateRenderer BRONZE_PLATED_BRICKS_CTM;
+    public static final VisualStateRenderer BRONZE_FIREBOX_CTM;
+    public static final VisualStateRenderer BRONZE_FIREBOX_ACTIVE_CTM;
+    public static final VisualStateRenderer STEEL_FIREBOX_CTM;
+    public static final VisualStateRenderer STEEL_FIREBOX_ACTIVE_CTM;
+    public static final VisualStateRenderer TITANIUM_FIREBOX_CTM;
+    public static final VisualStateRenderer TITANIUM_FIREBOX_ACTIVE_CTM;
+    public static final VisualStateRenderer TUNGSTENSTEEL_FIREBOX_CTM;
+    public static final VisualStateRenderer TUNGSTENSTEEL_FIREBOX_ACTIVE_CTM;
+    public static final VisualStateRenderer COKE_BRICKS_CTM;
+    public static final VisualStateRenderer GRATE_CASING_STEEL_FRONT_CTM;
+    public static final VisualStateRenderer INERT_PTFE_CASING_CTM;
+    public static final VisualStateRenderer STURDY_HSSE_CASING_CTM;
+    public static final VisualStateRenderer PLASCRETE_CTM;
+    public static final VisualStateRenderer COMPUTER_CASING_CTM;
+    public static final VisualStateRenderer HIGH_POWER_CASING_CTM;
+    public static final VisualStateRenderer ADVANCED_COMPUTER_CASING_CTM;
+    public static final VisualStateRenderer PALLADIUM_SUBSTATION_CASING_CTM;
+    public static final VisualStateRenderer WOOD_WALL_CTM;
+    public static final VisualStateRenderer PRIMITIVE_PUMP_CTM;
 
     @Nullable
     public static ICubeRenderer get(ResourceLocation id, @Nullable IMultiblockPart part) {
@@ -165,6 +114,46 @@ public class ConnectedTextures {
     public static void init() {
         registerNonOverlays();
         registerCTMOverrides();
+
+        if (SusMods.GCyM.isLoaded()) {
+            GCyMConnectedTextures.init();
+        }
+    }
+
+    static {
+        PRIMITIVE_BRICKS_CTM = from(METAL_CASING.getState(PRIMITIVE_BRICKS));
+        HEAT_PROOF_CASING_CTM = from(METAL_CASING.getState(INVAR_HEATPROOF));
+        FROST_PROOF_CASING_CTM = from(METAL_CASING.getState(ALUMINIUM_FROSTPROOF));
+        SOLID_STEEL_CASING_CTM = from(METAL_CASING.getState(STEEL_SOLID));
+        VOLTAGE_CASING_ULV_CTM = from(MACHINE_CASING.getState(ULV));
+        CLEAN_STAINLESS_STEEL_CASING_CTM = from(METAL_CASING.getState(STAINLESS_CLEAN));
+        STABLE_TITANIUM_CASING_CTM = from(METAL_CASING.getState(TITANIUM_STABLE));
+        ROBUST_TUNGSTENSTEEL_CASING_CTM = from(METAL_CASING.getState(TUNGSTENSTEEL_ROBUST));
+        STEEL_TURBINE_CASING_CTM = from(TURBINE_CASING.getState(STEEL_TURBINE_CASING));
+        STAINLESS_TURBINE_CASING_CTM = from(TURBINE_CASING.getState(STAINLESS_TURBINE_CASING));
+        TITANIUM_TURBINE_CASING_CTM = from(TURBINE_CASING.getState(TITANIUM_TURBINE_CASING));
+        TUNGSTENSTEEL_TURBINE_CASING_CTM = from(TURBINE_CASING.getState(TUNGSTENSTEEL_TURBINE_CASING));
+        BRONZE_PLATED_BRICKS_CTM = from(METAL_CASING.getState(BRONZE_BRICKS));
+        BRONZE_FIREBOX_CTM = from(BOILER_FIREBOX_CASING.getState(BRONZE_FIREBOX));
+        BRONZE_FIREBOX_ACTIVE_CTM = from(BOILER_FIREBOX_CASING.getState(BRONZE_FIREBOX));
+        STEEL_FIREBOX_CTM = from(BOILER_FIREBOX_CASING.getState(STEEL_FIREBOX));
+        STEEL_FIREBOX_ACTIVE_CTM = from(BOILER_FIREBOX_CASING.getState(STEEL_FIREBOX));
+        TITANIUM_FIREBOX_CTM = from(BOILER_FIREBOX_CASING.getState(TITANIUM_FIREBOX));
+        TITANIUM_FIREBOX_ACTIVE_CTM = from(BOILER_FIREBOX_CASING.getState(TITANIUM_FIREBOX));
+        TUNGSTENSTEEL_FIREBOX_CTM = from(BOILER_FIREBOX_CASING.getState(TUNGSTENSTEEL_FIREBOX));
+        TUNGSTENSTEEL_FIREBOX_ACTIVE_CTM = from(BOILER_FIREBOX_CASING.getState(TUNGSTENSTEEL_FIREBOX));
+        COKE_BRICKS_CTM = from(METAL_CASING.getState(COKE_BRICKS));
+        GRATE_CASING_STEEL_FRONT_CTM = from(MULTIBLOCK_CASING.getState(GRATE_CASING));
+        INERT_PTFE_CASING_CTM = from(METAL_CASING.getState(PTFE_INERT_CASING));
+        STURDY_HSSE_CASING_CTM = from(METAL_CASING.getState(HSSE_STURDY));
+        PLASCRETE_CTM = from(CLEANROOM_CASING.getState(PLASCRETE));
+        COMPUTER_CASING_CTM = from(COMPUTER_CASING.getState(BlockComputerCasing.CasingType.COMPUTER_CASING));
+        HIGH_POWER_CASING_CTM = from(COMPUTER_CASING.getState(BlockComputerCasing.CasingType.HIGH_POWER_CASING));
+        ADVANCED_COMPUTER_CASING_CTM = from(
+                COMPUTER_CASING.getState(BlockComputerCasing.CasingType.ADVANCED_COMPUTER_CASING));
+        PALLADIUM_SUBSTATION_CASING_CTM = from(METAL_CASING.getState(PALLADIUM_SUBSTATION));
+        WOOD_WALL_CTM = from(STEAM_CASING.getState(BlockSteamCasing.SteamCasingType.WOOD_WALL));
+        PRIMITIVE_PUMP_CTM = from(STEAM_CASING.getState(BlockSteamCasing.SteamCasingType.PUMP_DECK));
     }
 
     /// Register instances of [SimpleOverlayRenderer] which isn't technically an overlay.
@@ -173,7 +162,6 @@ public class ConnectedTextures {
     ///
     /// @see SimpleOverlayRendererMixin
     public static void registerNonOverlays() {
-        // GTCEu
         NONE_OVERLAYS.addAll(Arrays.asList(
                 Textures.BRONZE_PLATED_BRICKS,
                 Textures.PRIMITIVE_BRICKS,
@@ -192,22 +180,6 @@ public class ConnectedTextures {
                 Textures.ACTIVE_FUSION_TEXTURE,
                 Textures.GRATE_CASING,
                 Textures.HIGH_POWER_CASING));
-
-        // GCyM
-        NONE_OVERLAYS.addAll(Arrays.asList(
-                GCYMTextures.MACERATOR_CASING,
-                GCYMTextures.BLAST_CASING,
-                GCYMTextures.ASSEMBLING_CASING,
-                GCYMTextures.STRESS_PROOF_CASING,
-                GCYMTextures.CORROSION_PROOF_CASING,
-                GCYMTextures.VIBRATION_SAFE_CASING,
-                GCYMTextures.WATERTIGHT_CASING,
-                GCYMTextures.CUTTER_CASING,
-                GCYMTextures.NONCONDUCTING_CASING,
-                GCYMTextures.MIXER_CASING,
-                GCYMTextures.ENGRAVER_CASING,
-                GCYMTextures.ATOMIC_CASING,
-                GCYMTextures.STEAM_CASING));
     }
 
     /// Override original [ICubeRenderer]s for CEu/GCyM multiblocks.
@@ -217,7 +189,6 @@ public class ConnectedTextures {
     ///
     /// @see MultiblockControllerBaseMixin
     public static void registerCTMOverrides() {
-        // GTCEu
         PRIMITIVE_BRICKS_CTM.override(gregtechId("primitive_blast_furnace.bronze"));
         HEAT_PROOF_CASING_CTM.override(gregtechId("electric_blast_furnace"),
                 gregtechId("multi_furnace"));
@@ -301,36 +272,5 @@ public class ConnectedTextures {
         HIGH_POWER_CASING_CTM.override(gregtechId("active_transformer"));
         WOOD_WALL_CTM.override(gregtechId("tank.wood"));
         PRIMITIVE_PUMP_CTM.override(gregtechId("primitive_water_pump"));
-
-        // GCyM
-        MACERATOR_CASING_CTM.override(gcymId("large_macerator"));
-        BLAST_CASING_CTM.override(gcymId("alloy_blast_smelter"),
-                gcymId("alloy_blast_smelter"));
-        ASSEMBLING_CASING_CTM.override(gcymId("large_assembler"),
-                gcymId("large_circuit_assembler"));
-        WATERTIGHT_CASING_CTM.override(gcymId("large_autoclave"),
-                gcymId("large_chemical_bath"),
-                gcymId("large_extractor"),
-                gcymId("large_distillery"),
-                gcymId("large_solidifier"));
-        STRESS_PROOF_CTM.override(gcymId("large_bender"),
-                gcymId("large_extruder"),
-                gcymId("large_wiremill"));
-        CORROSION_PROOF_CASING_CTM.override(gcymId("large_brewer"));
-        VIBRATION_SAFE_CASING_CTM.override(gcymId("large_centrifuge"),
-                gcymId("large_sifter"));
-        CUTTER_CASING_CTM.override(gcymId("large_cutter"));
-        NONCONDUCTING_CASING_CTM.override(gcymId("large_electrolyzer"),
-                gcymId("large_polarizer"));
-        MIXER_CASING_CTM.override(gcymId("large_mixer"));
-        SOLID_STEEL_CASING_CTM.override(gcymId("large_packager"));
-        ENGRAVER_CASING_CTM.override(gcymId("large_engraver"));
-        ROBUST_TUNGSTENSTEEL_CASING_CTM.override(gcymId("electric_implosion_compressor"));
-
-        registerCustomOverride(gcymId("mega_blast_furnace"),
-                part -> part instanceof IMufflerHatch ? ROBUST_TUNGSTENSTEEL_CASING_CTM : BLAST_CASING_CTM);
-
-        FROST_PROOF_CASING_CTM.override(gcymId("mega_vacuum_freezer"));
-        STEAM_CASING_CTM.override(gcymId("steam_engine"));
     }
 }

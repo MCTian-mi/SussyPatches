@@ -10,10 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import gregtech.api.util.Mods;
 
 /// Mods that are :sus:
+/// Basically a re-implementation of [Mods]
 public enum SusMods implements BoolSupplier {
 
-    FLUIDLOGGED_API_2("fluidlogged_api", self -> self.version().startsWith("2")),
-    FLUIDLOGGED_API_3("fluidlogged_api", self -> self.version().startsWith("3")),
+    GCyM("gcym"),
+    FluidloggedAPI_2("fluidlogged_api", self -> self.version().startsWith("2")),
+    FluidloggedAPI_3("fluidlogged_api", self -> self.version().startsWith("3")),
     ;
 
     private final String ID;
