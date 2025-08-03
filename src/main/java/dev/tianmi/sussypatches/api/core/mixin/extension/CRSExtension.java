@@ -1,0 +1,22 @@
+package dev.tianmi.sussypatches.api.core.mixin.extension;
+
+import dev.tianmi.sussypatches.api.core.mixin.MixinExtension;
+import gregtech.client.renderer.CubeRendererState;
+import net.minecraft.util.math.BlockPos;
+
+/// A Mixin extension interface for [CubeRendererState]
+/// to allow getting the position of the block being rendered.
+///
+/// @see CubeRendererStateMixin
+/// @see MetaTileEntityRendererMixin
+@MixinExtension(CubeRendererState.class)
+public interface CRSExtension {
+
+    static CRSExtension cast(CubeRendererState state) {
+        return (CRSExtension) state;
+    }
+
+    CubeRendererState susy$withPos(BlockPos pos);
+
+    BlockPos susy$getPos();
+}
