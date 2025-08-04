@@ -32,7 +32,7 @@ public class SusConfig {
         })
         @Config.Name("Connected textures for multiblocks")
         @Config.RequiresMcRestart
-        public boolean CTM = true;
+        public boolean multiCTM = true;
     }
 
     public static final class Compat {
@@ -44,7 +44,7 @@ public class SusConfig {
         })
         @Config.Name("Fix on-demand animations")
         @Config.RequiresMcRestart
-        public boolean FIX_ON_DEMAND = true;
+        public boolean fixOnDemand = true;
 
         @Config.Comment({
                 "Fixes GregTech's DummyWorld crashs with Alfheim v1.6+, " +
@@ -54,7 +54,7 @@ public class SusConfig {
         })
         @Config.Name("Fix Alfheim v1.6+ breaking JEI")
         @Config.RequiresMcRestart
-        public boolean FIX_DUMMYWORLD = true;
+        public boolean fixDummyWorld = true;
 
         @Config.Comment({
                 "Fixes some GT lamps losing their inventory models when " +
@@ -63,7 +63,7 @@ public class SusConfig {
         })
         @Config.Name("Fix VintageFix making lamps invisible")
         @Config.RequiresMcRestart
-        public boolean FIX_LAMP_MODEL = true;
+        public boolean fixLampModel = true;
 
         @Config.Comment({
                 "Fixes Fluidlogged API v2 making multiblocks with fluid blocks " +
@@ -73,7 +73,7 @@ public class SusConfig {
         })
         @Config.Name("Fix Fluidlogged API v2 render failure")
         @Config.RequiresMcRestart
-        public boolean FIX_INWORLD_PREVIEW = true;
+        public boolean fixInworldPreview = true;
 
         @Config.Comment({
                 "Fixes various GrS issues, including:",
@@ -85,7 +85,7 @@ public class SusConfig {
         })
         @Config.Name("Fix various GrS issues")
         @Config.RequiresMcRestart
-        public boolean FIX_GRS = true;
+        public boolean fixGrS = true;
     }
 
     public static final class Bugfix {
@@ -96,7 +96,7 @@ public class SusConfig {
         })
         @Config.Name("Fix clipboards lighting")
         @Config.RequiresMcRestart
-        public boolean FIX_CLIPBOARD = true;
+        public boolean clipboardLighting = true;
 
         @Config.Comment({
                 "Fixes facades have weird lighting.",
@@ -105,7 +105,46 @@ public class SusConfig {
         })
         @Config.Name("Fix facades lighting")
         @Config.RequiresMcRestart
-        public boolean FIX_FACADE = true;
+        public boolean facadeLighting = true;
+
+        @Config.Comment({
+                "Implements getItem method for BlockMachine.",
+                "Fixes mod fail to render GT TileEntities, e.g. XNet.",
+                "Note: for RFTools you will need ReFinedTools.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Implement getItem for BlockMachine")
+        @Config.RequiresMcRestart
+        public boolean implGetItem = true;
+
+        @Config.Comment({
+                "Fixes MTE Packet Data Memory Leak",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Fix packet data memory leak")
+        @Config.RequiresMcRestart
+        public boolean packetMemLeak = true;
+
+        @Config.Comment({
+                "Reverses the data transfer direction correctly.",
+                "Fixes pipes losing data when adding/removing covers.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Fix data transfer between pipes")
+        @Config.RequiresMcRestart
+        public boolean pipeDataTransfer = true;
+
+        @Config.Comment({
+                "Refuses insertion into pipenets w/o specific facing.",
+                "Fixes crashing with mods like RFTools.",
+                "Default: true"
+        })
+        @Config.Name("Fix data transfer between pipes")
+        @Config.RequiresMcRestart
+        public boolean pipeInvCrash = true;
     }
 
     public static final class Tweaks {
@@ -116,6 +155,6 @@ public class SusConfig {
         })
         @Config.Name("Remove search bars from GT Tabs")
         @Config.RequiresMcRestart
-        public boolean NO_BARS = true;
+        public boolean noSearchBars = true;
     }
 }

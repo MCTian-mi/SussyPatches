@@ -14,7 +14,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.tianmi.sussypatches.api.annotation.Compat;
 import dev.tianmi.sussypatches.api.util.SusMods;
 import gregtech.client.model.lamp.LampBakedModel;
-import team.chisel.ctm.client.model.ModelBakedCTM;
+import team.chisel.ctm.client.model.AbstractCTMBakedModel;
 
 @Compat(mods = SusMods.VintageFix)
 @Mixin(value = LampBakedModel.class, remap = false)
@@ -27,7 +27,7 @@ public abstract class LampBakedModelMixin {
     private static void skipIfCTMModel(IRegistry<ModelResourceLocation, IBakedModel> modelRegistry,
                                        Object key, Object value, Operation<Void> method,
                                        @Local(name = "model") IBakedModel model) {
-        if (!(model instanceof ModelBakedCTM)) {
+        if (!(model instanceof AbstractCTMBakedModel)) {
             method.call(modelRegistry, key, value);
         }
     }

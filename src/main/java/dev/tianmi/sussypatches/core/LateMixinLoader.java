@@ -24,18 +24,22 @@ public class LateMixinLoader implements ILateMixinLoader {
     private static final Map<String, BoolSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        add(FEATURE, "connectedtextures", SusMods.of(CTM), SusConfig.FEAT.CTM);
+        add(FEATURE, "connectedtextures", SusMods.of(CTM), SusConfig.FEAT.multiCTM);
 
-        add(COMPAT, "ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.FIX_ON_DEMAND);
-        add(COMPAT, "dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.FIX_DUMMYWORLD);
-        add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusConfig.COMPAT.FIX_LAMP_MODEL);
-        add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.FIX_INWORLD_PREVIEW);
-        add(COMPAT, "variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.FIX_GRS);
+        add(COMPAT, "ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.fixOnDemand);
+        add(COMPAT, "dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.fixDummyWorld);
+        add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusConfig.COMPAT.fixLampModel);
+        add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
+        add(COMPAT, "variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.fixGrS);
 
-        add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.FIX_CLIPBOARD);
-        add(BUGFIX, "facadelighting", SusConfig.BUGFIX.FIX_FACADE);
+        add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
+        add(BUGFIX, "facadelighting", SusConfig.BUGFIX.facadeLighting);
+        add(BUGFIX, "implgetitem", SusConfig.BUGFIX.implGetItem);
+        add(BUGFIX, "packetdatamemleak", SusConfig.BUGFIX.packetMemLeak);
+        add(BUGFIX, "pipedatatransfer", SusConfig.BUGFIX.pipeDataTransfer);
+        add(BUGFIX, "pipeinvcrash", SusConfig.BUGFIX.pipeInvCrash);
 
-        add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.NO_BARS);
+        add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.noSearchBars);
     }
 
     private static void add(Type type, String name, Object... conditions) {

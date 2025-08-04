@@ -15,9 +15,11 @@ import com.llamalad7.mixinextras.sugar.Local;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import dev.tianmi.sussypatches.api.annotation.Implemented;
 import gregtech.client.renderer.texture.custom.ClipboardRenderer;
 import gregtech.common.metatileentities.MetaTileEntityClipboard;
 
+@Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2845")
 @Mixin(value = ClipboardRenderer.class, remap = false)
 public abstract class ClipboardRendererMixin {
 

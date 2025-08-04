@@ -16,7 +16,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void onPostInit() {
-        if (Mods.CTM.isModLoaded() && SusConfig.FEAT.CTM) {
+        if (Mods.CTM.isModLoaded() && SusConfig.FEAT.multiCTM) {
             ConnectedTextures.init();
         }
     }
