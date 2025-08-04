@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.bugfix.variousgrsissue;
+package dev.tianmi.sussypatches.core.mixin.compat.variousgrsissue;
 
 import java.util.Objects;
 

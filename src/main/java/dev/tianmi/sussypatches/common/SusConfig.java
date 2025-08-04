@@ -74,6 +74,18 @@ public class SusConfig {
         @Config.Name("Fix Fluidlogged API v2 render failure")
         @Config.RequiresMcRestart
         public boolean FIX_INWORLD_PREVIEW = true;
+
+        @Config.Comment({
+                "Fixes various GrS issues, including:",
+                " - GrS not respecting the item namespace.",
+                " - Fluid amount multiplier duplicates in the copied recipe removal code.",
+                "Could also fix some CrT issues, but I didn't brother testing.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Fix various GrS issues")
+        @Config.RequiresMcRestart
+        public boolean FIX_GRS = true;
     }
 
     public static final class Bugfix {
@@ -94,17 +106,6 @@ public class SusConfig {
         @Config.Name("Fix facades lighting")
         @Config.RequiresMcRestart
         public boolean FIX_FACADE = true;
-
-        @Config.Comment({
-                "Fixes various GrS issues, including:",
-                " - GrS not respecting the item namespace.",
-                " - Fluid amount multiplier duplicates in the copied recipe removal code.",
-                "Fixed in CEu master branch.",
-                "Default: true"
-        })
-        @Config.Name("Fix various GrS issues")
-        @Config.RequiresMcRestart
-        public boolean FIX_GRS = true;
     }
 
     public static final class Tweaks {

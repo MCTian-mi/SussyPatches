@@ -1,8 +1,7 @@
 package dev.tianmi.sussypatches.core;
 
 import static dev.tianmi.sussypatches.core.LateMixinLoader.Type.*;
-import static gregtech.api.util.Mods.Alfheim;
-import static gregtech.api.util.Mods.CTM;
+import static gregtech.api.util.Mods.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -31,10 +30,10 @@ public class LateMixinLoader implements ILateMixinLoader {
         add(COMPAT, "dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.FIX_DUMMYWORLD);
         add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusConfig.COMPAT.FIX_LAMP_MODEL);
         add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.FIX_INWORLD_PREVIEW);
+        add(COMPAT, "variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.FIX_GRS);
 
         add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.FIX_CLIPBOARD);
         add(BUGFIX, "facadelighting", SusConfig.BUGFIX.FIX_FACADE);
-        add(BUGFIX, "variousgrsissue", SusConfig.BUGFIX.FIX_GRS);
 
         add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.NO_BARS);
     }

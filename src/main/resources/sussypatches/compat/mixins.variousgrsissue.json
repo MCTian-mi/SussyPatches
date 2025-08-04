@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.bugfix.variousgrsissue",
+  "package": "dev.tianmi.sussypatches.core.mixin.compat.variousgrsissue",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
