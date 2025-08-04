@@ -1,6 +1,5 @@
 package dev.tianmi.sussypatches.core.mixin.bugfix.invalidregistration;
 
-import dev.tianmi.sussypatches.api.annotation.Implemented;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -9,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 
+import dev.tianmi.sussypatches.api.annotation.Implemented;
 import dev.tianmi.sussypatches.api.core.mixin.extension.MaterialPipeExtension;
 import gregtech.api.pipenet.block.material.BlockMaterialPipe;
 import gregtech.api.pipenet.block.material.ItemBlockMaterialPipe;
