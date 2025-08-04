@@ -26,12 +26,16 @@ public class LateMixinLoader implements ILateMixinLoader {
 
     static {
         add(FEATURE, "connectedtextures", SusMods.of(CTM), SusConfig.FEAT.CTM);
+
         add(COMPAT, "ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.FIX_ON_DEMAND);
         add(COMPAT, "dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.FIX_DUMMYWORLD);
         add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusConfig.COMPAT.FIX_LAMP_MODEL);
         add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.FIX_INWORLD_PREVIEW);
+
         add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.FIX_CLIPBOARD);
         add(BUGFIX, "facadelighting", SusConfig.BUGFIX.FIX_FACADE);
+
+        add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.NO_BARS);
     }
 
     private static void add(Type type, String name, Object... conditions) {

@@ -15,9 +15,13 @@ public class SusConfig {
     @Config.Name("Compatibilities")
     public static final Compat COMPAT = new Compat();
 
-    @Config.Comment("Config options for fixing GTCEu bugs")
+    @Config.Comment("Config options for fixing... bugs")
     @Config.Name("Bugfixes")
     public static final Bugfix BUGFIX = new Bugfix();
+
+    @Config.Comment("Config options for tweaking existing features")
+    @Config.Name("Bugfixes")
+    public static final Tweaks TWEAKS = new Tweaks();
 
     public static final class Features {
 
@@ -89,5 +93,16 @@ public class SusConfig {
         @Config.Name("Fix facades lighting")
         @Config.RequiresMcRestart
         public boolean FIX_FACADE = true;
+    }
+
+    public static final class Tweaks {
+
+        @Config.Comment({
+                "Removes the annoying search bars from GT Creative Tabs",
+                "Default: true"
+        })
+        @Config.Name("Remove search bars from GT Tabs")
+        @Config.RequiresMcRestart
+        public boolean NO_BARS = true;
     }
 }
