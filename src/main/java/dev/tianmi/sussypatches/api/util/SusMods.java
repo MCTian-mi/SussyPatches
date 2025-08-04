@@ -13,11 +13,11 @@ import gregtech.api.util.Mods;
 /// Basically a re-implementation of [Mods]
 public enum SusMods implements BoolSupplier {
 
-    GCyM("gcym"),
-    LoliASM("loliasm"),
-    VintageFix("vintagefix"),
-    FluidloggedAPI_2("fluidlogged_api", self -> self.version().startsWith("2")),
-    FluidloggedAPI_3("fluidlogged_api", self -> self.version().startsWith("3")),
+    GCyM(Names.GCYM),
+    LoliASM(Names.LOLIASM),
+    VintageFix(Names.VINTAGE_FIX),
+    FluidloggedAPI_2(Names.FLUIDLOGGED_API, self -> self.version().startsWith("2")),
+    FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     ;
 
     private final String ID;
@@ -63,5 +63,13 @@ public enum SusMods implements BoolSupplier {
         ModContainer container = Loader.instance().getIndexedModList().get(this.ID);
         if (container == null) return "";
         return container.getVersion();
+    }
+
+    public static class Names {
+
+        public static final String GCYM = "gcym";
+        public static final String LOLIASM = "loliasm";
+        public static final String VINTAGE_FIX = "vintagefix";
+        public static final String FLUIDLOGGED_API = "fluidlogged_api";
     }
 }

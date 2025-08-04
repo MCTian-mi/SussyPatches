@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.compat.vintagefix.lampbakedmodel;
+package dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -11,9 +11,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
+import dev.tianmi.sussypatches.api.annotation.Compat;
+import dev.tianmi.sussypatches.api.util.SusMods;
 import gregtech.client.model.lamp.LampBakedModel;
 import team.chisel.ctm.client.model.ModelBakedCTM;
 
+@Compat(mods = SusMods.VintageFix)
 @Mixin(value = LampBakedModel.class, remap = false)
 public abstract class LampBakedModelMixin {
 

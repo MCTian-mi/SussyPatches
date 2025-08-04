@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.api.core.mixin;
+package dev.tianmi.sussypatches.api.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;

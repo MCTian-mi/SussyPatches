@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.compat.alfheim.dummyworldcrash",
+  "package": "dev.tianmi.sussypatches.core.mixin.compat.ondemandanimation",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
@@ -8,7 +8,7 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "mixins": [
-    "DummyWorldMixin"
+  "client": [
+    "TexturesMixin"
   ]
 }

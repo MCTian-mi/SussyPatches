@@ -14,6 +14,7 @@ import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.common.SusConfig;
 import zone.rong.mixinbooter.ILateMixinLoader;
 
+@SuppressWarnings("unused")
 public class LateMixinLoader implements ILateMixinLoader {
 
     private static final String ROOT = Tags.MODID + "/";
@@ -24,9 +25,10 @@ public class LateMixinLoader implements ILateMixinLoader {
 
     static {
         add(Type.FEATURE, "connectedtextures", SusMods.of(CTM), () -> SusConfig.FEAT.CTM);
-        add(Type.COMPAT, "loliasm.ondemandanimation", SusMods.LoliASM, () -> SusConfig.COMPAT.ON_DEMAND);
-        add(Type.COMPAT, "alfheim.dummyworldcrash", SusMods.of(Alfheim));
-        add(Type.COMPAT, "vintagefix.lampbakedmodel", SusMods.VintageFix);
+        add(Type.COMPAT, "ondemandanimation", SusMods.LoliASM, () -> SusConfig.COMPAT.FIX_ON_DEMAND);
+        add(Type.COMPAT, "dummyworldcrash", SusMods.of(Alfheim), () -> SusConfig.COMPAT.FIX_DUMMYWORLD);
+        add(Type.COMPAT, "lampbakedmodel", SusMods.VintageFix, () -> SusConfig.COMPAT.FIX_LAMP_MODEL);
+        add(Type.COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, () -> SusConfig.COMPAT.FIX_INWORLD_PREVIEW);
     }
 
     private static void add(Type type, String name, BoolSupplier... conditions) {

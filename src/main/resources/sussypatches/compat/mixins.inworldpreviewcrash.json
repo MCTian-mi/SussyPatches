@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.compat.vintagefix.lampbakedmodel",
+  "package": "dev.tianmi.sussypatches.core.mixin.compat.inworldpreviewcrash",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
@@ -9,9 +9,6 @@
     "defaultRequire": 1
   },
   "client": [
-    "LampBakedModelAccessor",
-    "LampBakedModelAccessor$EntryAccessor",
-    "LampBakedModelAccessor$KeyAccessor",
-    "LampBakedModelMixin"
+    "TargetBlockAccessMixin"
   ]
 }

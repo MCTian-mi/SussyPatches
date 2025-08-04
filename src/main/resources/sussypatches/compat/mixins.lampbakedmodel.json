@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.compat.loliasm.ondemandanimation",
+  "package": "dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
@@ -9,6 +9,9 @@
     "defaultRequire": 1
   },
   "client": [
-    "TexturesMixin"
+    "LampBakedModelAccessor",
+    "LampBakedModelAccessor$EntryAccessor",
+    "LampBakedModelAccessor$KeyAccessor",
+    "LampBakedModelMixin"
   ]
 }

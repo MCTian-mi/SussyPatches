@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.compat.vintagefix.lampbakedmodel;
+package dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel;
 
 import java.util.Map;
 
@@ -8,9 +8,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
+import dev.tianmi.sussypatches.api.annotation.Compat;
+import dev.tianmi.sussypatches.api.util.SusMods;
 import gregtech.client.model.lamp.LampBakedModel;
 import gregtech.client.model.lamp.LampModelType;
 
+@Compat(mods = SusMods.VintageFix)
 @Mixin(value = LampBakedModel.class, remap = false)
 public interface LampBakedModelAccessor {
 

@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.compat.loliasm.ondemandanimation;
+package dev.tianmi.sussypatches.core.mixin.compat.ondemandanimation;
 
 import net.minecraft.client.renderer.chunk.CompiledChunk;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,12 +15,15 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
+import dev.tianmi.sussypatches.api.annotation.Compat;
+import dev.tianmi.sussypatches.api.util.SusMods;
 import gregtech.api.util.Mods;
 import gregtech.client.renderer.texture.Textures;
 import zone.rong.loliasm.client.sprite.ondemand.IAnimatedSpritePrimer;
 import zone.rong.loliasm.client.sprite.ondemand.ICompiledChunkExpander;
 import zone.rong.loliasm.config.LoliConfig;
 
+@Compat(mods = SusMods.LoliASM)
 @Mixin(value = Textures.class, remap = false)
 public abstract class TexturesMixin {
 
