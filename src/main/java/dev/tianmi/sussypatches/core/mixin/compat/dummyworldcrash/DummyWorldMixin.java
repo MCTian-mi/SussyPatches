@@ -12,7 +12,7 @@ import gregtech.api.util.world.DummyWorld;
 @Compat(mod = Mods.Alfheim)
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2838")
 @Mixin(value = DummyWorld.class, remap = false)
-public class DummyWorldMixin {
+public abstract class DummyWorldMixin {
 
     @SoftOverride
     public LightingEngine getAlfheim$lightingEngine() {

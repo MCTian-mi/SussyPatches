@@ -1,5 +1,6 @@
 package dev.tianmi.sussypatches.core;
 
+import static dev.tianmi.sussypatches.core.LateMixinLoader.Type.*;
 import static gregtech.api.util.Mods.Alfheim;
 import static gregtech.api.util.Mods.CTM;
 
@@ -24,17 +25,25 @@ public class LateMixinLoader implements ILateMixinLoader {
     private static final Map<String, BoolSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        add(Type.FEATURE, "connectedtextures", SusMods.of(CTM), () -> SusConfig.FEAT.CTM);
-        add(Type.COMPAT, "ondemandanimation", SusMods.LoliASM, () -> SusConfig.COMPAT.FIX_ON_DEMAND);
-        add(Type.COMPAT, "dummyworldcrash", SusMods.of(Alfheim), () -> SusConfig.COMPAT.FIX_DUMMYWORLD);
-        add(Type.COMPAT, "lampbakedmodel", SusMods.VintageFix, () -> SusConfig.COMPAT.FIX_LAMP_MODEL);
-        add(Type.COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, () -> SusConfig.COMPAT.FIX_INWORLD_PREVIEW);
+        add(FEATURE, "connectedtextures", SusMods.of(CTM), SusConfig.FEAT.CTM);
+        add(COMPAT, "ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.FIX_ON_DEMAND);
+        add(COMPAT, "dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.FIX_DUMMYWORLD);
+        add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusConfig.COMPAT.FIX_LAMP_MODEL);
+        add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.FIX_INWORLD_PREVIEW);
+        add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.FIX_CLIPBOARD);
+        add(BUGFIX, "facadelighting", SusConfig.BUGFIX.FIX_FACADE);
     }
 
-    private static void add(Type type, String name, BoolSupplier... conditions) {
+    private static void add(Type type, String name, Object... conditions) {
         BoolSupplier supplier = BoolSupplier.TRUE;
         for (var condition : conditions) {
-            supplier = supplier.and(condition);
+            if (condition instanceof BoolSupplier boolSupplier) {
+                supplier = supplier.and(boolSupplier);
+            } else if (condition instanceof Boolean bool) {
+                supplier.and(() -> bool);
+            } else {
+                throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
+            }
         }
         MIXIN_CONFIGS.put(ROOT + type + MIXINS + name + JSON, supplier);
     }
@@ -49,7 +58,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         return MIXIN_CONFIGS.get(mixinConfig).get();
     }
 
-    private enum Type {
+    enum Type {
 
         FEATURE,
         BUGFIX,

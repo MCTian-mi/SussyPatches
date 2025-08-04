@@ -15,7 +15,11 @@ public class SusConfig {
     @Config.Name("Compatibilities")
     public static final Compat COMPAT = new Compat();
 
-    public static class Features {
+    @Config.Comment("Config options for fixing GTCEu bugs")
+    @Config.Name("Bugfixes")
+    public static final Bugfix BUGFIX = new Bugfix();
+
+    public static final class Features {
 
         @Config.Comment({
                 "Make ConnectedTexturesMod (CTM) work on GregTech multiblocks.",
@@ -27,7 +31,7 @@ public class SusConfig {
         public boolean CTM = true;
     }
 
-    public static class Compat {
+    public static final class Compat {
 
         @Config.Comment({
                 "Fixes GregTech machines lost their animations when " +
@@ -43,7 +47,7 @@ public class SusConfig {
                         "which causes all GT recipes to disappear in JEI.",
                 "Default: true"
         })
-        @Config.Name("Fix Alfheim v1.6+ removing all GT recipes from JEI")
+        @Config.Name("Fix Alfheim v1.6+ breaking JEI")
         @Config.RequiresMcRestart
         public boolean FIX_DUMMYWORLD = true;
 
@@ -52,7 +56,7 @@ public class SusConfig {
                         "both VintageFix and ConnectedTexturesMod are loaded.",
                 "Default: true"
         })
-        @Config.Name("Fix VintageFix + CTM voiding GT lamp models")
+        @Config.Name("Fix VintageFix making lamps invisible")
         @Config.RequiresMcRestart
         public boolean FIX_LAMP_MODEL = true;
 
@@ -62,8 +66,28 @@ public class SusConfig {
                 "Fixed in Fluidlogged API v3.",
                 "Default: true"
         })
-        @Config.Name("Fix Fluidlogged API v2 causing multiblock render failure")
+        @Config.Name("Fix Fluidlogged API v2 render failure")
         @Config.RequiresMcRestart
         public boolean FIX_INWORLD_PREVIEW = true;
+    }
+
+    public static final class Bugfix {
+
+        @Config.Comment({
+                "Fixes clipboards always rendered at full brightness.",
+                "Default: true"
+        })
+        @Config.Name("Fix clipboards lighting")
+        @Config.RequiresMcRestart
+        public boolean FIX_CLIPBOARD = true;
+
+        @Config.Comment({
+                "Fixes facades have weird lighting.",
+                "A.k.a. different from normal blocks.",
+                "Default: true"
+        })
+        @Config.Name("Fix facades lighting")
+        @Config.RequiresMcRestart
+        public boolean FIX_FACADE = true;
     }
 }

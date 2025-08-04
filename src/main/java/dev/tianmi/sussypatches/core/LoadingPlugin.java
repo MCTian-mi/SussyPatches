@@ -13,7 +13,7 @@ import zone.rong.mixinbooter.IEarlyMixinLoader;
 
 @Name("SussyPatchesPlugin")
 @MCVersion(ForgeVersion.mcVersion)
-@TransformerExclusions("dev.tianmi.sussypatches.core.")
+@TransformerExclusions("dev.tianmi.sussypatches.core.asm.")
 public class LoadingPlugin implements ILoadingPlugin, IEarlyMixinLoader {
 
     @Override

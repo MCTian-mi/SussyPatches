@@ -17,7 +17,7 @@ import git.jbredwards.fluidlogged_api.api.asm.impl.IChunkProvider;
 
 @Compat(mods = SusMods.FluidloggedAPI_2)
 @Mixin(targets = "gregtech.client.renderer.handler.MultiblockPreviewRenderer$TargetBlockAccess", remap = false)
-public class TargetBlockAccessMixin implements IChunkProvider {
+public abstract class TargetBlockAccessMixin implements IChunkProvider {
 
     @Shadow
     @Final

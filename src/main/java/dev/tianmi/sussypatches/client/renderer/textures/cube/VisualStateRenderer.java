@@ -42,6 +42,7 @@ import gregtech.client.utils.BloomEffectUtil;
 import gregtech.common.ConfigHolder;
 import team.chisel.ctm.client.state.CTMExtendedState;
 
+// TODO: fix incompatibility with OptiFine
 @ParametersAreNonnullByDefault
 public class VisualStateRenderer implements ICubeRenderer {
 
