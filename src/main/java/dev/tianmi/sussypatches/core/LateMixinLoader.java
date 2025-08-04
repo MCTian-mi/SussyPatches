@@ -38,6 +38,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         add(BUGFIX, "packetdatamemleak", SusConfig.BUGFIX.packetMemLeak);
         add(BUGFIX, "pipedatatransfer", SusConfig.BUGFIX.pipeDataTransfer);
         add(BUGFIX, "pipeinvcrash", SusConfig.BUGFIX.pipeInvCrash);
+        add(BUGFIX, "invalidregistration", SusConfig.BUGFIX.invalidRegistration);
 
         add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.noSearchBars);
     }

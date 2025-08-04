@@ -115,7 +115,7 @@ public class VisualStateRenderer implements ICubeRenderer {
             if (!canRenderInLayer(layer)) return;
 
             IBlockAccess world = crs.world;
-            BlockPos pos = CRSExtension.cast(crs).susy$getPos();
+            BlockPos pos = CRSExtension.cast(crs).sus$getPos();
 
             try {
                 state = state.getActualState(world, pos);

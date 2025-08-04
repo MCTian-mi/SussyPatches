@@ -1,0 +1,18 @@
+{
+  "package": "dev.tianmi.sussypatches.core.mixin.bugfix.invalidregistration",
+  "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
+  "refmap": "mixins.sussypatches.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "MaterialPipesMixin",
+    "MaterialPipesMixin$BlockCableMixin",
+    "MaterialPipesMixin$BlockFluidPipeMixin",
+    "MaterialPipesMixin$BlockItemPipeMixin",
+    "CommonProxyMixin"
+  ]
+}

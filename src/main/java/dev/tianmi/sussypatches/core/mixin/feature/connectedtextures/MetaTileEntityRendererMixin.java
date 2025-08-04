@@ -23,6 +23,6 @@ public class MetaTileEntityRendererMixin {
                                             CubeRendererState original,
                                             @Local(argsOnly = true) BlockPos pos,
                                             @Local(name = "metaTileEntity") MetaTileEntity mte) {
-        return CRSExtension.cast(original).susy$withPos(pos);
+        return CRSExtension.cast(original).sus$withPos(pos);
     }
 }

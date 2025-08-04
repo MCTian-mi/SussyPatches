@@ -17,7 +17,7 @@ public interface CRSExtension {
         return (CRSExtension) state;
     }
 
-    CubeRendererState susy$withPos(BlockPos pos);
+    CubeRendererState sus$withPos(BlockPos pos);
 
-    BlockPos susy$getPos();
+    BlockPos sus$getPos();
 }

@@ -139,12 +139,22 @@ public class SusConfig {
 
         @Config.Comment({
                 "Refuses insertion into pipenets w/o specific facing.",
-                "Fixes crashing with mods like RFTools.",
+                "Fixes crashes with mods like RFTools.",
                 "Default: true"
         })
         @Config.Name("Fix data transfer between pipes")
         @Config.RequiresMcRestart
         public boolean pipeInvCrash = true;
+
+        @Config.Comment({
+                "Don't let GTCEu register pipes for empty registrations.",
+                "Fixes crashes for mods like BetterQuesting.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Stop invalid pipe registration")
+        @Config.RequiresMcRestart
+        public boolean invalidRegistration = true;
     }
 
     public static final class Tweaks {
@@ -153,7 +163,7 @@ public class SusConfig {
                 "Removes the annoying search bars from GT Creative Tabs",
                 "Default: true"
         })
-        @Config.Name("Remove search bars from GT Tabs")
+        @Config.Name("Remove search bars from GT tabs")
         @Config.RequiresMcRestart
         public boolean noSearchBars = true;
     }

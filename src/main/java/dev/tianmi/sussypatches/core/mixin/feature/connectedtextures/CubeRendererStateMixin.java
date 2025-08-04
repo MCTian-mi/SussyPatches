@@ -12,16 +12,16 @@ import gregtech.client.renderer.CubeRendererState;
 public abstract class CubeRendererStateMixin implements CRSExtension {
 
     @Unique
-    private BlockPos susy$pos = BlockPos.ORIGIN;
+    private BlockPos sus$pos = BlockPos.ORIGIN;
 
     @Override
-    public CubeRendererState susy$withPos(BlockPos pos) {
-        this.susy$pos = pos;
+    public CubeRendererState sus$withPos(BlockPos pos) {
+        this.sus$pos = pos;
         return (CubeRendererState) (Object) this;
     }
 
     @Override
-    public BlockPos susy$getPos() {
-        return this.susy$pos;
+    public BlockPos sus$getPos() {
+        return this.sus$pos;
     }
 }
