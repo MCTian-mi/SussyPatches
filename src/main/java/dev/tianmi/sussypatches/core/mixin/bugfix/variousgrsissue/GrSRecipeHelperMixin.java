@@ -2,8 +2,7 @@ package dev.tianmi.sussypatches.core.mixin.bugfix.variousgrsissue;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import gregtech.api.recipes.ingredients.GTRecipeInput;
@@ -13,11 +12,12 @@ import gregtech.integration.groovy.GrSRecipeHelper;
 @Mixin(value = GrSRecipeHelper.class, remap = false)
 public abstract class GrSRecipeHelperMixin {
 
-    @ModifyReturnValue(method = "getRecipeRemoveLine",
-                       at = @At(value = "INVOKE",
-                                target = "Lgregtech/api/recipes/ingredients/GTRecipeInput;getAmount()I",
-                                ordinal = 0))
-    private static int skipThis(final GTRecipeInput idc) {
-        return Integer.MAX_VALUE;
+    // Using hard @Redirect here since it's a bug anyway.
+    @Redirect(method = "getRecipeRemoveLine",
+              at = @At(value = "INVOKE",
+                       target = "Lgregtech/api/recipes/ingredients/GTRecipeInput;getAmount()I",
+                       ordinal = 0))
+    private static int skipThis(GTRecipeInput idc) {
+        return 0; // Use 0 < 1 to skip the logic
     }
 }

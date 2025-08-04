@@ -9,7 +9,7 @@ public class SusConfig {
 
     @Config.Comment("Config options for additional features")
     @Config.Name("Features")
-    public static final Features FEAT = new Features();
+    public static final Feature FEAT = new Feature();
 
     @Config.Comment("Config options for external mod compat")
     @Config.Name("Compatibilities")
@@ -20,10 +20,10 @@ public class SusConfig {
     public static final Bugfix BUGFIX = new Bugfix();
 
     @Config.Comment("Config options for tweaking existing features")
-    @Config.Name("Bugfixes")
+    @Config.Name("Tweaks")
     public static final Tweaks TWEAKS = new Tweaks();
 
-    public static final class Features {
+    public static final class Feature {
 
         @Config.Comment({
                 "Make ConnectedTexturesMod (CTM) work on GregTech multiblocks.",
