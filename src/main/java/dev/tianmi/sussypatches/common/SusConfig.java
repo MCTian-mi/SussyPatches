@@ -49,6 +49,7 @@ public class SusConfig {
         @Config.Comment({
                 "Fixes GregTech's DummyWorld crashs with Alfheim v1.6+, " +
                         "which causes all GT recipes to disappear in JEI.",
+                "Fixed in CEu master branch.",
                 "Default: true"
         })
         @Config.Name("Fix Alfheim v1.6+ breaking JEI")
@@ -93,6 +94,17 @@ public class SusConfig {
         @Config.Name("Fix facades lighting")
         @Config.RequiresMcRestart
         public boolean FIX_FACADE = true;
+
+        @Config.Comment({
+                "Fixes various GrS issues, including:",
+                " - GrS not respecting the item namespace.",
+                " - Fluid amount multiplier duplicates in the copied recipe removal code.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Fix various GrS issues")
+        @Config.RequiresMcRestart
+        public boolean FIX_GRS = true;
     }
 
     public static final class Tweaks {

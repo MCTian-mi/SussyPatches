@@ -34,6 +34,7 @@ public class LateMixinLoader implements ILateMixinLoader {
 
         add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.FIX_CLIPBOARD);
         add(BUGFIX, "facadelighting", SusConfig.BUGFIX.FIX_FACADE);
+        add(BUGFIX, "variousgrsissue", SusConfig.BUGFIX.FIX_GRS);
 
         add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.NO_BARS);
     }
