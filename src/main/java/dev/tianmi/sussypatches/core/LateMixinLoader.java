@@ -49,7 +49,7 @@ public class LateMixinLoader implements ILateMixinLoader {
             if (condition instanceof BoolSupplier boolSupplier) {
                 supplier = supplier.and(boolSupplier);
             } else if (condition instanceof Boolean bool) {
-                supplier.and(() -> bool);
+                supplier = supplier.and(() -> bool);
             } else {
                 throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
             }
