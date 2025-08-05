@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 
-import dev.tianmi.sussypatches.api.metatileentity.IConnectable;
+import dev.tianmi.sussypatches.api.core.mixin.extension.ConnectableExtension;
 import gregtech.api.block.machines.BlockMachine;
 import gregtech.api.metatileentity.MetaTileEntity;
 
@@ -19,8 +19,8 @@ public abstract class BlockMachineMixin {
                        at = @At("TAIL"))
     private IBlockState injectConnectableLogic(IBlockState original,
                                                @Local(name = "metaTileEntity") MetaTileEntity mte) {
-        if (mte instanceof IConnectable connectable) {
-            IBlockState visualState = connectable.getVisualState(null);
+        if (mte instanceof ConnectableExtension connectable) {
+            IBlockState visualState = connectable.sus$getVisualState(null);
             if (visualState != null) {
                 return visualState;
             }

@@ -14,6 +14,7 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.SimpleOverlayRenderer;
 import gregtech.client.utils.RenderUtil;
 
+// A dirty workaround
 @Mixin(value = SimpleOverlayRenderer.class, remap = false)
 public abstract class SimpleOverlayRendererMixin implements ICubeRenderer {
 

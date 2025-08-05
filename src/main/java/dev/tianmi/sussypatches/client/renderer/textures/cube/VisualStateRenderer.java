@@ -24,7 +24,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
 
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
@@ -39,11 +38,9 @@ import gregtech.client.renderer.cclop.ColourOperation;
 import gregtech.client.renderer.cclop.LightMapOperation;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.BloomEffectUtil;
-import gregtech.common.ConfigHolder;
 import team.chisel.ctm.client.state.CTMExtendedState;
 
-// TODO: fix incompatibility with OptiFine
-// TODO: fix z-fighting
+// TODO: fix z-fighting properly
 @ParametersAreNonnullByDefault
 public class VisualStateRenderer implements ICubeRenderer {
 
@@ -133,12 +130,11 @@ public class VisualStateRenderer implements ICubeRenderer {
                 state = new CTMExtendedState(extendedState, world, pos);
             } catch (Exception ignored) {}
 
-            boolean emissive = ConfigHolder.client.machinesEmissiveTextures &&
-                    layer == BloomEffectUtil.getEffectiveBloomLayer();
-
-            if (emissive) renderPipeline = ArrayUtils.addAll(renderPipeline,
-                    new LightMapOperation(240, 240),
-                    new ColourOperation(0xFFFFFFFF));
+            if (layer == BloomEffectUtil.getBloomLayer()) {
+                renderPipeline = ArrayUtils.addAll(renderPipeline,
+                        new LightMapOperation(240, 240),
+                        new ColourOperation(0xFFFFFFFF));
+            }
 
             long rand = MathHelper.getPositionRandom(pos);
             quads.addAll(model.getQuads(state, null, rand));
@@ -169,7 +165,7 @@ public class VisualStateRenderer implements ICubeRenderer {
         /* Do Nothing */
     }
 
-    public boolean canRenderInLayer(@NotNull BlockRenderLayer layer) {
+    public boolean canRenderInLayer(BlockRenderLayer layer) {
         return visualState.getBlock().canRenderInLayer(visualState, layer);
     }
 

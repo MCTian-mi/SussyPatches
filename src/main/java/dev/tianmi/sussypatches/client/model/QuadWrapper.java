@@ -13,6 +13,8 @@ import codechicken.lib.render.pipeline.attribute.LightCoordAttribute;
 import codechicken.lib.render.pipeline.attribute.SideAttribute;
 import codechicken.lib.vec.Vertex5;
 
+/// Wraps [BakedQuad] into [IVertexSource]
+/// Most of the logic is from [CCQuad]
 public class QuadWrapper implements IVertexSource {
 
     public final TextureAtlasSprite sprite;

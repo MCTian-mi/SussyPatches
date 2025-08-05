@@ -15,6 +15,7 @@
     "MetaTileEntityRendererMixin",
     "MultiblockControllerBaseMixin",
     "MultiblockPartMixin",
+    "OrientedOverlayRendererMixin",
     "SimpleOverlayRendererMixin"
   ]
 }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-import dev.tianmi.sussypatches.api.metatileentity.IConnectable;
+import dev.tianmi.sussypatches.api.core.mixin.extension.ConnectableExtension;
 import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
 import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
 import gregtech.api.metatileentity.MetaTileEntity;
@@ -21,7 +21,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.client.renderer.ICubeRenderer;
 
 @Mixin(value = MultiblockControllerBase.class, remap = false)
-public abstract class MultiblockControllerBaseMixin extends MetaTileEntity implements IConnectable {
+public abstract class MultiblockControllerBaseMixin extends MetaTileEntity implements ConnectableExtension {
 
     // Dummy
     MultiblockControllerBaseMixin() {
@@ -36,8 +36,7 @@ public abstract class MultiblockControllerBaseMixin extends MetaTileEntity imple
 
     @Nullable
     @Override
-    @SuppressWarnings("AddedMixinMembersNamePattern")
-    public IBlockState getVisualState(@Nullable IMultiblockPart part) {
+    public IBlockState sus$getVisualState(@Nullable IMultiblockPart part) {
         if (isStructureFormed()) {
             if (getBaseTexture(null) instanceof VisualStateRenderer stateRenderer) {
                 return stateRenderer.getVisualState();

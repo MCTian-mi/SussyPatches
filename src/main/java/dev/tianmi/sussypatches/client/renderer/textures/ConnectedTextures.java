@@ -37,6 +37,8 @@ import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMulti
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
+/// Holds the default connected textures for GregTechCEu
+/// See [GCyMConnectedTextures] for how to impl it for your own GT addon
 @ParametersAreNonnullByDefault
 public class ConnectedTextures {
 
