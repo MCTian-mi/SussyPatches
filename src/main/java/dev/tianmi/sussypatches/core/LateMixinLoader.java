@@ -31,6 +31,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusConfig.COMPAT.fixLampModel);
         add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
         add(COMPAT, "variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.fixGrS);
+        add(COMPAT, "grsinlineicon", SusMods.of(GroovyScript), SusConfig.COMPAT.inlineIcon);
 
         add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
         add(BUGFIX, "facadelighting", SusConfig.BUGFIX.facadeLighting);
@@ -39,6 +40,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         add(BUGFIX, "pipedatatransfer", SusConfig.BUGFIX.pipeDataTransfer);
         add(BUGFIX, "pipeinvcrash", SusConfig.BUGFIX.pipeInvCrash);
         add(BUGFIX, "invalidregistration", SusConfig.BUGFIX.invalidRegistration);
+        add(BUGFIX, "weakneighborref", SusConfig.BUGFIX.weakNeighborRef);
 
         add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.noSearchBars);
     }

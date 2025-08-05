@@ -90,6 +90,15 @@ public class SusConfig {
         @Config.Name("Fix various GrS issues")
         @Config.RequiresMcRestart
         public boolean fixGrS = true;
+
+        @Config.Comment({
+                "Make GT ObjectMappers support GrS inline icon.",
+                "Currently only \"metaitem\" mapper is supported.",
+                "Default: true"
+        })
+        @Config.Name("Inline icon for GT ObjectMappers")
+        @Config.RequiresMcRestart
+        public boolean inlineIcon = true;
     }
 
     public static final class Bugfix {
@@ -159,12 +168,22 @@ public class SusConfig {
         @Config.Name("Stop invalid pipe registration")
         @Config.RequiresMcRestart
         public boolean invalidRegistration = true;
+
+        @Config.Comment({
+                "Uses WeakReference for NeighborCacheTileEntityBase.",
+                "May solve unintended JVM garbage collection hindering.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Use WeakReference for neighbor cache")
+        @Config.RequiresMcRestart
+        public boolean weakNeighborRef = true;
     }
 
     public static final class Tweaks {
 
         @Config.Comment({
-                "Removes the annoying search bars from GT Creative Tabs",
+                "Removes the annoying search bars from GT Creative Tabs.",
                 "Default: true"
         })
         @Config.Name("Remove search bars from GT tabs")
