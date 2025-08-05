@@ -17,7 +17,7 @@ import gregtech.GTInternalTags;
 @Mod(modid = Tags.MODID,
      version = Tags.VERSION,
      name = Tags.MODNAME,
-     dependencies = GTInternalTags.DEP_VERSION_STRING + "after:ctm",
+     dependencies = GTInternalTags.DEP_VERSION_STRING + "after:ctm;" + "after:configanytime;",
      acceptedMinecraftVersions = ForgeVersion.mcVersion)
 public class SussyPatches {
 

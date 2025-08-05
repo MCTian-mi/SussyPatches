@@ -51,6 +51,7 @@ dependencies {
     compileOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.700'
     compileOnly 'appeng:ae2-uel:v0.56.7' transitive false
 
+    compileOnlyApi 'com.cleanroommc:configanytime:3.0'
 
     // # Optional dependencies. Uncomment the ones you need
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:ctm-267602:2915363')
@@ -58,7 +59,6 @@ dependencies {
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:supercritical-1185871:6793777")
 //    runtimeOnlyNonPublishable rfg.deobf('maven.modrinth:fluidlogged-api:3.0.6')
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:fluidlogged-api-485654:4564413')
-//    runtimeOnlyNonPublishable 'com.cleanroommc:configanytime:3.0'
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:lolasm-460609:6333774")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6598523")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:vintagefix-871198:6609247")

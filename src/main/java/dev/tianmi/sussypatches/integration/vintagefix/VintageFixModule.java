@@ -15,6 +15,7 @@ import org.embeddedt.vintagefix.event.DynamicModelBakeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import dev.tianmi.sussypatches.api.util.SusMods;
+import dev.tianmi.sussypatches.common.SusConfig;
 import dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel.LampBakedModelAccessor;
 import dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel.LampBakedModelAccessor.EntryAccessor;
 import dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel.LampBakedModelAccessor.KeyAccessor;
@@ -32,7 +33,8 @@ public class VintageFixModule extends IntegrationSubmodule {
     @NotNull
     @Override
     public List<Class<?>> getEventBusSubscribers() {
-        return Collections.singletonList(VintageFixModule.class);
+        return SusConfig.COMPAT.fixLampModel ? Collections.singletonList(VintageFixModule.class) :
+                Collections.emptyList();
     }
 
     @SideOnly(Side.CLIENT)

@@ -2,7 +2,11 @@ package dev.tianmi.sussypatches.common;
 
 import net.minecraftforge.common.config.Config;
 
+import com.cleanroommc.configanytime.ConfigAnytime;
+
+import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.api.util.SusMods;
 
 @Config(modid = Tags.MODID)
 public class SusConfig {
@@ -166,5 +170,13 @@ public class SusConfig {
         @Config.Name("Remove search bars from GT tabs")
         @Config.RequiresMcRestart
         public boolean noSearchBars = true;
+    }
+
+    static {
+        if (SusMods.ConfigAnytime.isLoaded()) {
+            ConfigAnytime.register(SusConfig.class);
+        } else if (!SusMods.Lwjgl3ify.isLoaded()) { // Can't run ConfigAnytime on Lwjgl3ify environment
+            SussyPatches.LOGGER.error("ConfigAnytime not found! Config options may not work.");
+        }
     }
 }
