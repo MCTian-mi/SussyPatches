@@ -25,7 +25,7 @@ public abstract class SimpleOverlayRendererMixin implements ICubeRenderer {
         if (ConnectedTextures.shouldOffset(this)) {
             // An arbitrary number to make it look good.
             // Would be much appreciated if anyone knows how to avoid z-fighting w/o this.
-            renderTranslation = RenderUtil.adjustTrans(renderTranslation, facing, 4);
+            renderTranslation = RenderUtil.adjustTrans(renderTranslation, facing, 10);
         }
         return renderTranslation;
     }

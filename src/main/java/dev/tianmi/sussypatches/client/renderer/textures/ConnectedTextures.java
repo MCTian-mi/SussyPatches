@@ -183,9 +183,6 @@ public class ConnectedTextures {
     }
 
     /// Override original [ICubeRenderer]s for CEu/GCyM multiblocks.
-    /// Don't register your own multis here!
-    /// Instead, create a new [VisualStateRenderer] and override
-    /// [MultiblockControllerBase#getBaseTexture(IMultiblockPart)].
     ///
     /// @see MultiblockControllerBaseMixin
     public static void registerCTMOverrides() {

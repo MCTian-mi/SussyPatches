@@ -43,6 +43,7 @@ import gregtech.common.ConfigHolder;
 import team.chisel.ctm.client.state.CTMExtendedState;
 
 // TODO: fix incompatibility with OptiFine
+// TODO: fix z-fighting
 @ParametersAreNonnullByDefault
 public class VisualStateRenderer implements ICubeRenderer {
 

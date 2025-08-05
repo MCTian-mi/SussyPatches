@@ -39,10 +39,6 @@ public enum SusMods implements BoolSupplier {
         return mod::isModLoaded;
     }
 
-    public String id() {
-        return this.ID;
-    }
-
     public boolean isLoaded() {
         if (this.loaded == null) {
             this.loaded = Loader.isModLoaded(this.ID);

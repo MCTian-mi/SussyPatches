@@ -76,7 +76,7 @@ public class GCyMConnectedTextures {
     public static void registerCTMOverrides() {
         MACERATOR_CASING_CTM.override(gcymId("large_macerator"));
         BLAST_CASING_CTM.override(gcymId("alloy_blast_smelter"),
-                gcymId("alloy_blast_smelter"));
+                gcymId("large_arc_furnace"));
         ASSEMBLING_CASING_CTM.override(gcymId("large_assembler"),
                 gcymId("large_circuit_assembler"));
         WATERTIGHT_CASING_CTM.override(gcymId("large_autoclave"),
