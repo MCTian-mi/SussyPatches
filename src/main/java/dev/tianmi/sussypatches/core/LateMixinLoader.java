@@ -17,46 +17,28 @@ import zone.rong.mixinbooter.ILateMixinLoader;
 @SuppressWarnings("unused")
 public class LateMixinLoader implements ILateMixinLoader {
 
-    private static final String ROOT = Tags.MODID + "/";
-    private static final String MIXINS = "mixins.";
-    private static final String JSON = ".json";
-
     private static final Map<String, BoolSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        add(FEATURE, "connectedtextures", SusMods.of(CTM), SusConfig.FEAT.multiCTM);
+        FEATURE.add("connectedtextures", SusMods.of(CTM), SusConfig.FEAT.multiCTM);
 
-        add(COMPAT, "ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.fixOnDemand);
-        add(COMPAT, "dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.fixDummyWorld);
-        add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusMods.of(CTM), SusConfig.COMPAT.fixLampModel);
-        add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
-        add(COMPAT, "variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.fixGrS);
-        add(COMPAT, "grsinlineicon", SusMods.of(GroovyScript), SusConfig.COMPAT.inlineIcon);
+        COMPAT.add("ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.fixOnDemand);
+        COMPAT.add("dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.fixDummyWorld);
+        COMPAT.add("lampbakedmodel", SusMods.VintageFix, SusMods.of(CTM), SusConfig.COMPAT.fixLampModel);
+        COMPAT.add("inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
+        COMPAT.add("variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.fixGrS);
+        COMPAT.add("grsinlineicon", SusMods.of(GroovyScript), SusConfig.COMPAT.inlineIcon);
 
-        add(BUGFIX, "clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
-        add(BUGFIX, "facadelighting", SusConfig.BUGFIX.facadeLighting);
-        add(BUGFIX, "implgetitem", SusConfig.BUGFIX.implGetItem);
-        add(BUGFIX, "packetdatamemleak", SusConfig.BUGFIX.packetMemLeak);
-        add(BUGFIX, "pipedatatransfer", SusConfig.BUGFIX.pipeDataTransfer);
-        add(BUGFIX, "pipeinvcrash", SusConfig.BUGFIX.pipeInvCrash);
-        add(BUGFIX, "invalidregistration", SusConfig.BUGFIX.invalidRegistration);
-        add(BUGFIX, "weakneighborref", SusConfig.BUGFIX.weakNeighborRef);
+        BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
+        BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);
+        BUGFIX.add("implgetitem", SusConfig.BUGFIX.implGetItem);
+        BUGFIX.add("packetdatamemleak", SusConfig.BUGFIX.packetMemLeak);
+        BUGFIX.add("pipedatatransfer", SusConfig.BUGFIX.pipeDataTransfer);
+        BUGFIX.add("pipeinvcrash", SusConfig.BUGFIX.pipeInvCrash);
+        BUGFIX.add("invalidregistration", SusConfig.BUGFIX.invalidRegistration);
+        BUGFIX.add("weakneighborref", SusConfig.BUGFIX.weakNeighborRef);
 
-        add(TWEAK, "tabnosearchbars", SusConfig.TWEAKS.noSearchBars);
-    }
-
-    private static void add(Type type, String name, Object... conditions) {
-        BoolSupplier supplier = BoolSupplier.TRUE;
-        for (var condition : conditions) {
-            if (condition instanceof BoolSupplier boolSupplier) {
-                supplier = supplier.and(boolSupplier);
-            } else if (condition instanceof Boolean bool) {
-                supplier = supplier.and(() -> bool);
-            } else {
-                throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
-            }
-        }
-        MIXIN_CONFIGS.put(ROOT + type + MIXINS + name + JSON, supplier);
+        TWEAK.add("tabnosearchbars", SusConfig.TWEAKS.noSearchBars);
     }
 
     @Override
@@ -75,11 +57,30 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX,
         TWEAK,
         COMPAT,
+        API,
         ;
+
+        private static final String ROOT = Tags.MODID + "/";
+        private static final String MIXINS = "mixins.";
+        private static final String JSON = ".json";
 
         @Override
         public String toString() {
             return name().toLowerCase() + "/";
+        }
+
+        public void add(String name, Object... conditions) {
+            BoolSupplier supplier = BoolSupplier.TRUE;
+            for (var condition : conditions) {
+                if (condition instanceof BoolSupplier boolSupplier) {
+                    supplier = supplier.and(boolSupplier);
+                } else if (condition instanceof Boolean bool) {
+                    supplier = supplier.and(() -> bool);
+                } else {
+                    throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
+                }
+            }
+            MIXIN_CONFIGS.put(ROOT + this + MIXINS + name + JSON, supplier);
         }
     }
 }
