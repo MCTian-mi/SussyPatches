@@ -14,6 +14,7 @@ import org.embeddedt.vintagefix.dynamicresources.model.DynamicBakedModelProvider
 import org.embeddedt.vintagefix.event.DynamicModelBakeEvent;
 import org.jetbrains.annotations.NotNull;
 
+import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.common.SusConfig;
 import dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel.LampBakedModelAccessor;
@@ -24,7 +25,7 @@ import gregtech.api.modules.GregTechModule;
 import gregtech.integration.IntegrationSubmodule;
 
 @GregTechModule(moduleID = SusModules.ViF_ID,
-                containerID = SusModules.CORE_ID,
+                containerID = Tags.MODID,
                 modDependencies = SusMods.Names.VINTAGE_FIX,
                 name = SusModules.ViF_NAME,
                 description = SusModules.ViF_DESC)

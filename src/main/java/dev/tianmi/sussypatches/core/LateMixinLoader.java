@@ -28,7 +28,7 @@ public class LateMixinLoader implements ILateMixinLoader {
 
         add(COMPAT, "ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.fixOnDemand);
         add(COMPAT, "dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.fixDummyWorld);
-        add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusConfig.COMPAT.fixLampModel);
+        add(COMPAT, "lampbakedmodel", SusMods.VintageFix, SusMods.of(CTM), SusConfig.COMPAT.fixLampModel);
         add(COMPAT, "inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
         add(COMPAT, "variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.fixGrS);
         add(COMPAT, "grsinlineicon", SusMods.of(GroovyScript), SusConfig.COMPAT.inlineIcon);

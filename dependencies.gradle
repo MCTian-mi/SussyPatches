@@ -56,15 +56,15 @@ dependencies {
     compileOnlyApi 'com.cleanroommc:configanytime:3.0'
 
     // # Optional dependencies. Uncomment the ones you need
-//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:ctm-267602:2915363')
-//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:supercritical-1185871:6793777")
+//    runtimeOnlyNonPublishable 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31' transitive false
+//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:supercritical-1185871:6793777')
 //    runtimeOnlyNonPublishable rfg.deobf('maven.modrinth:fluidlogged-api:3.0.6')
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:fluidlogged-api-485654:4564413')
-//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:lolasm-460609:6333774")
-//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6598523")
-//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:vintagefix-871198:6609247")
-//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:alfheim-lighting-engine-910715:6687458")
-//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:red-core-873867:6230904")
+//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:lolasm-460609:6333774')
+//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:flare-692142:6598523')
+//    runtimeOnlyNonPublishable 'com.github.embeddedt:VintageFix:0.6.2'
+//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:alfheim-lighting-engine-910715:6687458')
+//    runtimeOnlyNonPublishable 'dev.redstudio:Red-Core-MC:1.8-1.12-0.7-Dev-1'
 
     // # OptiFine
 //    // Copied from GTCEu, originally used to download latest Vintagium from GitHub

@@ -1,5 +1,23 @@
 // Add any additional repositories for your dependencies here
 
 repositories {
-
+    maven {
+        name 'tterrag Maven'
+        url "https://maven.tterrag.com/"
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Red Studio'
+                url = 'https://repo.redstudio.dev/beta'
+            }
+        }
+        filter {
+            includeGroup 'dev.redstudio'
+        }
+    }
+    maven {
+        name 'JitPack'
+        url 'https://www.jitpack.io'
+    }
 }
