@@ -247,7 +247,7 @@ public class SusConfig {
                 "Backported from GregTechCEu#2799 and Nomi-Libs",
                 "Default: true"
         })
-        @Config.Name("Disable the muffler recovery mechanism")
+        @Config.Name("Disable the muffler recovery mechanic")
         @Config.RequiresMcRestart
         public boolean noMufflerRecovery = true;
     }

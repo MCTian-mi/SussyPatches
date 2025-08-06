@@ -37,7 +37,7 @@ public abstract class MultiblockInfoRecipeWrapperMixin {
     @ModifyArg(method = "initializePattern",
                at = @At(value = "INVOKE",
                         target = "Lgregtech/client/utils/TrackedDummyWorld;setRenderFilter(Ljava/util/function/Predicate;)V"))
-    private Predicate<BlockPos> ReplaceRenderFilter(Predicate<BlockPos> renderFilter,
+    private Predicate<BlockPos> ReplaceRenderFilter(Predicate<BlockPos> ignored,
                                                     @Local(name = "worldSceneRenderer") ImmediateWorldSceneRenderer wsr) {
         return WSRExtension.cast(wsr).sus$getRenderedBlocks()::contains;
     }
