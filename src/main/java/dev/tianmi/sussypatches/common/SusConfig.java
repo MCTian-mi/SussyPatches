@@ -197,6 +197,16 @@ public class SusConfig {
         @Config.Name("Properly unbinding Framebuffer for shaders.")
         @Config.RequiresMcRestart
         public boolean unbindFBO = true;
+
+        @Config.Comment({
+                "Removes the override to \"addDisplayText\" in DistillationTower class.",
+                "Which is both bugged and unnecessary.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Remove the bugged \"addDisplayText\" override.")
+        @Config.RequiresMcRestart
+        public boolean removeDTText = true;
     }
 
     public static final class Tweaks {
@@ -229,6 +239,17 @@ public class SusConfig {
         @Config.Name("Optimize JEI multiblock preview allocations")
         @Config.RequiresMcRestart
         public boolean optPreview = true;
+
+        @Config.Comment({
+                "Removes the muffler inventory and recovery mechanics.",
+                "Who would ever use them, anyways.",
+                "Would help with performance, in a way.",
+                "Backported from GregTechCEu#2799 and Nomi-Libs",
+                "Default: true"
+        })
+        @Config.Name("Disable the muffler recovery mechanism")
+        @Config.RequiresMcRestart
+        public boolean noMufflerRecovery = true;
     }
 
     static {

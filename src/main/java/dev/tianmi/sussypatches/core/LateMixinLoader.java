@@ -39,10 +39,12 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("weakneighborref", SusConfig.BUGFIX.weakNeighborRef);
         BUGFIX.add("redundantgas", SusConfig.BUGFIX.redundantGas);
         BUGFIX.add("unbindframebuffer", SusConfig.BUGFIX.unbindFBO);
+        BUGFIX.add("dtguitext", SusConfig.BUGFIX.removeDTText);
 
         TWEAK.add("tabnosearchbars", SusConfig.TWEAKS.noSearchBars);
         TWEAK.add("xoshiro256plusplus", SusConfig.TWEAKS.xoShiRo256plusplus);
         TWEAK.add("previewoptimization", SusConfig.TWEAKS.optPreview);
+        TWEAK.add("nomuffler", SusConfig.TWEAKS.noMufflerRecovery);
     }
 
     @Override
