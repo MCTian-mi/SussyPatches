@@ -178,6 +178,25 @@ public class SusConfig {
         @Config.Name("Use WeakReference for neighbor cache")
         @Config.RequiresMcRestart
         public boolean weakNeighborRef = true;
+
+        @Config.Comment({
+                "Fixes the sometimes-funny \"Gas Gas\" suffix.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Removes the redundant \"Gas\" suffix")
+        @Config.RequiresMcRestart
+        public boolean redundantGas = true;
+
+        @Config.Comment({
+                "Properly unbinds the bound framebuffer object for shaders.",
+                "Potentially fixes bloom incorrectly showing through blocks.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Properly unbinding Framebuffer for shaders.")
+        @Config.RequiresMcRestart
+        public boolean unbindFBO = true;
     }
 
     public static final class Tweaks {
@@ -189,13 +208,34 @@ public class SusConfig {
         @Config.Name("Remove search bars from GT tabs")
         @Config.RequiresMcRestart
         public boolean noSearchBars = true;
+
+        @Config.Comment({
+                "Switches from GT's own impl of XSTR to XoShiRo256++ random generator.",
+                "Which has both better performance and better randomness.",
+                "Backported from GregTechCEu#2747",
+                "Default: true"
+        })
+        @Config.Name("Use XoShiRo256++ Random")
+        @Config.RequiresMcRestart
+        public boolean xoShiRo256plusplus = true;
+
+        @Config.Comment({
+                "Removes the ISceneRenderHook logic in the WorldSceneRenderer.",
+                "Reduces the allocation in multiblock previews.",
+                "Note: has some minor issues with the terminal.",
+                "Backported from GregTechCEu#2629",
+                "Default: true"
+        })
+        @Config.Name("Optimize JEI multiblock preview allocations")
+        @Config.RequiresMcRestart
+        public boolean optPreview = true;
     }
 
     static {
         if (SusMods.ConfigAnytime.isLoaded()) {
             ConfigAnytime.register(SusConfig.class);
         } else if (!SusMods.Lwjgl3ify.isLoaded()) { // Can't run ConfigAnytime on Lwjgl3ify environment
-            SussyPatches.LOGGER.error("ConfigAnytime not found! Config options may not work.");
+            SussyPatches.LOGGER.error("ConfigAnytime not found! Configurations may not work!");
         }
     }
 }
