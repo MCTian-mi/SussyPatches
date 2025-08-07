@@ -19,12 +19,6 @@ import gregtech.api.metatileentity.MetaTileEntity;
 @MixinExtension(MetaTileEntity.class)
 public interface Mui2Extension extends IMui2Holder {
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    default ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
-        return null;
-    }
-
     @Override
     default ModularPanel buildUI(PosGuiData guiData, PanelSyncManager syncManager, UISettings settings) {
         return null;
