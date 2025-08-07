@@ -194,7 +194,7 @@ public class SusConfig {
                 "Fixed in CEu master branch.",
                 "Default: true"
         })
-        @Config.Name("Properly unbinding Framebuffer for shaders.")
+        @Config.Name("Properly unbinding Framebuffer for shaders")
         @Config.RequiresMcRestart
         public boolean unbindFBO = true;
 
@@ -204,9 +204,18 @@ public class SusConfig {
                 "Fixed in CEu master branch.",
                 "Default: true"
         })
-        @Config.Name("Remove the bugged \"addDisplayText\" override.")
+        @Config.Name("Remove the bugged \"addDisplayText\" override")
         @Config.RequiresMcRestart
         public boolean removeDTText = true;
+
+        @Config.Comment({
+                "Fix pipe frames not visible on servers.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Fix framing pipes not synced on servers")
+        @Config.RequiresMcRestart
+        public boolean pipeFrameDesync = true;
     }
 
     public static final class Tweaks {
@@ -250,6 +259,16 @@ public class SusConfig {
         @Config.Name("Disable the muffler recovery mechanic")
         @Config.RequiresMcRestart
         public boolean noMufflerRecovery = true;
+
+        @Config.Comment({
+                "Make prospectors place waypoints at the average height of the hovered ores.",
+                "Less tedious than having to look it up in jei or blindly mining up or down.",
+                "Backported from GregTechCEu#2726",
+                "Default: true"
+        })
+        @Config.Name("Place ore prospector waypoints at vein height")
+        @Config.RequiresMcRestart
+        public boolean prospectorHeight = true;
     }
 
     static {
