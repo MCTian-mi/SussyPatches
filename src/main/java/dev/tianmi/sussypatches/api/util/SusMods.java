@@ -21,6 +21,7 @@ public enum SusMods implements BoolSupplier {
     FluidloggedAPI_2(Names.FLUIDLOGGED_API, self -> self.version().startsWith("2")),
     FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     Celeritas(Names.CELERITAS),
+    ModularUI(Names.MODULARUI),
     ;
 
     private final String ID;
@@ -73,5 +74,6 @@ public enum SusMods implements BoolSupplier {
         public static final String CONFIGANYTIME = "configanytime";
         public static final String FLUIDLOGGED_API = "fluidlogged_api";
         public static final String CELERITAS = "celeritas";
+        public static final String MODULARUI = "modularui";
     }
 }

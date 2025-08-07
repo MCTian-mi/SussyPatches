@@ -25,7 +25,14 @@ public class SusConfig {
 
     @Config.Comment("Config options for tweaking existing features")
     @Config.Name("Tweaks")
-    public static final Tweaks TWEAKS = new Tweaks();
+    public static final Tweaks TWEAK = new Tweaks();
+
+    @Config.Comment({
+            "Config options for possibly useful apis",
+            "Don't enable them unless you know what you are doing"
+    })
+    @Config.Name("Apis")
+    public static final Api API = new Api();
 
     public static final class Feature {
 
@@ -269,6 +276,19 @@ public class SusConfig {
         @Config.Name("Place ore prospector waypoints at vein height")
         @Config.RequiresMcRestart
         public boolean prospectorHeight = true;
+    }
+
+    public static final class Api {
+
+        @Config.Comment({
+                "Supports using ModularUI2 for GT MTEs.",
+                "Note: there's no default impl for exsiting MTEs, currently.",
+                "Backported from GregTechCEu#2281",
+                "Default: false"
+        })
+        @Config.Name("Enable ModularUI2 support")
+        @Config.RequiresMcRestart
+        public boolean useMui2 = false;
     }
 
     static {

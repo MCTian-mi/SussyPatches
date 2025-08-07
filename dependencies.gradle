@@ -50,10 +50,11 @@ dependencies {
     // CTM 1.0.2.31
     compileOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.700'
     compileOnly 'appeng:ae2-uel:v0.56.7' transitive false
-    // # GroovyScript
+    // GroovyScript
     compileOnly 'com.cleanroommc:groovyscript:1.2.5' transitive false
 
     compileOnlyApi 'com.cleanroommc:configanytime:3.0'
+    compileOnlyApi 'com.cleanroommc:modularui:2.5.0-rc5' transitive false
 
     // # Optional dependencies. Uncomment the ones you need
 //    runtimeOnlyNonPublishable 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31' transitive false

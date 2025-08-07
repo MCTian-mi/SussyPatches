@@ -42,11 +42,13 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("dtguitext", SusConfig.BUGFIX.removeDTText);
         BUGFIX.add("pipeframedesync", SusConfig.BUGFIX.pipeFrameDesync);
 
-        TWEAK.add("tabnosearchbars", SusConfig.TWEAKS.noSearchBars);
-        TWEAK.add("xoshiro256plusplus", SusConfig.TWEAKS.xoShiRo256plusplus);
-        TWEAK.add("previewoptimization", SusConfig.TWEAKS.optPreview);
-        TWEAK.add("nomuffler", SusConfig.TWEAKS.noMufflerRecovery);
-        TWEAK.add("prospectorheight", SusConfig.TWEAKS.prospectorHeight);
+        TWEAK.add("tabnosearchbars", SusConfig.TWEAK.noSearchBars);
+        TWEAK.add("xoshiro256plusplus", SusConfig.TWEAK.xoShiRo256plusplus);
+        TWEAK.add("previewoptimization", SusConfig.TWEAK.optPreview);
+        TWEAK.add("nomuffler", SusConfig.TWEAK.noMufflerRecovery);
+        TWEAK.add("prospectorheight", SusConfig.TWEAK.prospectorHeight);
+
+        API.add("usemui2", SusMods.ModularUI, SusConfig.API.useMui2);
     }
 
     @Override
