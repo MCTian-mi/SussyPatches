@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.BoolSupplier;
@@ -26,8 +27,10 @@ public class LateMixinLoader implements ILateMixinLoader {
         COMPAT.add("dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.fixDummyWorld);
         COMPAT.add("lampbakedmodel", SusMods.VintageFix, SusMods.of(CTM), SusConfig.COMPAT.fixLampModel);
         COMPAT.add("inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
-        COMPAT.add("variousgrsissue", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)), SusConfig.COMPAT.fixGrS);
+        COMPAT.add("variousgrsissue", SusMods.of(GroovyScript), SusConfig.COMPAT.fixGrS);
         COMPAT.add("grsinlineicon", SusMods.of(GroovyScript), SusConfig.COMPAT.inlineIcon);
+        COMPAT.add("tweakerinfo", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)),
+                SusMods.of(JustEnoughItems), SusConfig.COMPAT.tweakerInfo);
 
         BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
         BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);
@@ -85,7 +88,9 @@ public class LateMixinLoader implements ILateMixinLoader {
                 if (condition instanceof BoolSupplier boolSupplier) {
                     supplier = supplier.and(boolSupplier);
                 } else if (condition instanceof Boolean bool) {
-                    supplier = supplier.and(() -> bool);
+                    supplier = supplier.and(BoolSupplier.of(bool));
+                } else if (condition instanceof BooleanSupplier booleanSupplier) {
+                    supplier = supplier.and(BoolSupplier.of(booleanSupplier));
                 } else {
                     throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
                 }

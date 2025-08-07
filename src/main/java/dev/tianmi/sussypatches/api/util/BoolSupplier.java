@@ -1,12 +1,27 @@
 package dev.tianmi.sussypatches.api.util;
 
+import java.util.function.BooleanSupplier;
+
 @FunctionalInterface
-public interface BoolSupplier {
+public interface BoolSupplier extends BooleanSupplier {
 
     BoolSupplier TRUE = () -> true;
     BoolSupplier FALSE = () -> false;
 
     boolean get();
+
+    @Override
+    default boolean getAsBoolean() {
+        return get();
+    }
+
+    static BoolSupplier of(BooleanSupplier supplier) {
+        return supplier::getAsBoolean;
+    }
+
+    static BoolSupplier of(boolean bool) {
+        return bool ? TRUE : FALSE;
+    }
 
     default BoolSupplier and(BoolSupplier other) {
         return () -> this.get() && other.get();

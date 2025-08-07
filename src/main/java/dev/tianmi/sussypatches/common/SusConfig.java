@@ -106,6 +106,15 @@ public class SusConfig {
         @Config.Name("Inline icon for GT ObjectMappers")
         @Config.RequiresMcRestart
         public boolean inlineIcon = true;
+
+        @Config.Comment({
+                "Adds an icon in for recipes created by a tweaker mod in JEI.",
+                "Backported from GregTechCEu#2638",
+                "Default: true"
+        })
+        @Config.Name("Add tweaker icons in JEI")
+        @Config.RequiresMcRestart
+        public boolean tweakerInfo = true;
     }
 
     public static final class Bugfix {
