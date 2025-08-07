@@ -59,12 +59,12 @@ dependencies {
     // # Optional dependencies. Uncomment the ones you need
 //    runtimeOnlyNonPublishable 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31' transitive false
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:supercritical-1185871:6793777')
-//    runtimeOnlyNonPublishable rfg.deobf('maven.modrinth:fluidlogged-api:3.0.6')
-//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:fluidlogged-api-485654:4564413')
+//    runtimeOnlyNonPublishable 'maven.modrinth:fluidlogged-api:3.0.6'
+//    runtimeOnlyNonPublishable 'maven.modrinth:fluidlogged-api:2.2.4'
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:lolasm-460609:6333774')
-//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:flare-692142:6598523')
-//    runtimeOnlyNonPublishable 'com.github.embeddedt:VintageFix:0.6.2'
-//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:alfheim-lighting-engine-910715:6687458')
+//    runtimeOnlyNonPublishable 'maven.modrinth:flare:0.7.0'
+//    runtimeOnlyNonPublishable 'maven.modrinth:vintagefix:0.6.2'
+//    runtimeOnlyNonPublishable 'maven.modrinth:alfheim-lighting-engine:1.6'
 //    runtimeOnlyNonPublishable 'dev.redstudio:Red-Core-MC:1.8-1.12-0.7-Dev-1'
 
     // # OptiFine
