@@ -1,21 +1,24 @@
 package dev.tianmi.sussypatches.core.mixin.api.usemui2;
 
-import codechicken.lib.raytracer.CuboidRayTraceResult;
-import com.cleanroommc.modularui.api.IGuiHolder;
-import com.cleanroommc.modularui.factory.PosGuiData;
-import dev.tianmi.sussypatches.api.annotation.Implemented;
-import dev.tianmi.sussypatches.api.core.mixin.extension.Mui2Extension;
-import dev.tianmi.sussypatches.api.metatileentity.mui2.MTEGuiFactory;
-import gregtech.api.metatileentity.MetaTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.PosGuiData;
+
+import codechicken.lib.raytracer.CuboidRayTraceResult;
+import dev.tianmi.sussypatches.api.annotation.Implemented;
+import dev.tianmi.sussypatches.api.core.mixin.extension.Mui2Extension;
+import dev.tianmi.sussypatches.api.metatileentity.mui2.MTEGuiFactory;
+import gregtech.api.metatileentity.MetaTileEntity;
 
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2281")
 @Mixin(value = MetaTileEntity.class, remap = false)

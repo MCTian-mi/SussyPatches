@@ -1,19 +1,22 @@
 package dev.tianmi.sussypatches.api.metatileentity.mui2;
 
-import com.cleanroommc.modularui.api.IGuiHolder;
-import com.cleanroommc.modularui.factory.AbstractUIFactory;
-import com.cleanroommc.modularui.factory.GuiManager;
-import com.cleanroommc.modularui.factory.PosGuiData;
-import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
+import java.util.Objects;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.AbstractUIFactory;
+import com.cleanroommc.modularui.factory.GuiManager;
+import com.cleanroommc.modularui.factory.PosGuiData;
+
+import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 
 // Copied from CEu master branch
 public class MTEGuiFactory extends AbstractUIFactory<PosGuiData> {
