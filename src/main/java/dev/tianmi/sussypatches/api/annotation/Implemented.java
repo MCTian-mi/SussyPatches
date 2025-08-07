@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/// A marker interface for Mixins whose contents are already implemented in-dev.
+/// A marker annotation for Mixins whose contents are already implemented in-dev.
 /// Mixins marked with this @interface should and will be removed
 /// in the (highly hypothetical) next CEu update.
 @Target(ElementType.TYPE)

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import dev.tianmi.sussypatches.api.util.SusMods;
 import gregtech.api.util.Mods;
 
-/// A marker @interface for marking the target compat mod
+/// A marker annotation for marking the target compat mod
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Compat {

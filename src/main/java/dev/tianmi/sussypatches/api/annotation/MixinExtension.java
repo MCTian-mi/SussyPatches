@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/// A marker interface for Interfaces that are used in Mixins.
+/// A marker annotation for Interfaces that are used in Mixins.
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface MixinExtension {
