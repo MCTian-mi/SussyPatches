@@ -50,7 +50,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fixes GregTech machines lost their animations when " +
-                        "\"On-Demand Animations\" is turned on in CensoredASM.",
+                        "'On-Demand Animations' is turned on in CensoredASM.",
                 "Default: true"
         })
         @Config.Name("Fix on-demand animations")
@@ -100,7 +100,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Make GT ObjectMappers support GrS inline icon.",
-                "Currently only \"metaitem\" mapper is supported.",
+                "Currently only 'metaitem' mapper is supported.",
                 "Default: true"
         })
         @Config.Name("Inline icon for GT ObjectMappers")
@@ -187,11 +187,11 @@ public class SusConfig {
         public boolean weakNeighborRef = true;
 
         @Config.Comment({
-                "Fixes the sometimes-funny \"Gas Gas\" suffix.",
+                "Fixes the sometimes-funny 'Gas Gas' suffix.",
                 "Fixed in CEu master branch.",
                 "Default: true"
         })
-        @Config.Name("Removes the redundant \"Gas\" suffix")
+        @Config.Name("Removes the redundant 'Gas' suffix")
         @Config.RequiresMcRestart
         public boolean redundantGas = true;
 
@@ -206,12 +206,12 @@ public class SusConfig {
         public boolean unbindFBO = true;
 
         @Config.Comment({
-                "Removes the override to \"addDisplayText\" in DistillationTower class.",
+                "Removes the override to 'addDisplayText' in DistillationTower class.",
                 "Which is both bugged and unnecessary.",
                 "Fixed in CEu master branch.",
                 "Default: true"
         })
-        @Config.Name("Remove the bugged \"addDisplayText\" override")
+        @Config.Name("Remove the bugged 'addDisplayText' override")
         @Config.RequiresMcRestart
         public boolean removeDTText = true;
 
