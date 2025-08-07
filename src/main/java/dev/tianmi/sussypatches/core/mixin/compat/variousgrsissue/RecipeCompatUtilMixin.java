@@ -10,13 +10,16 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
+import dev.tianmi.sussypatches.api.annotation.Compat;
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import dev.tianmi.sussypatches.api.util.SusUtil;
 import gregtech.api.GTValues;
 import gregtech.api.items.metaitem.MetaItem.MetaValueItem;
 import gregtech.api.unification.material.Material;
+import gregtech.api.util.Mods;
 import gregtech.integration.RecipeCompatUtil;
 
+@Compat(mod = Mods.GroovyScript)
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2785")
 @Mixin(value = RecipeCompatUtil.class, remap = false)
 public abstract class RecipeCompatUtilMixin {

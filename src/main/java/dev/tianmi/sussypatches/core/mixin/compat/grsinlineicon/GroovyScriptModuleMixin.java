@@ -11,8 +11,11 @@ import com.cleanroommc.groovyscript.mapper.TextureBinder;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
+import dev.tianmi.sussypatches.api.annotation.Compat;
+import gregtech.api.util.Mods;
 import gregtech.integration.groovy.GroovyScriptModule;
 
+@Compat(mod = Mods.GroovyScript)
 @Mixin(value = GroovyScriptModule.class, remap = false)
 public class GroovyScriptModuleMixin {
 
