@@ -282,7 +282,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Supports using ModularUI2 for GT MTEs.",
-                "Note: there's no default impl for exsiting MTEs, currently.",
+                "Note: there's no default impl for existing MTEs, currently.",
                 "Backported from GregTechCEu#2281",
                 "Default: false"
         })
