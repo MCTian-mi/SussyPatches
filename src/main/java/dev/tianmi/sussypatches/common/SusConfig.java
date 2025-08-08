@@ -232,6 +232,15 @@ public class SusConfig {
         @Config.Name("Fix framing pipes not synced on servers")
         @Config.RequiresMcRestart
         public boolean pipeFrameDesync = true;
+
+        @Config.Comment({
+                "Fix potential 'getMinecraftServer' NPE due to TrackedDummyWorld being client-side.",
+                "Fixed in CEu master branch.",
+                "Default: true"
+        })
+        @Config.Name("Fix potential MTE NPE on integrated servers")
+        @Config.RequiresMcRestart
+        public boolean mteServerNPE = true;
     }
 
     public static final class Tweaks {
