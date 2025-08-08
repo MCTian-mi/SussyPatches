@@ -60,7 +60,8 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
 
     @WrapOperation(method = "addInformation",
                    at = @At(value = "INVOKE",
-                            target = "Lnet/minecraft/client/resources/I18n;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+                            target = "Lnet/minecraft/client/resources/I18n;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                            remap = true),
                    require = -1)
     private String replaceWithRemovalLine(String translateKey, Object[] args, Operation<String> method) {
         return switch (translateKey) {
