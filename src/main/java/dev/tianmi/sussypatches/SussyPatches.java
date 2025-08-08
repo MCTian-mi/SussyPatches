@@ -1,5 +1,6 @@
 package dev.tianmi.sussypatches;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import dev.tianmi.sussypatches.api.util.SusAccessor;
 import dev.tianmi.sussypatches.common.CommonProxy;
 import gregtech.GTInternalTags;
 
@@ -34,6 +36,8 @@ public class SussyPatches {
     @EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         proxy.onPreInit();
+        SusAccessor.set(Minecraft.class, Boolean.class, Minecraft.getMinecraft(), "isGamePaused", true);
+        LOGGER.info(SusAccessor.get(Minecraft.class, Boolean.class, Minecraft.getMinecraft(), "isGamePaused"));
     }
 
     @EventHandler

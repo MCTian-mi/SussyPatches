@@ -1,2 +1,28 @@
+apply plugin: 'groovy'
+
+sourceSets {
+    main {
+        java { srcDirs = [] } // no source dirs for the java compiler
+        // compile everything in src/ with groovy
+        groovy { srcDirs = ['src/main/java/', 'src/main/groovy/'] }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        sourceCompatibility = 8
+    }
+}
+
+if (enableSpotless.toBoolean()) {
+    spotless {
+        groovy {
+            target 'src/*/groovy/**/*.groovy'
+        }
+    }
+}
+
+
 // enable JLine Terminal since idea_rt.jar is no longer added to the classpath
 minecraft.extraRunJvmArguments.add('-Dterminal.jline=true')
