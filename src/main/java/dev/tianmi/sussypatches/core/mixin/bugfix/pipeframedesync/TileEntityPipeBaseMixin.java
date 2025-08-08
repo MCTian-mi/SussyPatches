@@ -16,7 +16,8 @@ public abstract class TileEntityPipeBaseMixin {
     @ModifyExpressionValue(method = "setFrameMaterial",
                            at = @At(value = "FIELD",
                                     target = "Lnet/minecraft/world/World;isRemote:Z",
-                                    opcode = Opcodes.GETFIELD))
+                                    opcode = Opcodes.GETFIELD,
+                                    remap = true))
     private boolean reverseIsRemote(boolean original) {
         return !original;
     }
