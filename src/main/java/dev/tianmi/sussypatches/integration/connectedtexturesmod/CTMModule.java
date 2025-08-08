@@ -1,6 +1,6 @@
 package dev.tianmi.sussypatches.integration.connectedtexturesmod;
 
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
@@ -18,7 +18,7 @@ import gregtech.integration.IntegrationSubmodule;
 public class CTMModule extends IntegrationSubmodule {
 
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) {
         if (SusConfig.FEAT.multiCTM && event.getSide().isClient()) {
             ConnectedTextures.init();
         }
