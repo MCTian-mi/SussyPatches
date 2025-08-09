@@ -12,15 +12,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.sugar.Local;
 
+import dev.tianmi.sussypatches.api.annotation.Compat;
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.util.LocalizationUtils;
+import gregtech.api.util.Mods;
 import gregtech.integration.RecipeCompatUtil;
 import gregtech.integration.jei.recipe.GTRecipeWrapper;
 import gregtech.integration.jei.utils.AdvancedRecipeWrapper;
 import gregtech.integration.jei.utils.JeiButton;
 
+@Compat(mod = { Mods.GroovyScript, Mods.CraftTweaker })
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2638")
 @Mixin(value = GTRecipeWrapper.class, remap = false)
 public abstract class GTRecipeWrapperMixin extends AdvancedRecipeWrapper {

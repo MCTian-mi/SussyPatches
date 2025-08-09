@@ -33,9 +33,10 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
 
     @Shadow
     private boolean neighborsInvalidated;
+
     @Unique
-    private final List<WeakReference<TileEntity>> sus$neighbors = Arrays.asList(
-            INVALID, INVALID, INVALID, INVALID, INVALID, INVALID);
+    private final List<WeakReference<TileEntity>> sus$neighbors = Arrays.asList(INVALID, INVALID, INVALID, INVALID,
+            INVALID, INVALID);
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void clearOriginalImpl(CallbackInfo ci) {
