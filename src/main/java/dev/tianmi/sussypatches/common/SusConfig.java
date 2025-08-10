@@ -241,6 +241,15 @@ public class SusConfig {
         @Config.Name("Fix potential MTE NPE on integrated servers")
         @Config.RequiresMcRestart
         public boolean mteServerNPE = true;
+
+        @Config.Comment({
+                "Fix RelativeDirection#LEFT and #RIGHT not treating EnumFacing#DOWN properly.",
+                "Depending on the multi impl this may or may not fix things.",
+                "Default: true"
+        })
+        @Config.Name("Fix RelativeDirection providing wrong facings")
+        @Config.RequiresMcRestart
+        public boolean relativeDir = true;
     }
 
     public static final class Tweaks {

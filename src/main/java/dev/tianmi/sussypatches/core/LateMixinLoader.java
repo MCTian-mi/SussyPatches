@@ -45,6 +45,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("dtguitext", SusConfig.BUGFIX.removeDTText);
         BUGFIX.add("pipeframedesync", SusConfig.BUGFIX.pipeFrameDesync);
         BUGFIX.add("mtenpeonserver", SusConfig.BUGFIX.mteServerNPE);
+        BUGFIX.add("relativedirection", SusConfig.BUGFIX.relativeDir);
 
         TWEAK.add("tabnosearchbars", SusConfig.TWEAK.noSearchBars);
         TWEAK.add("xoshiro256plusplus", SusConfig.TWEAK.xoShiRo256plusplus);
