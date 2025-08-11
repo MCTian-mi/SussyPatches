@@ -15,6 +15,10 @@ import gregtech.api.metatileentity.MetaTileEntity;
 @MixinExtension(MetaTileEntity.class)
 public interface Mui2Extension extends IGuiHolder<PosGuiData> {
 
+    static Mui2Extension cast(MetaTileEntity mte) {
+        return (Mui2Extension) mte;
+    }
+
     @Override
     default ModularPanel buildUI(PosGuiData guiData, PanelSyncManager syncManager, UISettings settings) {
         return null;

@@ -16,6 +16,10 @@ public interface NeighborCacheExtension {
     WeakReference<TileEntity> NULL = new WeakReference<>(null);
     WeakReference<TileEntity> INVALID = new WeakReference<>(null);
 
+    static NeighborCacheExtension cast(NeighborCacheTileEntityBase neighborCache) {
+        return (NeighborCacheExtension) neighborCache;
+    }
+
     boolean sus$invalidRef(EnumFacing facing);
 
     @NotNull

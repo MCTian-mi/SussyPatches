@@ -250,6 +250,15 @@ public class SusConfig {
         @Config.Name("Fix RelativeDirection providing wrong facings")
         @Config.RequiresMcRestart
         public boolean relativeDir = true;
+
+        @Config.Comment({
+                "Make GT TileEntities aware of nearby chunk loading/unloadings.",
+                "Fixes issues like fluid pipes disconnecting at chunk border after chunk unload.",
+                "Default: true"
+        })
+        @Config.Name("Fix GT tiles not chunk-aware")
+        @Config.RequiresMcRestart
+        public boolean chunkAware = true;
     }
 
     public static final class Tweaks {

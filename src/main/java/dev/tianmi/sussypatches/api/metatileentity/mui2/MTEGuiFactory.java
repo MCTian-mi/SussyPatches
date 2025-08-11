@@ -8,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
@@ -19,6 +20,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 
 // Copied from CEu master branch
+@ApiStatus.Internal
 public class MTEGuiFactory extends AbstractUIFactory<PosGuiData> {
 
     public static final MTEGuiFactory INSTANCE = new MTEGuiFactory();

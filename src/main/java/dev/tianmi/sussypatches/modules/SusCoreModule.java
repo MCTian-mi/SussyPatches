@@ -1,10 +1,15 @@
 package dev.tianmi.sussypatches.modules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.common.EventHandlers.ChunkAwareHook;
+import dev.tianmi.sussypatches.common.SusConfig;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.modules.IGregTechModule;
 
@@ -15,8 +20,17 @@ import gregtech.api.modules.IGregTechModule;
                 coreModule = true)
 public class SusCoreModule implements IGregTechModule {
 
+    @NotNull
     @Override
-    public @NotNull Logger getLogger() {
+    public Logger getLogger() {
         return SussyPatches.LOGGER;
+    }
+
+    @NotNull
+    @Override
+    public List<Class<?>> getEventBusSubscribers() {
+        List<Class<?>> list = new ArrayList<>();
+        if (SusConfig.BUGFIX.chunkAware) list.add(ChunkAwareHook.class);
+        return list;
     }
 }
