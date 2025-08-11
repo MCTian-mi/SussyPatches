@@ -37,6 +37,7 @@ public abstract class WidgetProspectingMapMixin implements ProspectingMapExtensi
     @Shadow
     @Final
     private List<String> hoveredNames;
+
     @Unique
     private int sus$hoveredOreHeight = 0;
 

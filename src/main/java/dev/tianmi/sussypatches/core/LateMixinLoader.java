@@ -53,6 +53,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("previewoptimization", SusConfig.TWEAK.optPreview);
         TWEAK.add("nomuffler", SusConfig.TWEAK.noMufflerRecovery);
         TWEAK.add("prospectorheight", SusConfig.TWEAK.prospectorHeight);
+        TWEAK.add("thickercovers", SusConfig.TWEAK.thickerCovers);
 
         API.add("usemui2", SusMods.ModularUI, SusConfig.API.useMui2);
     }

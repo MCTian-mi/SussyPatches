@@ -312,6 +312,15 @@ public class SusConfig {
         @Config.Name("Place ore prospector waypoints at vein height")
         @Config.RequiresMcRestart
         public boolean prospectorHeight = true;
+
+        @Config.Comment({
+                "Doubles the thickness of covers on a pipe.",
+                "So that they look the same as in GT5.",
+                "Default: true"
+        })
+        @Config.Name("Make covers on a pipe thicker")
+        @Config.RequiresMcRestart
+        public boolean thickerCovers = true;
     }
 
     public static final class Api {
