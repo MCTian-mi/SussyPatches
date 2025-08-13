@@ -22,10 +22,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import dev.tianmi.sussypatches.api.core.mixin.extension.WSRExtension;
-import dev.tianmi.sussypatches.api.util.OpenGL3Helper;
 import dev.tianmi.sussypatches.api.util.RenderPass;
+import dev.tianmi.sussypatches.api.util.SusMods;
 import gregtech.client.renderer.scene.ISceneRenderHook;
 import gregtech.client.renderer.scene.ImmediateWorldSceneRenderer;
 import gregtech.client.renderer.scene.WorldSceneRenderer;
@@ -52,7 +53,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
             for (BlockRenderLayer layer : BlockRenderLayer.values()) {
 
                 int index = layer.ordinal();
-                this.vaos[index] = OpenGL3Helper.isGl3Loaded() ? OpenGL3Helper.genVertexArrays() : -1;
+                this.vaos[index] = SusMods.OpenGL3.isLoaded() ? GL30.glGenVertexArrays() : -1;
                 this.vbos[index] = new VertexBuffer(DefaultVertexFormats.BLOCK);
 
                 ForgeHooksClient.setRenderLayer(layer);
@@ -82,12 +83,13 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
                 ByteBuffer data = buffer.getByteBuffer();
                 vbo.bufferData(data);
-                if (OpenGL3Helper.isGl3Loaded()) {
-                    OpenGL3Helper.bindVertexArray(vao);
+                if (SusMods.OpenGL3.isLoaded()) {
+                    GL30.glBindVertexArray(vao);
                     vbo.bindBuffer();
                     setupClientStates();
                     setupArrayPointers();
-                    OpenGL3Helper.bindVertexArray(0);
+                    GL30.glBindVertexArray(0);
+                    resetClientStates();
                     vbo.unbindBuffer();
                 }
             }
@@ -126,14 +128,15 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                 int vao = this.vaos[layer.ordinal()];
                 var vbo = this.vbos[layer.ordinal()];
                 vbo.bindBuffer();
-                if (OpenGL3Helper.isGl3Loaded()) {
-                    OpenGL3Helper.bindVertexArray(vao);
+                if (SusMods.OpenGL3.isLoaded()) {
+                    GL30.glBindVertexArray(vao);
                     vbo.drawArrays(GL11.GL_QUADS);
-                    OpenGL3Helper.bindVertexArray(0);
+                    GL30.glBindVertexArray(0);
                 } else {
                     setupClientStates();
                     setupArrayPointers();
                     vbo.drawArrays(GL11.GL_QUADS);
+                    resetClientStates();
                 }
                 vbo.unbindBuffer();
             }
@@ -164,6 +167,13 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
         GlStateManager.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
         GlStateManager.glEnableClientState(GL11.GL_COLOR_ARRAY);
+    }
+
+    protected void resetClientStates() {
+        GlStateManager.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+        GlStateManager.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+        GlStateManager.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+        GlStateManager.glDisableClientState(GL11.GL_COLOR_ARRAY);
     }
 
     protected void setupArrayPointers() {

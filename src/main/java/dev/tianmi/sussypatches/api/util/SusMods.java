@@ -23,7 +23,13 @@ public enum SusMods implements BoolSupplier {
     FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     Celeritas(Names.CELERITAS),
     ModularUI(Names.MODULARUI),
-    ;
+    OpenGL3(null) { // Well true this isn't a mod, technically...
+
+        @Override
+        public boolean isLoaded() {
+            return Cleanroom.isLoaded() || Lwjgl3ify.isLoaded();
+        }
+    };
 
     private final String ID;
     private final Function<SusMods, Boolean> extraCheck;
