@@ -57,7 +57,7 @@ dependencies {
     compileOnlyApi 'com.cleanroommc:modularui:2.5.0-rc5' transitive false
 
     // # Optional dependencies. Uncomment the ones you need
-    runtimeOnlyNonPublishable 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31' transitive false
+//    runtimeOnlyNonPublishable 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31' transitive false
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:supercritical-1185871:6793777')
 //    runtimeOnlyNonPublishable 'maven.modrinth:fluidlogged-api:3.0.6'
 //    runtimeOnlyNonPublishable 'maven.modrinth:fluidlogged-api:2.2.4'
