@@ -52,10 +52,6 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
         try { // render block in each layer
             for (BlockRenderLayer layer : BlockRenderLayer.values()) {
 
-                int index = layer.ordinal();
-                this.vaos[index] = SusMods.OpenGL3.isLoaded() ? GL30.glGenVertexArrays() : -1;
-                this.vbos[index] = new VertexBuffer(DefaultVertexFormats.BLOCK);
-
                 ForgeHooksClient.setRenderLayer(layer);
                 int pass = layer == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
                 setDefaultPassRenderState(pass);
@@ -78,12 +74,13 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                 buffer.finishDrawing();
                 buffer.reset();
 
-                int vao = this.vaos[index];
-                var vbo = this.vbos[index];
-
+                int i = layer.ordinal();
+                var vbo = this.vbos[i] = new VertexBuffer(DefaultVertexFormats.BLOCK);
                 ByteBuffer data = buffer.getByteBuffer();
                 vbo.bufferData(data);
+
                 if (SusMods.OpenGL3.isLoaded()) {
+                    int vao = this.vaos[i] = GL30.glGenVertexArrays();
                     GL30.glBindVertexArray(vao);
                     vbo.bindBuffer();
                     setupClientStates();
@@ -101,9 +98,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
     @Override
     protected void drawWorld() {
-        if (this.isDirty) {
-            uploadVBO();
-        }
+        if (this.isDirty) uploadVBO();
 
         Minecraft mc = Minecraft.getMinecraft();
         GlStateManager.enableCull();
@@ -125,10 +120,11 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
             GlStateManager.pushMatrix();
             {
-                int vao = this.vaos[layer.ordinal()];
-                var vbo = this.vbos[layer.ordinal()];
+                int i = layer.ordinal();
+                var vbo = this.vbos[i];
                 vbo.bindBuffer();
                 if (SusMods.OpenGL3.isLoaded()) {
+                    int vao = this.vaos[i];
                     GL30.glBindVertexArray(vao);
                     vbo.drawArrays(GL11.GL_QUADS);
                     GL30.glBindVertexArray(0);
@@ -144,7 +140,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
         }
         ForgeHooksClient.setRenderLayer(oldRenderLayer);
 
-        renderTESR(); // Handles TileEntities
+        renderTESR(); // Handle TileEntities
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         RenderHelper.enableStandardItemLighting();

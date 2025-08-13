@@ -2,15 +2,19 @@ package dev.tianmi.sussypatches.api.util;
 
 import java.util.function.Function;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import gregtech.api.util.Mods;
 
 /// Mods that are :sus:
 /// Basically a re-implementation of [Mods]
+@ParametersAreNonnullByDefault
 public enum SusMods implements BoolSupplier {
 
     GCyM(Names.GCYM),
@@ -27,19 +31,25 @@ public enum SusMods implements BoolSupplier {
 
         @Override
         public boolean isLoaded() {
-            return Cleanroom.isLoaded() || Lwjgl3ify.isLoaded();
+            if (this.loaded == null) {
+                this.loaded = Cleanroom.isLoaded() || Lwjgl3ify.isLoaded();
+            }
+            return this.loaded;
         }
     };
 
-    private final String ID;
-    private final Function<SusMods, Boolean> extraCheck;
-    private Boolean loaded;
+    @Nullable
+    protected final String ID;
+    @Nullable
+    protected final Function<SusMods, Boolean> extraCheck;
+    @Nullable
+    protected Boolean loaded;
 
-    SusMods(String id) {
+    SusMods(@Nullable String id) {
         this(id, null);
     }
 
-    SusMods(String id, Function<SusMods, Boolean> extraCheck) {
+    SusMods(@Nullable String id, @Nullable Function<SusMods, Boolean> extraCheck) {
         this.ID = id;
         this.extraCheck = extraCheck;
     }
@@ -67,6 +77,7 @@ public enum SusMods implements BoolSupplier {
 
     @NotNull
     public String version() {
+        if (this.ID == null) return "";
         ModContainer container = Loader.instance().getIndexedModList().get(this.ID);
         if (container == null) return "";
         return container.getVersion();
