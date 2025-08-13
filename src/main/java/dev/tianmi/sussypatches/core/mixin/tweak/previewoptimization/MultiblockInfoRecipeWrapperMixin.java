@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +16,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import dev.tianmi.sussypatches.api.core.mixin.extension.WSRExtension;
+import dev.tianmi.sussypatches.client.renderer.scene.VBOWorldSceneRenderer;
 import gregtech.client.renderer.scene.ISceneRenderHook;
 import gregtech.client.renderer.scene.ImmediateWorldSceneRenderer;
 import gregtech.client.renderer.scene.WorldSceneRenderer;
@@ -37,8 +39,16 @@ public abstract class MultiblockInfoRecipeWrapperMixin {
     @ModifyArg(method = "initializePattern",
                at = @At(value = "INVOKE",
                         target = "Lgregtech/client/utils/TrackedDummyWorld;setRenderFilter(Ljava/util/function/Predicate;)V"))
-    private Predicate<BlockPos> ReplaceRenderFilter(Predicate<BlockPos> ignored,
+    private Predicate<BlockPos> replaceRenderFilter(Predicate<BlockPos> ignored,
                                                     @Local(name = "worldSceneRenderer") ImmediateWorldSceneRenderer wsr) {
         return WSRExtension.cast(wsr).sus$getRenderedBlocks()::contains;
+    }
+
+    // This is a hard rewrite, any conflict should result in a hard crash
+    @Redirect(method = "initializePattern",
+              at = @At(value = "NEW",
+                       target = "gregtech/client/renderer/scene/ImmediateWorldSceneRenderer"))
+    private ImmediateWorldSceneRenderer useVBORenderer(World world) {
+        return new VBOWorldSceneRenderer(world);
     }
 }

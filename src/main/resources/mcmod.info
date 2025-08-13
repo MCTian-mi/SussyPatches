@@ -12,6 +12,7 @@
     "credits": "",
     "dependencies": [
         "gregtech",
-        "mixinbooter"
+        "mixinbooter",
+        "configanytime"
     ]
 }]

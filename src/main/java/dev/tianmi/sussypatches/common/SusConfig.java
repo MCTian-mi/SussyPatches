@@ -282,13 +282,13 @@ public class SusConfig {
         public boolean xoShiRo256plusplus = true;
 
         @Config.Comment({
-                "Removes the ISceneRenderHook logic in the WorldSceneRenderer.",
-                "Reduces the allocation in multiblock previews.",
+                "Uses VBO for JEI preview renderer, which would significantly reduce the render lag.",
+                "Also removes the ISceneRenderHook logic from the WorldSceneRenderer, which reduces the allocation in multiblock previews.",
                 "Note: has some minor issues with the terminal.",
                 "Backported from GregTechCEu#2629",
                 "Default: true"
         })
-        @Config.Name("Optimize JEI multiblock preview allocations")
+        @Config.Name("Optimize JEI multiblock preview")
         @Config.RequiresMcRestart
         public boolean optPreview = true;
 
