@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -35,6 +36,7 @@ public abstract class MultiblockPartMixin extends MetaTileEntity implements IMul
     @Shadow
     public abstract ICubeRenderer getBaseTexture();
 
+    @Unique
     @Nullable
     @Override
     public IBlockState sus$getVisualState(@Nullable IMultiblockPart part) {
@@ -48,6 +50,7 @@ public abstract class MultiblockPartMixin extends MetaTileEntity implements IMul
         return null;
     }
 
+    @Unique
     @Override
     public boolean canRenderInLayer(@NotNull BlockRenderLayer layer) {
         if (super.canRenderInLayer(layer)) {

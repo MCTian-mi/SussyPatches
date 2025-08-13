@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import dev.tianmi.sussypatches.api.core.mixin.extension.MaterialPipeExtension;
 import gregtech.api.pipenet.block.material.BlockMaterialPipe;
@@ -16,6 +17,7 @@ import gregtech.common.pipelike.itempipe.BlockItemPipe;
 @Mixin(value = BlockMaterialPipe.class, remap = false)
 public abstract class MaterialPipesMixin implements MaterialPipeExtension {
 
+    @Unique
     @Override
     public Collection<Material> sus$getEnabledMaterials() {
         return Collections.emptySet();
@@ -27,6 +29,7 @@ public abstract class MaterialPipesMixin implements MaterialPipeExtension {
         @Shadow
         public abstract Collection<Material> getEnabledMaterials();
 
+        @Unique
         @Override
         public Collection<Material> sus$getEnabledMaterials() {
             return this.getEnabledMaterials();
@@ -39,6 +42,7 @@ public abstract class MaterialPipesMixin implements MaterialPipeExtension {
         @Shadow
         public abstract Collection<Material> getEnabledMaterials();
 
+        @Unique
         @Override
         public Collection<Material> sus$getEnabledMaterials() {
             return this.getEnabledMaterials();
@@ -51,6 +55,7 @@ public abstract class MaterialPipesMixin implements MaterialPipeExtension {
         @Shadow
         public abstract Collection<Material> getEnabledMaterials();
 
+        @Unique
         @Override
         public Collection<Material> sus$getEnabledMaterials() {
             return this.getEnabledMaterials();

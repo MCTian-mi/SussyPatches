@@ -76,6 +76,7 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
         this.sus$neighbors.set(facing.getIndex(), INVALID);
     }
 
+    @Unique
     @NotNull
     @Override
     public WeakReference<TileEntity> sus$computeNeighbor(EnumFacing facing) {
@@ -87,12 +88,14 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
         return ref;
     }
 
+    @Unique
     @NotNull
     @Override
     public WeakReference<TileEntity> sus$getRef(EnumFacing facing) {
         return this.sus$neighbors.get(facing.getIndex());
     }
 
+    @Unique
     @Override
     public boolean sus$invalidRef(EnumFacing facing) {
         WeakReference<TileEntity> ref = sus$getRef(facing);

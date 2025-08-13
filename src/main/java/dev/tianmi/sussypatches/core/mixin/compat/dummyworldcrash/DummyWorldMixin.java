@@ -2,6 +2,7 @@ package dev.tianmi.sussypatches.core.mixin.compat.dummyworldcrash;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.SoftOverride;
+import org.spongepowered.asm.mixin.Unique;
 
 import dev.redstudio.alfheim.lighting.LightingEngine;
 import dev.tianmi.sussypatches.api.annotation.Compat;
@@ -14,6 +15,7 @@ import gregtech.api.util.world.DummyWorld;
 @Mixin(value = DummyWorld.class, remap = false)
 public abstract class DummyWorldMixin {
 
+    @Unique
     @SoftOverride
     public LightingEngine getAlfheim$lightingEngine() {
         return null;

@@ -41,11 +41,13 @@ public abstract class WidgetProspectingMapMixin implements ProspectingMapExtensi
     @Unique
     private int sus$hoveredOreHeight = 0;
 
+    @Unique
     @Override
     public int sus$getHoveredHeight() {
         return sus$hoveredOreHeight;
     }
 
+    @Unique
     @Override
     public void sus$setHoveredHeight(int hoveredHeight) {
         this.sus$hoveredOreHeight = hoveredHeight;

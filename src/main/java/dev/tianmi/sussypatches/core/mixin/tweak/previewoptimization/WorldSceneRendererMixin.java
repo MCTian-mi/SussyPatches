@@ -27,6 +27,7 @@ public abstract class WorldSceneRendererMixin implements WSRExtension {
     @Unique
     public final Collection<BlockPos> sus$renderedBlocks = new ObjectOpenHashSet<>();
 
+    @Unique
     @Override
     public Collection<BlockPos> sus$getRenderedBlocks() {
         return sus$renderedBlocks;

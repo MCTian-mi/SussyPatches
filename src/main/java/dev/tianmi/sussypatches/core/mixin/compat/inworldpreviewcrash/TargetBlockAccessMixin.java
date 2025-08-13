@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import dev.tianmi.sussypatches.api.annotation.Compat;
 import dev.tianmi.sussypatches.api.util.SusMods;
@@ -23,6 +24,7 @@ public abstract class TargetBlockAccessMixin implements IChunkProvider {
     @Final
     private IBlockAccess delegate;
 
+    @Unique
     @Nullable
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")

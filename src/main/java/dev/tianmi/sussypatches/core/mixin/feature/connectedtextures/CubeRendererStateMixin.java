@@ -14,12 +14,14 @@ public abstract class CubeRendererStateMixin implements CRSExtension {
     @Unique
     private BlockPos sus$pos = BlockPos.ORIGIN;
 
+    @Unique
     @Override
     public CubeRendererState sus$withPos(BlockPos pos) {
         this.sus$pos = pos;
         return (CubeRendererState) (Object) this;
     }
 
+    @Unique
     @Override
     public BlockPos sus$getPos() {
         return this.sus$pos;

@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import gregtech.api.block.BlockCustomParticle;
@@ -24,6 +25,7 @@ public abstract class BlockMachineMixin extends BlockCustomParticle {
         super(null, null);
     }
 
+    @Unique
     @NotNull
     @Override
     @SuppressWarnings("deprecation")
