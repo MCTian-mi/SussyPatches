@@ -2,6 +2,8 @@ package dev.tianmi.sussypatches.client.renderer.scene;
 
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -22,11 +24,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL15;
 
 import dev.tianmi.sussypatches.api.core.mixin.extension.WSRExtension;
 import dev.tianmi.sussypatches.api.util.RenderPass;
 import dev.tianmi.sussypatches.api.util.SusMods;
+import dev.tianmi.sussypatches.client.renderer.buffer.VertexArray;
+import gregtech.api.metatileentity.IFastRenderMetaTileEntity;
+import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.client.renderer.scene.ISceneRenderHook;
 import gregtech.client.renderer.scene.ImmediateWorldSceneRenderer;
 import gregtech.client.renderer.scene.WorldSceneRenderer;
@@ -34,15 +39,13 @@ import gregtech.client.renderer.scene.WorldSceneRenderer;
 @SideOnly(Side.CLIENT)
 public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
-    protected final int[] vaos;
-    protected final VertexBuffer[] vbos;
+    protected static final VertexArray[] VAOS = new VertexArray[BlockRenderLayer.values().length];
+    protected static final VertexBuffer[] VBOS = new VertexBuffer[BlockRenderLayer.values().length];
+    protected final Map<BlockPos, TileEntity> TILES = new LinkedHashMap<>();
     protected boolean isDirty = true;
 
     public VBOWorldSceneRenderer(World world) {
         super(world);
-        int layers = BlockRenderLayer.values().length;
-        this.vaos = new int[layers];
-        this.vbos = new VertexBuffer[layers];
     }
 
     private void uploadVBO() {
@@ -75,17 +78,19 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                 buffer.reset();
 
                 int i = layer.ordinal();
-                var vbo = this.vbos[i] = new VertexBuffer(DefaultVertexFormats.BLOCK);
+                var vbo = VBOS[i];
+                if (vbo == null) vbo = VBOS[i] = new VertexBuffer(DefaultVertexFormats.BLOCK);
                 ByteBuffer data = buffer.getByteBuffer();
                 vbo.bufferData(data);
 
                 if (SusMods.OpenGL3.isLoaded()) {
-                    int vao = this.vaos[i] = GL30.glGenVertexArrays();
-                    GL30.glBindVertexArray(vao);
+                    var vao = VAOS[i];
+                    if (vao == null) vao = VAOS[i] = new VertexArray();
+                    vao.bindVertexArray();
                     vbo.bindBuffer();
                     setupClientStates();
                     setupArrayPointers();
-                    GL30.glBindVertexArray(0);
+                    vao.unbindVertexArray();
                     resetClientStates();
                     vbo.unbindBuffer();
                 }
@@ -121,13 +126,14 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
             GlStateManager.pushMatrix();
             {
                 int i = layer.ordinal();
-                var vbo = this.vbos[i];
+                var vbo = VBOS[i];
+                int preVBO = GlStateManager.glGetInteger(GL15.GL_ARRAY_BUFFER_BINDING);
                 vbo.bindBuffer();
                 if (SusMods.OpenGL3.isLoaded()) {
-                    int vao = this.vaos[i];
-                    GL30.glBindVertexArray(vao);
+                    var vao = VAOS[i];
+                    vao.bindVertexArray();
                     vbo.drawArrays(GL11.GL_QUADS);
-                    GL30.glBindVertexArray(0);
+                    vao.unbindVertexArray();
                 } else {
                     setupClientStates();
                     setupArrayPointers();
@@ -135,12 +141,13 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                     resetClientStates();
                 }
                 vbo.unbindBuffer();
+                OpenGlHelper.glBindBuffer(OpenGlHelper.GL_ARRAY_BUFFER, preVBO);
             }
             GlStateManager.popMatrix();
         }
         ForgeHooksClient.setRenderLayer(oldRenderLayer);
 
-        renderTESR(); // Handle TileEntities
+        renderTileEntities(); // Handle TileEntities
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         RenderHelper.enableStandardItemLighting();
@@ -152,7 +159,17 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
     @Override
     public WorldSceneRenderer addRenderedBlocks(Collection<BlockPos> blocks, ISceneRenderHook _null) {
         this.isDirty = true;
-        return super.addRenderedBlocks(blocks, _null);
+        super.addRenderedBlocks(blocks, _null);
+        TILES.clear();
+        blocks.forEach(pos -> {
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile != null && (!(tile instanceof IGregTechTileEntity gtte) ||
+                    // Put MTEs only when it has FastRenderer
+                    gtte.getMetaTileEntity() instanceof IFastRenderMetaTileEntity)) {
+                TILES.put(pos, tile);
+            }
+        });
+        return this;
     }
 
     protected void setupClientStates() {
@@ -182,21 +199,18 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
         OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
-    protected void renderTESR() {
+    protected void renderTileEntities() {
         RenderHelper.enableStandardItemLighting();
+        var terd = TileEntityRendererDispatcher.instance;
         for (var pass : RenderPass.values()) {
             ForgeHooksClient.setRenderPass(pass.ordinal());
             setPassRenderState(pass);
 
-            var renderedBlocks = WSRExtension.cast(this).sus$getRenderedBlocks();
-            for (BlockPos pos : renderedBlocks) {
-                TileEntity tile = world.getTileEntity(pos);
-                if (tile != null) {
-                    if (tile.shouldRenderInPass(pass.ordinal())) {
-                        TileEntityRendererDispatcher.instance.render(tile, pos.getX(), pos.getY(), pos.getZ(), 0);
-                    }
+            TILES.forEach((pos, tile) -> {
+                if (tile.shouldRenderInPass(pass.ordinal())) {
+                    terd.render(tile, pos.getX(), pos.getY(), pos.getZ(), 0);
                 }
-            }
+            });
         }
         ForgeHooksClient.setRenderPass(-1);
         RenderHelper.disableStandardItemLighting();
