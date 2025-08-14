@@ -27,7 +27,8 @@ public class LateMixinLoader implements ILateMixinLoader {
         COMPAT.add("dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.fixDummyWorld);
         COMPAT.add("lampbakedmodel", SusMods.VintageFix, SusMods.of(CTM), SusConfig.COMPAT.fixLampModel);
         COMPAT.add("inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
-        COMPAT.add("variousgrsissue", SusMods.of(GroovyScript), SusConfig.COMPAT.fixGrS);
+        COMPAT.add("variousgrsissue", SusMods.of(GroovyScript), SusMods.NomiLibs.negate(),
+                SusConfig.COMPAT.fixGrS);
         COMPAT.add("grsinlineicon", SusMods.of(GroovyScript), SusConfig.COMPAT.inlineIcon);
         COMPAT.add("tweakerinfo", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)),
                 SusMods.of(JustEnoughItems), SusConfig.COMPAT.tweakerInfo);
@@ -36,11 +37,11 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);
         BUGFIX.add("implgetitem", SusConfig.BUGFIX.implGetItem);
         BUGFIX.add("packetdatamemleak", SusConfig.BUGFIX.packetMemLeak);
-        BUGFIX.add("pipedatatransfer", SusConfig.BUGFIX.pipeDataTransfer);
+        BUGFIX.add("pipedatatransfer", SusMods.NomiLibs.negate(), SusConfig.BUGFIX.pipeDataTransfer);
         BUGFIX.add("pipeinvcrash", SusConfig.BUGFIX.pipeInvCrash);
         BUGFIX.add("invalidregistration", SusConfig.BUGFIX.invalidRegistration);
         BUGFIX.add("weakneighborref", SusConfig.BUGFIX.weakNeighborRef);
-        BUGFIX.add("redundantgas", SusConfig.BUGFIX.redundantGas);
+        BUGFIX.add("redundantgas", SusMods.NomiLibs.negate(), SusConfig.BUGFIX.redundantGas);
         BUGFIX.add("unbindframebuffer", SusConfig.BUGFIX.unbindFBO);
         BUGFIX.add("dtguitext", SusConfig.BUGFIX.removeDTText);
         BUGFIX.add("pipeframedesync", SusConfig.BUGFIX.pipeFrameDesync);
@@ -51,8 +52,8 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("tabnosearchbars", SusConfig.TWEAK.noSearchBars);
         TWEAK.add("xoshiro256plusplus", SusConfig.TWEAK.xoShiRo256plusplus);
         TWEAK.add("previewoptimization", SusConfig.TWEAK.optPreview);
-        TWEAK.add("nomuffler", SusConfig.TWEAK.noMufflerRecovery);
-        TWEAK.add("prospectorheight", SusConfig.TWEAK.prospectorHeight);
+        TWEAK.add("nomuffler", SusMods.NomiLibs.negate(), SusConfig.TWEAK.noMufflerRecovery);
+        TWEAK.add("prospectorheight", SusMods.NomiLibs.negate(), SusConfig.TWEAK.prospectorHeight);
         TWEAK.add("thickercovers", SusConfig.TWEAK.thickerCovers);
 
         API.add("usemui2", SusMods.ModularUI, SusConfig.API.useMui2);

@@ -27,6 +27,7 @@ public enum SusMods implements BoolSupplier {
     FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     Celeritas(Names.CELERITAS),
     ModularUI(Names.MODULARUI),
+    NomiLibs(Names.NOMI_LIBS),
     OpenGL3(null) { // Well true this isn't a mod, technically...
 
         @Override
@@ -94,5 +95,6 @@ public enum SusMods implements BoolSupplier {
         public static final String CELERITAS = "celeritas";
         public static final String MODULARUI = "modularui";
         public static final String CLEANROOM = "cleanroom";
+        public static final String NOMI_LIBS = "nomilabs";
     }
 }
