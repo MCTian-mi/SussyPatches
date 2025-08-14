@@ -259,6 +259,24 @@ public class SusConfig {
         @Config.Name("Fix GT tiles not chunk-aware")
         @Config.RequiresMcRestart
         public boolean chunkAware = true;
+
+        @Config.Comment({
+                "Fixes an edge case for cleanroom structure check.",
+                "You can now put hatches at the same axis as the controller on the top layer.",
+                "Default: true"
+        })
+        @Config.Name("Fix Cleanroom structure check")
+        @Config.RequiresMcRestart
+        public boolean cleanroomStruct = true;
+
+        @Config.Comment({
+                "Fixes in-world preview missing blocks.",
+                "E.g. for Cleanroom.",
+                "Default: true"
+        })
+        @Config.Name("Fix multiblock preview missing blocks")
+        @Config.RequiresMcRestart
+        public boolean previewmissingblocks = true;
     }
 
     public static final class Tweaks {

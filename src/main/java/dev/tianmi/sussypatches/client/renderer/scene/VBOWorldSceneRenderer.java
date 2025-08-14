@@ -1,6 +1,5 @@
 package dev.tianmi.sussypatches.client.renderer.scene;
 
-import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,6 +12,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -80,18 +80,17 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                 int i = layer.ordinal();
                 var vbo = VBOS[i];
                 if (vbo == null) vbo = VBOS[i] = new VertexBuffer(DefaultVertexFormats.BLOCK);
-                ByteBuffer data = buffer.getByteBuffer();
-                vbo.bufferData(data);
+                vbo.bufferData(buffer.getByteBuffer());
 
                 if (SusMods.OpenGL3.isLoaded()) {
                     var vao = VAOS[i];
                     if (vao == null) vao = VAOS[i] = new VertexArray();
                     vao.bindVertexArray();
                     vbo.bindBuffer();
-                    setupClientStates();
+                    enableClientStates();
                     setupArrayPointers();
                     vao.unbindVertexArray();
-                    resetClientStates();
+                    disableClientStates();
                     vbo.unbindBuffer();
                 }
             }
@@ -135,10 +134,10 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                     vbo.drawArrays(GL11.GL_QUADS);
                     vao.unbindVertexArray();
                 } else {
-                    setupClientStates();
+                    enableClientStates();
                     setupArrayPointers();
                     vbo.drawArrays(GL11.GL_QUADS);
-                    resetClientStates();
+                    disableClientStates();
                 }
                 vbo.unbindBuffer();
                 OpenGlHelper.glBindBuffer(OpenGlHelper.GL_ARRAY_BUFFER, preVBO);
@@ -172,7 +171,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
         return this;
     }
 
-    protected void setupClientStates() {
+    protected void enableClientStates() {
         GlStateManager.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
         GlStateManager.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
@@ -182,11 +181,19 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
         GlStateManager.glEnableClientState(GL11.GL_COLOR_ARRAY);
     }
 
-    protected void resetClientStates() {
-        GlStateManager.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-        GlStateManager.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-        GlStateManager.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-        GlStateManager.glDisableClientState(GL11.GL_COLOR_ARRAY);
+    protected void disableClientStates() {
+        for (VertexFormatElement element : DefaultVertexFormats.BLOCK.getElements()) {
+            switch (element.getUsage()) {
+                case POSITION -> GlStateManager.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+                case COLOR -> GlStateManager.glDisableClientState(GL11.GL_COLOR_ARRAY);
+                case UV -> {
+                    OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit + element.getIndex());
+                    GlStateManager.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+                    OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
+                }
+                default -> {}
+            }
+        }
     }
 
     protected void setupArrayPointers() {
