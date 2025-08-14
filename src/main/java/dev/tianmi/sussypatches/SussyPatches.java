@@ -11,15 +11,22 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.common.CommonProxy;
 import gregtech.GTInternalTags;
+import gregtech.api.util.Mods;
 
 @Mod(modid = Tags.MODID,
      version = Tags.VERSION,
      name = Tags.MODNAME,
-     dependencies = GTInternalTags.DEP_VERSION_STRING + "after:ctm;" + "after:configanytime;",
+     dependencies = SussyPatches.DEP_STRING,
      acceptedMinecraftVersions = ForgeVersion.mcVersion)
 public class SussyPatches {
+
+    private static final String AFTER = ";after:";
+    static final String DEP_STRING = GTInternalTags.DEP_VERSION_STRING +
+            AFTER + Mods.Names.CONNECTED_TEXTURES_MOD +
+            AFTER + SusMods.Names.CONFIGANYTIME;
 
     public static final Logger LOGGER = LogManager.getLogger(Tags.MODID);
 
