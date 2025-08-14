@@ -11,7 +11,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Transformer {
 
+    /// The transformer class for this dummy mixin
     Class<?>[] clazz() default {};
 
+    /// The target class for this transformer
     Class<?>[] target() default {};
 }
