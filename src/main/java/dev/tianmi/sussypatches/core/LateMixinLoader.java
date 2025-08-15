@@ -58,6 +58,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("prospectorheight", SusMods.NomiLibs.negate(), SusConfig.TWEAK.prospectorHeight);
         TWEAK.add("thickercovers", SusConfig.TWEAK.thickerCovers);
         TWEAK.add("activemteitems", SusConfig.TWEAK.activeMTEItems);
+        TWEAK.add("toolsubitems", SusConfig.TWEAK.showAllToolItems);
 
         API.add("usemui2", SusMods.ModularUI, SusConfig.API.useMui2);
     }

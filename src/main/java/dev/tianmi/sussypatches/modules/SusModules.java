@@ -23,6 +23,10 @@ public class SusModules implements IModuleContainer {
     public static final String CTM_NAME = "Sus CTM Integration";
     public static final String CTM_DESC = "Integration module for ConnectedTextureMod";
 
+    public static final String JEI_ID = "jei_integration";
+    public static final String JEI_NAME = "Sus JEI Integration";
+    public static final String JEI_DESC = "Integration module for JustEnoughItems";
+
     @Override
     public String getID() {
         return Tags.MODID;

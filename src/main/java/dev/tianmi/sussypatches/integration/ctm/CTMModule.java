@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.integration.connectedtexturesmod;
+package dev.tianmi.sussypatches.integration.ctm;
 
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 

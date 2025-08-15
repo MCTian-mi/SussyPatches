@@ -348,6 +348,16 @@ public class SusConfig {
         @Config.Name("Render active textures for GT machine items")
         @Config.RequiresMcRestart
         public boolean activeMTEItems = false;
+
+        @Config.Comment({
+                "Add all GT tools made of different materials to JEI.",
+                "Also separating their recipes.",
+                "Note: CEu code here is really shitty, use at your own risk.",
+                "Default: false"
+        })
+        @Config.Name("Show all GT tools in JEI")
+        @Config.RequiresMcRestart
+        public boolean showAllToolItems = false;
     }
 
     public static final class Api {
