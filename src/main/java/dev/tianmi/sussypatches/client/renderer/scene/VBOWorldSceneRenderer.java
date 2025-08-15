@@ -41,7 +41,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
     protected static final VertexArray[] VAOS = new VertexArray[BlockRenderLayer.values().length];
     protected static final VertexBuffer[] VBOS = new VertexBuffer[BlockRenderLayer.values().length];
-    protected final Map<BlockPos, TileEntity> TILES = new LinkedHashMap<>();
+    protected static final Map<BlockPos, TileEntity> TILES = new LinkedHashMap<>();
     protected boolean isDirty = true;
 
     public VBOWorldSceneRenderer(World world) {

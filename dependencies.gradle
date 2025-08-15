@@ -66,6 +66,7 @@ dependencies {
 //    runtimeOnlyNonPublishable 'maven.modrinth:vintagefix:0.6.2'
 //    runtimeOnlyNonPublishable 'maven.modrinth:alfheim-lighting-engine:1.6'
 //    runtimeOnlyNonPublishable 'dev.redstudio:Red-Core-MC:1.8-1.12-0.7-Dev-1'
+//    runtimeOnlyNonPublishable 'maven.modrinth:zbgt:0.16.1'
 
     // # OptiFine
 //    // Copied from GTCEu, originally used to download latest Vintagium from GitHub

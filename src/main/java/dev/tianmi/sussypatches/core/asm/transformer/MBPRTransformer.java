@@ -39,6 +39,7 @@ public class MBPRTransformer implements IExplicitTransformer {
                                 ordinal++ == 1
                         ) { // spotless:on
                             instructions.remove(insnNode);
+                            return;
                         }
                     }
                 }
