@@ -339,6 +339,15 @@ public class SusConfig {
         @Config.Name("Make covers on a pipe thicker")
         @Config.RequiresMcRestart
         public boolean thickerCovers = true;
+
+        @Config.Comment({
+                "Makes GT machine items render their active-state textures.",
+                "So that they look the same as in GT5.",
+                "Default: false"
+        })
+        @Config.Name("Render active textures for GT machine items")
+        @Config.RequiresMcRestart
+        public boolean activeMTEItems = false;
     }
 
     public static final class Api {
