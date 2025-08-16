@@ -30,9 +30,9 @@ public class EventHandlers {
             var chunk = event.getChunk();
             int x = chunk.x, z = chunk.z;
 
+            var chunkProvider = world.getChunkProvider();
             for (var side : EnumFacing.HORIZONTALS) {
-                var nearbyChunk = world.getChunkProvider()
-                        .getLoadedChunk(x + side.getXOffset(), z + side.getZOffset());
+                var nearbyChunk = chunkProvider.getLoadedChunk(x + side.getXOffset(), z + side.getZOffset());
                 if (nearbyChunk != null && nearbyChunk.isLoaded()) {
                     nearbyChunk.getTileEntityMap().forEach((pos, tile) -> {
                         if (tile instanceof ChunkAwareExtension chunkAware && isNextToChunkAtSide(pos, x, z, side)) {
