@@ -8,8 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
-import dev.tianmi.sussypatches.common.EventHandlers.ChunkAwareHook;
 import dev.tianmi.sussypatches.common.SusConfig;
+import dev.tianmi.sussypatches.common.helper.ChunkAwareHook;
+import dev.tianmi.sussypatches.common.helper.QChestInteractions;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.modules.IGregTechModule;
 
@@ -31,6 +32,7 @@ public class SusCoreModule implements IGregTechModule {
     public List<Class<?>> getEventBusSubscribers() {
         List<Class<?>> list = new ArrayList<>();
         if (SusConfig.BUGFIX.chunkAware) list.add(ChunkAwareHook.class);
+        if (SusConfig.FEAT.interactiveStorage) list.add(QChestInteractions.class);
         return list;
     }
 }

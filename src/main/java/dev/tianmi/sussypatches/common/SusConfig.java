@@ -44,6 +44,15 @@ public class SusConfig {
         @Config.Name("Connected textures for multiblocks")
         @Config.RequiresMcRestart
         public boolean multiCTM = true;
+
+        @Config.Comment({
+                "Allow you to interact with Quantum Chests with l/r-clicks.",
+                "Much like that of StorageDrawers.",
+                "Default: true"
+        })
+        @Config.Name("Make Quantum Chest interactable")
+        @Config.RequiresMcRestart
+        public boolean interactiveStorage = true;
     }
 
     public static final class Compat {
