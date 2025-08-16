@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/// For dummy mixins that are used for [IExplicitTransformer]s
+/// For dummy mixins that have corresponding [IExplicitTransformer]s
 /// And for transformers for their targets
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)

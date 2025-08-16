@@ -14,8 +14,8 @@ import gregtech.client.renderer.handler.MultiblockPreviewRenderer;
 @Transformer(target = MultiblockPreviewRenderer.class)
 public class MBPRTransformer implements IExplicitTransformer {
 
-    public static final String TARGET_METHOD_NAME = "renderControllerInList";
-    public static final String TARGET_METHOD_DESC = "(Lgregtech/api/metatileentity/multiblock/MultiblockControllerBase;Lgregtech/api/pattern/MultiblockShapeInfo;I)V";
+    private static final String TARGET_METHOD_NAME = "renderControllerInList";
+    private static final String TARGET_METHOD_DESC = "(Lgregtech/api/metatileentity/multiblock/MultiblockControllerBase;Lgregtech/api/pattern/MultiblockShapeInfo;I)V";
 
     @Override
     public String targetClassName() {
@@ -39,11 +39,13 @@ public class MBPRTransformer implements IExplicitTransformer {
                                 ordinal++ == 1
                         ) { // spotless:on
                             instructions.remove(insnNode);
+                            success();
                             return;
                         }
                     }
                 }
             }
         }
+        failure();
     }
 }

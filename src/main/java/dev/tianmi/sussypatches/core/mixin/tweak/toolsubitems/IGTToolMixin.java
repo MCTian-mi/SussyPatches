@@ -10,12 +10,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import dev.tianmi.sussypatches.api.annotation.Transformer;
 import dev.tianmi.sussypatches.api.core.mixin.extension.GTToolExtension;
 import dev.tianmi.sussypatches.api.util.CEuNonSense;
+import dev.tianmi.sussypatches.core.asm.transformer.IGTToolTransformer;
 import gregtech.api.items.toolitem.IGTTool;
 import gregtech.api.unification.material.Material;
 import gregtech.common.items.ToolItems;
 
+@Transformer(clazz = IGTToolTransformer.class)
 @Mixin(value = IGTTool.class, remap = false)
 public interface IGTToolMixin extends GTToolExtension {
 

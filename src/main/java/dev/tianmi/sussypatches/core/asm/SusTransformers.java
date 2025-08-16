@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
 import dev.tianmi.sussypatches.api.core.asm.IExplicitTransformer;
+import dev.tianmi.sussypatches.core.asm.transformer.IGTToolTransformer;
 import dev.tianmi.sussypatches.core.asm.transformer.MBPRTransformer;
 
 public class SusTransformers {
@@ -17,6 +18,7 @@ public class SusTransformers {
 
     static {
         add(new MBPRTransformer());
+        add(new IGTToolTransformer());
     }
 
     public static void transform(String targetClassName, ClassNode targetClass) {
