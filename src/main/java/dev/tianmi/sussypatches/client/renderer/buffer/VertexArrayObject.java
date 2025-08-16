@@ -2,13 +2,12 @@ package dev.tianmi.sussypatches.client.renderer.buffer;
 
 import org.lwjgl.opengl.GL30;
 
-import com.github.bsideup.jabel.Desugar;
+public class VertexArrayObject {
 
-@Desugar
-public record VertexArray(int id) {
+    protected int id;
 
-    public VertexArray() {
-        this(GL30.glGenVertexArrays());
+    public VertexArrayObject() {
+        this.id = GL30.glGenVertexArrays();
     }
 
     public void bindVertexArray() {
@@ -20,6 +19,9 @@ public record VertexArray(int id) {
     }
 
     public void deleteVertexArray() {
-        GL30.glDeleteVertexArrays(this.id);
+        if (this.id > 0) {
+            GL30.glDeleteVertexArrays(this.id);
+        }
+        this.id = -1;
     }
 }

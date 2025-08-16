@@ -49,7 +49,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("relativedirection", SusConfig.BUGFIX.relativeDir);
         BUGFIX.add("chunkaware", SusConfig.BUGFIX.chunkAware);
         BUGFIX.add("cleanroomstructure", SusMods.NomiLibs.negate(), SusConfig.BUGFIX.cleanroomStruct);
-        BUGFIX.add("previewmissingblocks", SusConfig.BUGFIX.previewmissingblocks);
+        BUGFIX.add("previewmissingblocks", SusConfig.BUGFIX.previewMissingBlocks);
 
         TWEAK.add("tabnosearchbars", SusConfig.TWEAK.noSearchBars);
         TWEAK.add("xoshiro256plusplus", SusConfig.TWEAK.xoShiRo256plusplus);

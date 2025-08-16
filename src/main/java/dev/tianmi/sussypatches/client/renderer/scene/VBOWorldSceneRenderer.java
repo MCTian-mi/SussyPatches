@@ -29,7 +29,7 @@ import org.lwjgl.opengl.GL15;
 import dev.tianmi.sussypatches.api.core.mixin.extension.WSRExtension;
 import dev.tianmi.sussypatches.api.util.RenderPass;
 import dev.tianmi.sussypatches.api.util.SusMods;
-import dev.tianmi.sussypatches.client.renderer.buffer.VertexArray;
+import dev.tianmi.sussypatches.client.renderer.buffer.VertexArrayObject;
 import gregtech.api.metatileentity.IFastRenderMetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.client.renderer.scene.ISceneRenderHook;
@@ -39,7 +39,7 @@ import gregtech.client.renderer.scene.WorldSceneRenderer;
 @SideOnly(Side.CLIENT)
 public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
-    protected static final VertexArray[] VAOS = new VertexArray[BlockRenderLayer.values().length];
+    protected static final VertexArrayObject[] VAOS = new VertexArrayObject[BlockRenderLayer.values().length];
     protected static final VertexBuffer[] VBOS = new VertexBuffer[BlockRenderLayer.values().length];
     protected static final Map<BlockPos, TileEntity> TILES = new LinkedHashMap<>();
     protected boolean isDirty = true;
@@ -84,7 +84,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
                 if (SusMods.OpenGL3.isLoaded()) {
                     var vao = VAOS[i];
-                    if (vao == null) vao = VAOS[i] = new VertexArray();
+                    if (vao == null) vao = VAOS[i] = new VertexArrayObject();
                     vao.bindVertexArray();
                     vbo.bindBuffer();
                     enableClientStates();

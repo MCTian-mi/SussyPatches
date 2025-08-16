@@ -276,7 +276,7 @@ public class SusConfig {
         })
         @Config.Name("Fix multiblock preview missing blocks")
         @Config.RequiresMcRestart
-        public boolean previewmissingblocks = true;
+        public boolean previewMissingBlocks = true;
     }
 
     public static final class Tweaks {
