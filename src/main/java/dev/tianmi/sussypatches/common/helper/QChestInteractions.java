@@ -11,12 +11,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
@@ -60,8 +58,8 @@ public class QChestInteractions {
     @SubscribeEvent
     public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event) {
         // Don't do anything if it's canceled alr.
-        // And since all logics here are server-side only, we just skip the client side.
-        if (event.isCanceled() || event.getSide() != Side.SERVER) return;
+        // Let the client side pass for now.
+        if (event.isCanceled()) return;
 
         // IDK what could case this but well
         var hitFace = event.getFace();
@@ -81,23 +79,28 @@ public class QChestInteractions {
             RayTraceResult rayTraceResult = traceCuboidAt(pos, player, hitFace);
             if (rayTraceResult == null) return; // The cuboid is a thin layer so no need to check hitSide
 
-            // Denies item & block l-click actions
-            // Might be good for compatibility
-            event.setUseBlock(Result.DENY);
-            event.setUseItem(Result.DENY);
+            // Cancels the event anyway.
+            // On the client side you just can't get what's in the qChest.
+            // This is a workaround for S-C desync when breaking the qChest.
+            // As a trade-off you can no longer break it when clicking within the hitbox.
+            // Hope this won't cause more severe issues...
+            event.setCanceled(true);
 
             // Special treatment for cChest
             if (qChest instanceof MetaTileEntityCreativeChest cChest) {
-                event.setCanceled(cChestLeftClick(cChest, player));
+                cChestLeftClick(cChest, player);
             } else {
                 // Cancel the event if any action is performed successfully
-                event.setCanceled(qChestLeftClick(qChest, player));
+                qChestLeftClick(qChest, player);
             }
         }
     }
 
     @SubscribeEvent
     public static void onBlockRightClick(PlayerInteractEvent.RightClickBlock event) {
+        // And since all logics here are server-side only, we just skip the client side.
+        // This is a workaround for S-C desync in display number updating after item insertion.
+        // Hope this won't cause more severe issues...
         if (event.isCanceled() || event.getSide() != Side.SERVER) return;
 
         // Return false if player is sneaking, since we still want to
@@ -117,11 +120,15 @@ public class QChestInteractions {
             RayTraceResult rayTraceResult = traceCuboidAt(pos, player, hitFace);
             if (rayTraceResult == null) return;
 
-            event.setUseBlock(Result.DENY);
-            event.setUseItem(Result.DENY);
-
             // This fails sliently for the cChest
-            event.setCanceled(qChestRightClick(qChest, player, event.getHand()));
+            if (qChestRightClick(qChest, player, event.getHand())) {
+                event.setCanceled(true);
+            } else {
+                // Denies item & block actions, whatever.
+                // Might be good for compatibility.
+                event.setUseBlock(Result.DENY);
+                event.setUseItem(Result.DENY);
+            }
         }
     }
 
@@ -130,7 +137,7 @@ public class QChestInteractions {
                 new Vector3(RayTracer.getEndVec(player)), HITBOXES.get(facing));
     }
 
-    public static boolean qChestLeftClick(MetaTileEntityQuantumChest qChest, EntityPlayer player) {
+    public static void qChestLeftClick(MetaTileEntityQuantumChest qChest, EntityPlayer player) {
         // The outputInventory only includes the output slot.
         // Here it can be used since we extract 1 stack per time at most.
         // (You can figure out why combinedInventory isn't used here, right?)
@@ -140,29 +147,27 @@ public class QChestInteractions {
         int coolDown = qExtension.sus$getCoolDown();
         qExtension.sus$refreshCoolDown(); // Refresh the cooldown
         // A workaround for getting multiple items in 1 single tick
-        if (coolDown > NORMAL_CLICK_THRESHOLD) return false;
+        if (coolDown > NORMAL_CLICK_THRESHOLD) return;
 
-        ItemStack candidate = qChestInv.extractItem(0, 1, true);
-        if (candidate.isEmpty()) return false;
-        ItemStack stack = qChestInv.extractItem(0, player.isSneaking() ? candidate.getMaxStackSize() : 1, false);
+        var candidate = qChestInv.extractItem(0, 1, true);
+        if (candidate.isEmpty()) return;
+        var stack = qChestInv.extractItem(0, player.isSneaking() ? candidate.getMaxStackSize() : 1, false);
         giveItemToPlayer(player, stack, player.inventory.currentItem,
                 qChest.getPos().offset(qChest.getFrontFacing()));
-        return true;
     }
 
-    public static boolean cChestLeftClick(MetaTileEntityCreativeChest cChest, EntityPlayer player) {
+    public static void cChestLeftClick(MetaTileEntityCreativeChest cChest, EntityPlayer player) {
         var cChestInv = ((CreativeChestAccessor) cChest).getHandler();
         var cExtension = QChestCDExtension.cast(cChest);
 
         int coolDown = cExtension.sus$getCoolDown();
         cExtension.sus$refreshCoolDown();
-        if (coolDown > NORMAL_CLICK_THRESHOLD) return false;
+        if (coolDown > NORMAL_CLICK_THRESHOLD) return;
 
-        ItemStack stack = cChestInv.getStackInSlot(0).copy();
+        var stack = cChestInv.getStackInSlot(0).copy();
         stack.setCount(player.isSneaking() ? stack.getMaxStackSize() : 1);
         giveItemToPlayer(player, stack, player.inventory.currentItem,
                 cChest.getPos().offset(cChest.getFrontFacing()));
-        return true;
     }
 
     public static boolean qChestRightClick(MetaTileEntityQuantumChest qChest, EntityPlayer player, EnumHand hand) {
@@ -205,16 +210,19 @@ public class QChestInteractions {
     private static void giveItemToPlayer(EntityPlayer player, @NotNull ItemStack stack, int preferredSlot,
                                          BlockPos dropPos) {
         if (stack.isEmpty()) return;
+        stack.setAnimationsToGo(5);
 
-        IItemHandler inventory = new PlayerMainInvWrapper(player.inventory);
-        World world = player.world;
+        var inventory = new PlayerMainInvWrapper(player.inventory);
+        var world = player.world;
 
         // Try adding it into the inventory
-        ItemStack remainder = stack;
+        var remainder = stack;
+
         // Insert into preferred slot first
         if (preferredSlot >= 0 && preferredSlot < inventory.getSlots()) {
             remainder = inventory.insertItem(preferredSlot, stack, false);
         }
+
         // Then into the inventory in general
         if (!remainder.isEmpty()) {
             remainder = ItemHandlerHelper.insertItemStacked(inventory, remainder, false);
@@ -231,7 +239,7 @@ public class QChestInteractions {
 
         // Drop remaining itemStack into the world
         if (!remainder.isEmpty()) {
-            EntityItem entityitem = new EntityItem(world, x, y, z, remainder);
+            var entityitem = new EntityItem(world, x, y, z, remainder);
             entityitem.setPickupDelay(40);
             entityitem.motionX = 0;
             entityitem.motionY = 0;
