@@ -22,6 +22,7 @@ import dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel.LampBakedModelAc
 import dev.tianmi.sussypatches.core.mixin.compat.lampbakedmodel.LampBakedModelAccessor.KeyAccessor;
 import dev.tianmi.sussypatches.modules.SusModules;
 import gregtech.api.modules.GregTechModule;
+import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
 
 @GregTechModule(moduleID = SusModules.ViF_ID,
@@ -34,7 +35,8 @@ public class VintageFixModule extends IntegrationSubmodule {
     @NotNull
     @Override
     public List<Class<?>> getEventBusSubscribers() {
-        return SusConfig.COMPAT.fixLampModel ? Collections.singletonList(VintageFixModule.class) :
+        return Mods.CTM.isModLoaded() && SusConfig.COMPAT.fixLampModel ?
+                Collections.singletonList(VintageFixModule.class) :
                 Collections.emptyList();
     }
 

@@ -22,6 +22,7 @@ public abstract class LampBakedModelMixin {
     @WrapWithCondition(method = "onModelBake",
                        at = @At(value = "INVOKE",
                                 target = "Lnet/minecraft/util/registry/IRegistry;putObject(Ljava/lang/Object;Ljava/lang/Object;)V",
+                                ordinal = 0,
                                 remap = true))
     private static boolean skipIfCTMModel(IRegistry<ModelResourceLocation, IBakedModel> modelRegistry,
                                           Object key, Object value, @Local(name = "model") IBakedModel model) {
