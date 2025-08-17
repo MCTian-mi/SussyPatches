@@ -60,6 +60,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("thickercovers", SusConfig.TWEAK.thickerCovers);
         TWEAK.add("activemteitems", SusConfig.TWEAK.activeMTEItems);
         TWEAK.add("toolsubitems", SusConfig.TWEAK.showAllToolItems);
+        TWEAK.add("cstorageinf", !SusConfig.TWEAK.cStorageInf.isEmpty());
 
         API.add("usemui2", SusMods.ModularUI, SusConfig.API.useMui2);
     }

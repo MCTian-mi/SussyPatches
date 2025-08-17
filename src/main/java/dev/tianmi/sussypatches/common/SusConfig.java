@@ -367,6 +367,15 @@ public class SusConfig {
         @Config.Name("Show all GT tools in JEI")
         @Config.RequiresMcRestart
         public boolean showAllToolItems = false;
+
+        @Config.Comment({
+                "Replaces the text for Creative Chest/Tanks.",
+                "Leave this empty to use default numbers.",
+                "Default: \"\""
+        })
+        @Config.Name("Replace Creative Chest/Tank display text")
+        @Config.RequiresMcRestart
+        public String cStorageInf = "";
     }
 
     public static final class Api {

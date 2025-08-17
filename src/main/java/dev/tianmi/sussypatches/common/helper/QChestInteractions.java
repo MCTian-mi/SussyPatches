@@ -59,7 +59,9 @@ public class QChestInteractions {
 
     @SubscribeEvent
     public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getSide() != Side.SERVER) return; // All logics here are server-side only
+        // Don't do anything if it's canceled alr.
+        // And since all logics here are server-side only, we just skip the client side.
+        if (event.isCanceled() || event.getSide() != Side.SERVER) return;
 
         // IDK what could case this but well
         var hitFace = event.getFace();
@@ -96,7 +98,7 @@ public class QChestInteractions {
 
     @SubscribeEvent
     public static void onBlockRightClick(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getSide() != Side.SERVER) return;
+        if (event.isCanceled() || event.getSide() != Side.SERVER) return;
 
         // Return false if player is sneaking, since we still want to
         // make it possible for players to place blocks/covers on this face
@@ -118,6 +120,7 @@ public class QChestInteractions {
             event.setUseBlock(Result.DENY);
             event.setUseItem(Result.DENY);
 
+            // This fails sliently for the cChest
             event.setCanceled(qChestRightClick(qChest, player, event.getHand()));
         }
     }
@@ -162,7 +165,6 @@ public class QChestInteractions {
         return true;
     }
 
-    // This fails sliently for the Creative qChest
     public static boolean qChestRightClick(MetaTileEntityQuantumChest qChest, EntityPlayer player, EnumHand hand) {
         // The combinedInventory includes the output handler (slot 0) and the internal qStorage handler (slot 1).
         var qChestInv = qChest.getCombinedInventory();
