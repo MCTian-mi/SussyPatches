@@ -21,48 +21,48 @@ public class LateMixinLoader implements ILateMixinLoader {
     private static final Map<String, BoolSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        FEATURE.add("connectedtextures", SusMods.of(CTM), SusConfig.FEAT.multiCTM);
+        FEATURE.add("connectedtextures", SusConfig.FEAT.multiCTM, SusMods.of(CTM));
         FEATURE.add("interactivestorage", SusConfig.FEAT.interactiveStorage);
 
-        COMPAT.add("ondemandanimation", SusMods.LoliASM, SusConfig.COMPAT.fixOnDemand);
-        COMPAT.add("dummyworldcrash", SusMods.of(Alfheim), SusConfig.COMPAT.fixDummyWorld);
-        COMPAT.add("lampbakedmodel", SusMods.VintageFix, SusMods.of(CTM), SusConfig.COMPAT.fixLampModel);
-        COMPAT.add("inworldpreviewcrash", SusMods.FluidloggedAPI_2, SusConfig.COMPAT.fixInworldPreview);
-        COMPAT.add("variousgrsissue", SusMods.of(GroovyScript), SusMods.NomiLibs.negate(),
-                SusConfig.COMPAT.fixGrS);
-        COMPAT.add("grsinlineicon", SusMods.of(GroovyScript), SusConfig.COMPAT.inlineIcon);
-        COMPAT.add("tweakerinfo", SusMods.of(GroovyScript).or(SusMods.of(CraftTweaker)),
-                SusMods.of(JustEnoughItems), SusConfig.COMPAT.tweakerInfo);
+        COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
+        COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
+        COMPAT.add("lampbakedmodel", SusConfig.COMPAT.fixLampModel, SusMods.VintageFix, SusMods.of(CTM));
+        COMPAT.add("inworldpreviewcrash", SusConfig.COMPAT.fixInworldPreview, SusMods.FluidloggedAPI_2);
+        COMPAT.add("variousgrsissue", SusConfig.COMPAT.fixGrS, SusMods.of(GroovyScript),
+                SusMods.NomiLibs.negate());
+        COMPAT.add("grsinlineicon", SusConfig.COMPAT.inlineIcon, SusMods.of(GroovyScript));
+        COMPAT.add("tweakerinfo", SusConfig.COMPAT.tweakerInfo, SusMods.of(GroovyScript)
+                .or(SusMods.of(CraftTweaker)), SusMods.of(JustEnoughItems));
 
         BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
         BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);
         BUGFIX.add("implgetitem", SusConfig.BUGFIX.implGetItem);
         BUGFIX.add("packetdatamemleak", SusConfig.BUGFIX.packetMemLeak);
-        BUGFIX.add("pipedatatransfer", SusMods.NomiLibs.negate(), SusConfig.BUGFIX.pipeDataTransfer);
+        BUGFIX.add("pipedatatransfer", SusConfig.BUGFIX.pipeDataTransfer, SusMods.NomiLibs.negate());
         BUGFIX.add("pipeinvcrash", SusConfig.BUGFIX.pipeInvCrash);
         BUGFIX.add("invalidregistration", SusConfig.BUGFIX.invalidRegistration);
         BUGFIX.add("weakneighborref", SusConfig.BUGFIX.weakNeighborRef);
-        BUGFIX.add("redundantgas", SusMods.NomiLibs.negate(), SusConfig.BUGFIX.redundantGas);
+        BUGFIX.add("redundantgas", SusConfig.BUGFIX.redundantGas, SusMods.NomiLibs.negate());
         BUGFIX.add("unbindframebuffer", SusConfig.BUGFIX.unbindFBO);
         BUGFIX.add("dtguitext", SusConfig.BUGFIX.removeDTText);
         BUGFIX.add("pipeframedesync", SusConfig.BUGFIX.pipeFrameDesync);
         BUGFIX.add("mtenpeonserver", SusConfig.BUGFIX.mteServerNPE);
         BUGFIX.add("relativedirection", SusConfig.BUGFIX.relativeDir);
         BUGFIX.add("chunkaware", SusConfig.BUGFIX.chunkAware);
-        BUGFIX.add("cleanroomstructure", SusMods.NomiLibs.negate(), SusConfig.BUGFIX.cleanroomStruct);
+        BUGFIX.add("cleanroomstructure", SusConfig.BUGFIX.cleanroomStruct, SusMods.NomiLibs.negate());
         BUGFIX.add("previewmissingblocks", SusConfig.BUGFIX.previewMissingBlocks);
 
         TWEAK.add("tabnosearchbars", SusConfig.TWEAK.noSearchBars);
         TWEAK.add("xoshiro256plusplus", SusConfig.TWEAK.xoShiRo256plusplus);
         TWEAK.add("previewoptimization", SusConfig.TWEAK.optPreview);
-        TWEAK.add("nomuffler", SusMods.NomiLibs.negate(), SusConfig.TWEAK.noMufflerRecovery);
-        TWEAK.add("prospectorheight", SusMods.NomiLibs.negate(), SusConfig.TWEAK.prospectorHeight);
+        TWEAK.add("nomuffler", SusConfig.TWEAK.noMufflerRecovery, SusMods.NomiLibs.negate());
+        TWEAK.add("prospectorheight", SusConfig.TWEAK.prospectorHeight, SusMods.NomiLibs.negate());
         TWEAK.add("thickercovers", SusConfig.TWEAK.thickerCovers);
         TWEAK.add("activemteitems", SusConfig.TWEAK.activeMTEItems);
         TWEAK.add("toolsubitems", SusConfig.TWEAK.showAllToolItems);
         TWEAK.add("cstorageinf", !SusConfig.TWEAK.cStorageInf.isEmpty());
 
-        API.add("usemui2", SusMods.ModularUI, SusConfig.API.useMui2);
+        API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
     }
 
     @Override
