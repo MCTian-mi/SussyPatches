@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.BoolSupplier;
@@ -23,6 +22,7 @@ public class LateMixinLoader implements ILateMixinLoader {
     static {
         FEATURE.add("connectedtextures", SusConfig.FEAT.multiCTM, SusMods.of(CTM));
         FEATURE.add("interactivestorage", SusConfig.FEAT.interactiveStorage);
+        FEATURE.add("fluidcontainerbar", SusConfig.FEAT.fluidContainerBar, SusConfig.API.itemOverlayEvent);
 
         COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
@@ -94,19 +94,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         }
 
         public void add(String name, Object... conditions) {
-            BoolSupplier supplier = BoolSupplier.TRUE;
-            for (var condition : conditions) {
-                if (condition instanceof BoolSupplier boolSupplier) {
-                    supplier = supplier.and(boolSupplier);
-                } else if (condition instanceof Boolean bool) {
-                    supplier = supplier.and(BoolSupplier.of(bool));
-                } else if (condition instanceof BooleanSupplier booleanSupplier) {
-                    supplier = supplier.and(BoolSupplier.of(booleanSupplier));
-                } else {
-                    throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
-                }
-            }
-            MIXIN_CONFIGS.put(ROOT + this + MIXINS + name + JSON, supplier);
+            MIXIN_CONFIGS.put(ROOT + this + MIXINS + name + JSON, BoolSupplier.compact(conditions));
         }
     }
 }

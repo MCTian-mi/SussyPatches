@@ -38,4 +38,20 @@ public interface BoolSupplier extends BooleanSupplier {
     default BoolSupplier negate() {
         return () -> !this.get();
     }
+
+    static BoolSupplier compact(Object... conditions) {
+        BoolSupplier supplier = BoolSupplier.TRUE;
+        for (var condition : conditions) {
+            if (condition instanceof BoolSupplier boolSupplier) {
+                supplier = supplier.and(boolSupplier);
+            } else if (condition instanceof Boolean bool) {
+                supplier = supplier.and(BoolSupplier.of(bool));
+            } else if (condition instanceof BooleanSupplier booleanSupplier) {
+                supplier = supplier.and(BoolSupplier.of(booleanSupplier));
+            } else {
+                throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
+            }
+        }
+        return supplier;
+    }
 }

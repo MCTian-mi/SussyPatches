@@ -38,8 +38,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Make ConnectedTexturesMod (CTM) work on GregTech multiblocks.",
-                "Needs CTM to be loaded.",
-                "Default: true"
+                "Needs CTM to be loaded."
         })
         @Config.Name("Connected textures for multiblocks")
         @Config.RequiresMcRestart
@@ -47,20 +46,28 @@ public class SusConfig {
 
         @Config.Comment({
                 "Allow you to interact with Quantum Chests with l/r-clicks.",
-                "Much like that of StorageDrawers.",
-                "Default: true"
+                "Much like that of StorageDrawers."
         })
         @Config.Name("Make Quantum Chest interactable")
         @Config.RequiresMcRestart
         public boolean interactiveStorage = true;
+
+        @Config.Comment({
+                "Render a durability bar for drums, with the same color as the fluid within.",
+                "Note: this won't work when you fluid-containing drums.",
+                "Stacking non-empty drums is buggy, would also suggest you not to do that.",
+                "Requires to turn on 'Enable RenderItemOverlayEvent' in the API option."
+        })
+        @Config.Name("Draw fluid bars for drums")
+        @Config.RequiresMcRestart
+        public boolean fluidContainerBar = true;
     }
 
     public static final class Compat {
 
         @Config.Comment({
                 "Fixes GregTech machines lost their animations when " +
-                        "'On-Demand Animations' is turned on in CensoredASM.",
-                "Default: true"
+                        "'On-Demand Animations' is turned on in CensoredASM."
         })
         @Config.Name("Fix on-demand animations")
         @Config.RequiresMcRestart
@@ -69,8 +76,7 @@ public class SusConfig {
         @Config.Comment({
                 "Fixes GregTech's DummyWorld crashs with Alfheim v1.6+, " +
                         "which causes all GT recipes to disappear in JEI.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Fix Alfheim v1.6+ breaking JEI")
         @Config.RequiresMcRestart
@@ -78,8 +84,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fixes some GT lamps losing their inventory models when " +
-                        "both VintageFix and ConnectedTexturesMod are loaded.",
-                "Default: true"
+                        "both VintageFix and ConnectedTexturesMod are loaded."
         })
         @Config.Name("Fix VintageFix making lamps invisible")
         @Config.RequiresMcRestart
@@ -88,8 +93,7 @@ public class SusConfig {
         @Config.Comment({
                 "Fixes Fluidlogged API v2 making multiblocks with fluid blocks " +
                         "in the structure failed to render the in-world preview.",
-                "Fixed in Fluidlogged API v3.",
-                "Default: true"
+                "Fixed in Fluidlogged API v3."
         })
         @Config.Name("Fix Fluidlogged API v2 render failure")
         @Config.RequiresMcRestart
@@ -100,8 +104,7 @@ public class SusConfig {
                 " - GrS not respecting the item namespace.",
                 " - Fluid amount multiplier duplicates in the copied recipe removal code.",
                 "Could also fix some CrT issues, but I didn't brother testing.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Fix various GrS issues")
         @Config.RequiresMcRestart
@@ -109,8 +112,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Make GT ObjectMappers support GrS inline icon.",
-                "Currently only 'metaitem' mapper is supported.",
-                "Default: true"
+                "Currently only 'metaitem' mapper is supported."
         })
         @Config.Name("Inline icon for GT ObjectMappers")
         @Config.RequiresMcRestart
@@ -118,8 +120,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Adds an icon in for recipes created by a tweaker mod in JEI.",
-                "Backported from GregTechCEu#2638",
-                "Default: true"
+                "Backported from GregTechCEu#2638"
         })
         @Config.Name("Add tweaker icons in JEI")
         @Config.RequiresMcRestart
@@ -129,8 +130,7 @@ public class SusConfig {
     public static final class Bugfix {
 
         @Config.Comment({
-                "Fixes clipboards always rendered at full brightness.",
-                "Default: true"
+                "Fixes clipboards always rendered at full brightness."
         })
         @Config.Name("Fix clipboards lighting")
         @Config.RequiresMcRestart
@@ -138,8 +138,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fixes facades have weird lighting.",
-                "A.k.a. different from normal blocks.",
-                "Default: true"
+                "A.k.a. different from normal blocks."
         })
         @Config.Name("Fix facades lighting")
         @Config.RequiresMcRestart
@@ -149,8 +148,7 @@ public class SusConfig {
                 "Implements getItem method for BlockMachine.",
                 "Fixes mod fail to render GT TileEntities, e.g. XNet.",
                 "Note: for RFTools you will need ReFinedTools.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Implement getItem for BlockMachine")
         @Config.RequiresMcRestart
@@ -158,8 +156,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fixes MTE Packet Data Memory Leak",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Fix packet data memory leak")
         @Config.RequiresMcRestart
@@ -168,8 +165,7 @@ public class SusConfig {
         @Config.Comment({
                 "Reverses the data transfer direction correctly.",
                 "Fixes pipes losing data when adding/removing covers.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Fix data transfer between pipes")
         @Config.RequiresMcRestart
@@ -177,8 +173,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Refuses insertion into pipenets w/o specific facing.",
-                "Fixes crashes with mods like RFTools.",
-                "Default: true"
+                "Fixes crashes with mods like RFTools."
         })
         @Config.Name("Fix data transfer between pipes")
         @Config.RequiresMcRestart
@@ -187,8 +182,7 @@ public class SusConfig {
         @Config.Comment({
                 "Don't let GTCEu register pipes for empty registrations.",
                 "Fixes crashes for mods like BetterQuesting.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Stop invalid pipe registration")
         @Config.RequiresMcRestart
@@ -197,8 +191,7 @@ public class SusConfig {
         @Config.Comment({
                 "Uses WeakReference for NeighborCacheTileEntityBase.",
                 "May solve unintended JVM garbage collection hindering.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Use WeakReference for neighbor cache")
         @Config.RequiresMcRestart
@@ -206,8 +199,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fixes the sometimes-funny 'Gas Gas' suffix.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Removes the redundant 'Gas' suffix")
         @Config.RequiresMcRestart
@@ -216,8 +208,7 @@ public class SusConfig {
         @Config.Comment({
                 "Properly unbinds the bound framebuffer object for shaders.",
                 "Potentially fixes bloom incorrectly showing through blocks.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Properly unbinding Framebuffer for shaders")
         @Config.RequiresMcRestart
@@ -226,8 +217,7 @@ public class SusConfig {
         @Config.Comment({
                 "Removes the override to 'addDisplayText' in DistillationTower class.",
                 "Which is both bugged and unnecessary.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Remove the bugged 'addDisplayText' override")
         @Config.RequiresMcRestart
@@ -235,8 +225,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fix pipe frames not visible on servers.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Fix framing pipes not synced on servers")
         @Config.RequiresMcRestart
@@ -244,8 +233,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fix potential 'getMinecraftServer' NPE due to TrackedDummyWorld being client-side.",
-                "Fixed in CEu master branch.",
-                "Default: true"
+                "Fixed in CEu master branch."
         })
         @Config.Name("Fix potential MTE NPE on integrated servers")
         @Config.RequiresMcRestart
@@ -253,8 +241,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fix RelativeDirection#LEFT and #RIGHT not treating EnumFacing#DOWN properly.",
-                "Depending on the multi impl this may or may not fix things.",
-                "Default: true"
+                "Depending on the multi impl this may or may not fix things."
         })
         @Config.Name("Fix RelativeDirection providing wrong facings")
         @Config.RequiresMcRestart
@@ -262,8 +249,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Make GT TileEntities aware of nearby chunk loading/unloadings.",
-                "Fixes issues like fluid pipes disconnecting at chunk border after chunk unload.",
-                "Default: true"
+                "Fixes issues like fluid pipes disconnecting at chunk border after chunk unload."
         })
         @Config.Name("Fix GT tiles not chunk-aware")
         @Config.RequiresMcRestart
@@ -271,8 +257,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fixes an edge case for cleanroom structure check.",
-                "You can now put hatches at the same axis as the controller on the top layer.",
-                "Default: true"
+                "You can now put hatches at the same axis as the controller on the top layer."
         })
         @Config.Name("Fix Cleanroom structure check")
         @Config.RequiresMcRestart
@@ -280,8 +265,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Fixes in-world preview missing blocks.",
-                "E.g. for Cleanroom.",
-                "Default: true"
+                "E.g. for Cleanroom."
         })
         @Config.Name("Fix multiblock preview missing blocks")
         @Config.RequiresMcRestart
@@ -291,8 +275,7 @@ public class SusConfig {
     public static final class Tweaks {
 
         @Config.Comment({
-                "Removes the annoying search bars from GT Creative Tabs.",
-                "Default: true"
+                "Removes the annoying search bars from GT Creative Tabs."
         })
         @Config.Name("Remove search bars from GT tabs")
         @Config.RequiresMcRestart
@@ -301,8 +284,7 @@ public class SusConfig {
         @Config.Comment({
                 "Switches from GT's own impl of XSTR to XoShiRo256++ random generator.",
                 "Which has both better performance and better randomness.",
-                "Backported from GregTechCEu#2747",
-                "Default: true"
+                "Backported from GregTechCEu#2747"
         })
         @Config.Name("Use XoShiRo256++ Random")
         @Config.RequiresMcRestart
@@ -312,8 +294,7 @@ public class SusConfig {
                 "Uses VBO for JEI preview renderer, which would significantly reduce the render lag.",
                 "Also removes the ISceneRenderHook logic from the WorldSceneRenderer, which reduces the allocation in multiblock previews.",
                 "Note: has some minor issues with the terminal.",
-                "Backported from GregTechCEu#2629",
-                "Default: true"
+                "Backported from GregTechCEu#2629"
         })
         @Config.Name("Optimize JEI multiblock preview")
         @Config.RequiresMcRestart
@@ -323,8 +304,7 @@ public class SusConfig {
                 "Removes the muffler inventory and recovery mechanics.",
                 "Who would ever use them, anyways.",
                 "Would help with performance, in a way.",
-                "Backported from GregTechCEu#2799 and Nomi-Libs",
-                "Default: true"
+                "Backported from GregTechCEu#2799 and Nomi-Libs"
         })
         @Config.Name("Disable the muffler recovery mechanic")
         @Config.RequiresMcRestart
@@ -333,8 +313,7 @@ public class SusConfig {
         @Config.Comment({
                 "Make prospectors place waypoints at the average height of the hovered ores.",
                 "Less tedious than having to look it up in jei or blindly mining up or down.",
-                "Backported from GregTechCEu#2726",
-                "Default: true"
+                "Backported from GregTechCEu#2726"
         })
         @Config.Name("Place ore prospector waypoints at vein height")
         @Config.RequiresMcRestart
@@ -342,8 +321,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Doubles the thickness of covers on a pipe.",
-                "So that they look the same as in GT5.",
-                "Default: true"
+                "So that they look the same as in GT5."
         })
         @Config.Name("Make covers on a pipe thicker")
         @Config.RequiresMcRestart
@@ -351,8 +329,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Makes GT machine items render their active-state textures.",
-                "So that they look the same as in GT5.",
-                "Default: false"
+                "So that they look the same as in GT5."
         })
         @Config.Name("Render active textures for GT machine items")
         @Config.RequiresMcRestart
@@ -361,8 +338,7 @@ public class SusConfig {
         @Config.Comment({
                 "Add all GT tools made of different materials to JEI.",
                 "Also separating their recipes.",
-                "Note: CEu code here is really shitty, use at your own risk.",
-                "Default: false"
+                "Note: CEu code here is really shitty, use at your own risk."
         })
         @Config.Name("Show all GT tools in JEI")
         @Config.RequiresMcRestart
@@ -370,8 +346,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "Replaces the text for Creative Chest/Tanks.",
-                "Leave this empty to use default numbers.",
-                "Default: \"\""
+                "Leave this empty to use default numbers."
         })
         @Config.Name("Replace Creative Chest/Tank display text")
         @Config.RequiresMcRestart
@@ -383,12 +358,21 @@ public class SusConfig {
         @Config.Comment({
                 "Supports using ModularUI2 for GT MTEs.",
                 "Note: there's no default impl for existing MTEs, currently.",
-                "Backported from GregTechCEu#2281",
-                "Default: false"
+                "Backported from GregTechCEu#2281"
         })
         @Config.Name("Enable ModularUI2 support")
         @Config.RequiresMcRestart
         public boolean useMui2 = false;
+
+        @Config.Comment({
+                "Basically just added an event for handle item overlay rendering.",
+                "Technically this isn't anything strictly bounded to GregTech, you can use it wherever you want.",
+                "But well this is needed for the 'Draw fluid bar for drums' feature."
+        })
+        @Config.Name("Enable RenderItemOverlayEvent")
+        @Config.RequiresMcRestart
+        @Config.Ignore // TODO: fix early config
+        public boolean itemOverlayEvent = true;
     }
 
     static {

@@ -31,7 +31,6 @@ import gregtech.api.util.GTUtility;
 import gregtech.common.metatileentities.storage.MetaTileEntityCreativeChest;
 import gregtech.common.metatileentities.storage.MetaTileEntityQuantumChest;
 
-// TODO: Container#canInteractWith(EntityPlayer)?
 public class QChestInteractions {
 
     public static final int COOL_DOWN = 10;
