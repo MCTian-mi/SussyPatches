@@ -23,6 +23,7 @@ public class LateMixinLoader implements ILateMixinLoader {
     static {
         FEATURE.add("connectedtextures", SusConfig.FEAT.multiCTM, SusMods.of(CTM));
         FEATURE.add("interactivestorage", SusConfig.FEAT.interactiveStorage);
+        FEATURE.add("jeiocbutton");
 
         COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
