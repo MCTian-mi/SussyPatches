@@ -238,12 +238,12 @@ public class QChestInteractions {
 
         // Drop remaining itemStack into the world
         if (!remainder.isEmpty()) {
-            var entityitem = new EntityItem(world, x, y, z, remainder);
-            entityitem.setPickupDelay(40);
-            entityitem.motionX = 0;
-            entityitem.motionY = 0;
-            entityitem.motionZ = 0;
-            world.spawnEntity(entityitem);
+            var entityItem = new EntityItem(world, x, y, z, remainder);
+            entityItem.setPickupDelay(40);
+            entityItem.motionX = 0;
+            entityItem.motionY = 0;
+            entityItem.motionZ = 0;
+            world.spawnEntity(entityItem);
         }
     }
 }
