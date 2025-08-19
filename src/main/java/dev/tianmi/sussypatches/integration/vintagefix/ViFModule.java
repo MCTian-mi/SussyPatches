@@ -30,13 +30,13 @@ import gregtech.integration.IntegrationSubmodule;
                 modDependencies = SusMods.Names.VINTAGE_FIX,
                 name = SusModules.ViF_NAME,
                 description = SusModules.ViF_DESC)
-public class VintageFixModule extends IntegrationSubmodule {
+public class ViFModule extends IntegrationSubmodule {
 
     @NotNull
     @Override
     public List<Class<?>> getEventBusSubscribers() {
         return Mods.CTM.isModLoaded() && SusConfig.COMPAT.fixLampModel ?
-                Collections.singletonList(VintageFixModule.class) :
+                Collections.singletonList(ViFModule.class) :
                 Collections.emptyList();
     }
 
