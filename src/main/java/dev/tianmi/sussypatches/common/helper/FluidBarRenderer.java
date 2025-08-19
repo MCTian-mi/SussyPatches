@@ -32,7 +32,8 @@ public class FluidBarRenderer {
             double level = fluid.amount / (double) capacity;
 
             Color color = new Color(GTUtility.convertRGBtoOpaqueRGBA_MC(RenderUtil.getFluidColor(fluid)));
-            ToolChargeBarRenderer.render(level, x, y, 0, true, color, color, false);
+            ToolChargeBarRenderer.render(level, x, y, 0, true,
+                    color.darker(), color.brighter(), false);
         });
     }
 }
