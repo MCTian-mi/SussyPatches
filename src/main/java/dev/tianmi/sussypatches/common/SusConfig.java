@@ -358,6 +358,14 @@ public class SusConfig {
         @Config.Name("Replace Creative Chest/Tank display text")
         @Config.RequiresMcRestart
         public String cStorageInf = "";
+
+        @Config.Comment({
+                "Basically just give GT MetaTileEntities proper sound types based on their materials.",
+                "Backported from GregTechCEu#2853"
+        })
+        @Config.Name("Give GT MTEs proper step sounds.")
+        @Config.RequiresMcRestart
+        public boolean customMTESounds = false;
     }
 
     public static final class Api {

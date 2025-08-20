@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.BoolSupplier;
 import dev.tianmi.sussypatches.api.util.SusMods;
@@ -62,8 +63,14 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("activemteitems", SusConfig.TWEAK.activeMTEItems);
         TWEAK.add("toolsubitems", SusConfig.TWEAK.showAllToolItems);
         TWEAK.add("cstorageinf", !SusConfig.TWEAK.cStorageInf.isEmpty());
+        TWEAK.add("customsoundtype", SusConfig.TWEAK.customMTESounds);
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
+    }
+
+    public static int foo() {
+        SussyPatches.LOGGER.info("dashdaoisdaoh");
+        return 0;
     }
 
     @Override

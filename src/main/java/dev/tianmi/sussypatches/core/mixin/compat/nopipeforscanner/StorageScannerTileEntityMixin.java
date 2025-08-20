@@ -16,7 +16,7 @@ import mcjty.rftools.blocks.storagemonitor.StorageScannerTileEntity;
 @Compat(mods = SusMods.RFTools)
 @Mixin(value = StorageScannerTileEntity.class, remap = false)
 @SuppressWarnings("UnresolvedMixinReference")
-public class StorageScannerTileEntityMixin {
+public abstract class StorageScannerTileEntityMixin {
 
     @ModifyExpressionValue(method = "findInventories",
                            at = @At(value = "INVOKE",

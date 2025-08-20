@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import dev.tianmi.sussypatches.api.annotation.Implemented;
 import gregtech.api.block.BuiltInRenderBlock;
 import gregtech.api.pipenet.PipeNet;
 import gregtech.api.pipenet.WorldPipeNet;
@@ -17,6 +18,7 @@ import gregtech.api.pipenet.block.BlockPipe;
 import gregtech.api.pipenet.block.IPipeType;
 import gregtech.api.pipenet.tile.IPipeTile;
 
+@Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2852")
 @Mixin(value = BlockPipe.class, remap = false)
 public abstract class BlockPipeMixin<PipeType extends Enum<PipeType> & IPipeType<NodeDataType>, NodeDataType,
         WorldPipeNetType extends WorldPipeNet<NodeDataType, ? extends PipeNet<NodeDataType>>>
