@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.feature.fluidcontainerbar",
+  "package": "dev.tianmi.sussypatches.core.mixin.feature.visiblestorage",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
@@ -9,7 +9,7 @@
     "defaultRequire": 1
   },
   "client": [
-    "DrumAccessor",
-    "QuantumTankAccessor"
+    "CreativeTankMixin",
+    "QuantumTankMixin"
   ]
 }

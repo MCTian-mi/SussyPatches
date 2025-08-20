@@ -9,10 +9,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import dev.tianmi.sussypatches.api.event.RenderItemOverlayEvent;
 import dev.tianmi.sussypatches.core.mixin.feature.fluidcontainerbar.DrumAccessor;
+import dev.tianmi.sussypatches.core.mixin.feature.fluidcontainerbar.QuantumTankAccessor;
 import gregtech.api.util.GTUtility;
 import gregtech.client.utils.RenderUtil;
 import gregtech.client.utils.ToolChargeBarRenderer;
-import gregtech.common.metatileentities.storage.MetaTileEntityDrum;
+import gregtech.common.metatileentities.storage.MetaTileEntityCreativeTank;
 
 public class FluidBarRenderer {
 
@@ -23,15 +24,19 @@ public class FluidBarRenderer {
             if (stack.getCount() > 1) return; // Don't draw if it's not a single item
 
             var mte = GTUtility.getMetaTileEntity(stack);
-            if (!(mte instanceof MetaTileEntityDrum drum)) return;
+            int capacity;
+
+            // We actually do not need accessor here to read capacity, but well.
+            if (mte instanceof DrumAccessor drum) capacity = drum.getTankSize();
+            else if (mte instanceof MetaTileEntityCreativeTank) capacity = 1000;
+            else if (mte instanceof QuantumTankAccessor tank) capacity = tank.getMaxFluidCapacity();
+            else return; // Don't render
 
             var fluid = FluidUtil.getFluidContained(stack);
             if (fluid == null || fluid.amount <= 0) return;
 
-            int capacity = ((DrumAccessor) drum).getTankSize();
             double level = fluid.amount / (double) capacity;
-
-            Color color = new Color(GTUtility.convertRGBtoOpaqueRGBA_MC(RenderUtil.getFluidColor(fluid)));
+            var color = new Color(GTUtility.convertRGBtoOpaqueRGBA_MC(RenderUtil.getFluidColor(fluid)));
             ToolChargeBarRenderer.render(level, x, y, 0, true,
                     color.darker(), color.brighter(), false);
         });

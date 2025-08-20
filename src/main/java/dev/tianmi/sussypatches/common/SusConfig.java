@@ -53,14 +53,21 @@ public class SusConfig {
         public boolean interactiveStorage = true;
 
         @Config.Comment({
-                "Render a durability bar for drums, with the same color as the fluid within.",
-                "Note: this won't work when you fluid-containing drums.",
-                "Stacking non-empty drums is buggy, would also suggest you not to do that.",
+                "Render a durability bar for drums and quantum tanks, with the same color as the fluid within.",
+                "Note: this won't work when you stack them.",
+                "Stacking non-empty containers is buggy, would not suggest you to do that.",
                 "Requires to turn on 'Enable RenderItemOverlayEvent' in the API option."
         })
-        @Config.Name("Draw fluid bars for drums")
+        @Config.Name("Draw fluid bars for fluid container blocks")
         @Config.RequiresMcRestart
         public boolean fluidContainerBar = true;
+
+        @Config.Comment({
+                "Simply makes quantum tanks render containing fluids in their item form."
+        })
+        @Config.Name("Render quantum tanks fluids in inventories")
+        @Config.RequiresMcRestart
+        public boolean visibleStorage = true;
     }
 
     public static final class Compat {
