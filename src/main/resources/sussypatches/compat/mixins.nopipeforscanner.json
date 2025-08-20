@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.bugfix.implgetitem",
+  "package": "dev.tianmi.sussypatches.core.mixin.compat.nopipeforscanner",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
@@ -9,7 +9,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "BlockMachineMixin",
-    "BlockPipeMixin"
+    "StorageScannerTileEntityMixin"
   ]
 }

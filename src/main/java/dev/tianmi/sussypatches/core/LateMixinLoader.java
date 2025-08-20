@@ -33,6 +33,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         COMPAT.add("grsinlineicon", SusConfig.COMPAT.inlineIcon, SusMods.of(GroovyScript));
         COMPAT.add("tweakerinfo", SusConfig.COMPAT.tweakerInfo, SusMods.of(GroovyScript)
                 .or(SusMods.of(CraftTweaker)), SusMods.of(JustEnoughItems));
+        COMPAT.add("nopipeforscanner", SusConfig.COMPAT.noPipeForScanner, SusMods.RFTools);
 
         BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
         BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);

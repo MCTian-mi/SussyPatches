@@ -28,6 +28,7 @@ public enum SusMods implements BoolSupplier {
     Celeritas(Names.CELERITAS),
     ModularUI(Names.MODULARUI),
     NomiLibs(Names.NOMI_LIBS),
+    RFTools(Names.RFTOOLS),
     OpenGL3(null) { // Well true this isn't a mod, technically...
 
         @Override
@@ -96,5 +97,6 @@ public enum SusMods implements BoolSupplier {
         public static final String MODULARUI = "modularui";
         public static final String CLEANROOM = "cleanroom";
         public static final String NOMI_LIBS = "nomilabs";
+        public static final String RFTOOLS = "rftools";
     }
 }

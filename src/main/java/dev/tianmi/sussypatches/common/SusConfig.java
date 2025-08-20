@@ -125,6 +125,13 @@ public class SusConfig {
         @Config.Name("Add tweaker icons in JEI")
         @Config.RequiresMcRestart
         public boolean tweakerInfo = true;
+
+        @Config.Comment({
+                "Stops RFTools Storage Scanner adding GT pipes as inventories."
+        })
+        @Config.Name("Exclude GT pipes from Storage Scanners.")
+        @Config.RequiresMcRestart
+        public boolean noPipeForScanner = true;
     }
 
     public static final class Bugfix {
@@ -145,7 +152,7 @@ public class SusConfig {
         public boolean facadeLighting = true;
 
         @Config.Comment({
-                "Implements getItem method for BlockMachine.",
+                "Implements getItem method for BlockMachine and BlockPipe.",
                 "Fixes mod fail to render GT TileEntities, e.g. XNet.",
                 "Note: for RFTools you will need ReFinedTools.",
                 "Fixed in CEu master branch."
