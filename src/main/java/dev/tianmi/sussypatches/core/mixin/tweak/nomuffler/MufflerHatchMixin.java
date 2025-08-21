@@ -97,9 +97,7 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
     @Override
     @Overwrite
     public void clearMachineInventory(NonNullList<ItemStack> itemBuffer) {
-        SussyPatches.LOGGER.error("Class {} is trying to call \"clearMachineInventory(NonNullList<ItemStack>)\", " +
-                "please report to the auther!", this.getClass());
-        throw new UnsupportedOperationException("Muffler logic has been removed!");
+        super.clearMachineInventory(itemBuffer);
     }
 
     /**
