@@ -35,10 +35,10 @@ public abstract class BlockPipeMixin<PipeType extends Enum<PipeType> & IPipeType
     @Unique
     @NotNull
     @Override
-    @SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
+    @SuppressWarnings({ "deprecation", "unchecked" })
     public ItemStack getItem(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state) {
         var te = world.getTileEntity(pos);
-        if (!(te instanceof IPipeTile pipeTile)) return ItemStack.EMPTY;
+        if (!(te instanceof IPipeTile<?, ?>pipeTile)) return ItemStack.EMPTY;
         return getDropItem((IPipeTile<PipeType, NodeDataType>) pipeTile);
     }
 }
