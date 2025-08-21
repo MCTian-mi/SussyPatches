@@ -284,6 +284,13 @@ public class SusConfig {
         @Config.Name("Fix multiblock preview missing blocks")
         @Config.RequiresMcRestart
         public boolean previewMissingBlocks = true;
+
+        @Config.Comment({
+                "Fixes GregTech Crafting Station voiding fluid containers during batch crafting."
+        })
+        @Config.Name("Fix crafting station voiding fluid containers")
+        @Config.RequiresMcRestart
+        public boolean workbenchVoidContainers = true;
     }
 
     public static final class Tweaks {
@@ -370,7 +377,7 @@ public class SusConfig {
                 "Basically just give GT MetaTileEntities proper sound types based on their materials.",
                 "Backported from GregTechCEu#2853"
         })
-        @Config.Name("Give GT MTEs proper step sounds.")
+        @Config.Name("Give GT MTEs proper step sounds")
         @Config.RequiresMcRestart
         public boolean customMTESounds = false;
     }
