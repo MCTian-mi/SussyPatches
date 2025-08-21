@@ -55,6 +55,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("cleanroomstructure", SusConfig.BUGFIX.cleanroomStruct, SusMods.NomiLibs.negate());
         BUGFIX.add("previewmissingblocks", SusConfig.BUGFIX.previewMissingBlocks);
         BUGFIX.add("workbenchvoidcontainers", SusConfig.BUGFIX.workbenchVoidContainers);
+        BUGFIX.add("thickpiperender", SusConfig.BUGFIX.thickPipeRender);
 
         TWEAK.add("tabnosearchbars", SusConfig.TWEAK.noSearchBars);
         TWEAK.add("xoshiro256plusplus", SusConfig.TWEAK.xoShiRo256plusplus);

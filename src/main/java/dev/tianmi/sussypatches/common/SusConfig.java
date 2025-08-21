@@ -291,6 +291,14 @@ public class SusConfig {
         @Config.Name("Fix crafting station voiding fluid containers")
         @Config.RequiresMcRestart
         public boolean workbenchVoidContainers = true;
+
+        @Config.Comment({
+                "Fixes quadruple and nonuple pipes have rendering issues, like weird lighting, etc.",
+                "Note: this fix simply shrinks their thickness from 0.95 to 0.9375, a magic number that just works."
+        })
+        @Config.Name("Fix quad/nonuple pipes rendering")
+        @Config.RequiresMcRestart
+        public boolean thickPipeRender = true;
     }
 
     public static final class Tweaks {
