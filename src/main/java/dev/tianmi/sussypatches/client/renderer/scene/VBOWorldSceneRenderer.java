@@ -22,16 +22,19 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.optifine.shaders.ShadersRender;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
 import dev.tianmi.sussypatches.api.core.mixin.extension.WSRExtension;
+import dev.tianmi.sussypatches.api.util.OptiFineHelper;
 import dev.tianmi.sussypatches.api.util.RenderPass;
 import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.client.renderer.buffer.VertexArrayObject;
 import gregtech.api.metatileentity.IFastRenderMetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
+import gregtech.api.util.Mods;
 import gregtech.client.renderer.scene.ISceneRenderHook;
 import gregtech.client.renderer.scene.ImmediateWorldSceneRenderer;
 import gregtech.client.renderer.scene.WorldSceneRenderer;
@@ -58,6 +61,8 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                 ForgeHooksClient.setRenderLayer(layer);
                 int pass = layer == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
                 setDefaultPassRenderState(pass);
+
+                OptiFineHelper.preRenderChunkLayer(layer);
 
                 BufferBuilder buffer = Tessellator.getInstance().getBuffer();
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
@@ -93,6 +98,8 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                     disableClientStates();
                     vbo.unbindBuffer();
                 }
+
+                OptiFineHelper.postRenderChunkLayer(layer);
             }
         } finally {
             ForgeHooksClient.setRenderLayer(oldRenderLayer);
@@ -122,6 +129,8 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
             var pass = layer == BlockRenderLayer.TRANSLUCENT ? RenderPass.TRANSLUCENT : RenderPass.NORMAL;
             setPassRenderState(pass);
 
+            OptiFineHelper.preRenderChunkLayer(layer);
+
             GlStateManager.pushMatrix();
             {
                 int i = layer.ordinal();
@@ -143,6 +152,8 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
                 OpenGlHelper.glBindBuffer(OpenGlHelper.GL_ARRAY_BUFFER, preVBO);
             }
             GlStateManager.popMatrix();
+
+            OptiFineHelper.postRenderChunkLayer(layer);
         }
         ForgeHooksClient.setRenderLayer(oldRenderLayer);
 
@@ -197,13 +208,18 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
     }
 
     protected void setupArrayPointers() {
-        // 28 == DefaultVertexFormats.BLOCK.getSize();
-        GlStateManager.glVertexPointer(3, GL11.GL_FLOAT, 28, 0);
-        GlStateManager.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, 28, 12);
-        GlStateManager.glTexCoordPointer(2, GL11.GL_FLOAT, 28, 16);
-        OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.glTexCoordPointer(2, GL11.GL_SHORT, 28, 24);
-        OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
+        if (Mods.Optifine.isModLoaded()) {
+            // OptiFine I hate you
+            ShadersRender.setupArrayPointersVbo();
+        } else {
+            // 28 == DefaultVertexFormats.BLOCK.getSize();
+            GlStateManager.glVertexPointer(3, GL11.GL_FLOAT, 28, 0);
+            GlStateManager.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, 28, 12);
+            GlStateManager.glTexCoordPointer(2, GL11.GL_FLOAT, 28, 16);
+            OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
+            GlStateManager.glTexCoordPointer(2, GL11.GL_SHORT, 28, 24);
+            OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
+        }
     }
 
     protected void renderTileEntities() {
