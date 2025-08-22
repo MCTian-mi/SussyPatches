@@ -1,7 +1,6 @@
 package dev.tianmi.sussypatches.client.renderer.scene;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -38,13 +37,14 @@ import gregtech.api.util.Mods;
 import gregtech.client.renderer.scene.ISceneRenderHook;
 import gregtech.client.renderer.scene.ImmediateWorldSceneRenderer;
 import gregtech.client.renderer.scene.WorldSceneRenderer;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 
 @SideOnly(Side.CLIENT)
 public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
 
     protected static final VertexArrayObject[] VAOS = new VertexArrayObject[BlockRenderLayer.values().length];
     protected static final VertexBuffer[] VBOS = new VertexBuffer[BlockRenderLayer.values().length];
-    protected static final Map<BlockPos, TileEntity> TILES = new LinkedHashMap<>();
+    protected static final Map<BlockPos, TileEntity> TILE_ENTITIES = new Object2ObjectArrayMap<>();
     protected boolean isDirty = true;
 
     public VBOWorldSceneRenderer(World world) {
@@ -170,13 +170,13 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
     public WorldSceneRenderer addRenderedBlocks(Collection<BlockPos> blocks, ISceneRenderHook _null) {
         this.isDirty = true;
         super.addRenderedBlocks(blocks, _null);
-        TILES.clear();
+        TILE_ENTITIES.clear();
         blocks.forEach(pos -> {
             TileEntity tile = world.getTileEntity(pos);
             if (tile != null && (!(tile instanceof IGregTechTileEntity gtte) ||
                     // Put MTEs only when it has FastRenderer
                     gtte.getMetaTileEntity() instanceof IFastRenderMetaTileEntity)) {
-                TILES.put(pos, tile);
+                TILE_ENTITIES.put(pos, tile);
             }
         });
         return this;
@@ -229,7 +229,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
             ForgeHooksClient.setRenderPass(pass.ordinal());
             setPassRenderState(pass);
 
-            TILES.forEach((pos, tile) -> {
+            TILE_ENTITIES.forEach((pos, tile) -> {
                 if (tile.shouldRenderInPass(pass.ordinal())) {
                     terd.render(tile, pos.getX(), pos.getY(), pos.getZ(), 0);
                 }
