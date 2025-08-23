@@ -42,7 +42,6 @@ import team.chisel.ctm.client.state.CTMExtendedState;
 
 // TODO: fix z-fighting properly
 // TODO: investigate lighting issue
-// TODO: fix incompatibility with Celeritas Dynamic Light
 @ParametersAreNonnullByDefault
 public class VisualStateRenderer implements ICubeRenderer {
 
