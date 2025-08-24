@@ -399,7 +399,7 @@ public class SusConfig {
         })
         @Config.Name("Enable ModularUI2 support")
         @Config.RequiresMcRestart
-        public boolean useMui2 = false;
+        public boolean useMui2 = SusMods.DevEnv.isLoaded();
 
         @Config.Comment({
                 "Basically just added an event for handle item overlay rendering.",

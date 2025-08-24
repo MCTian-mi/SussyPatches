@@ -6,6 +6,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,26 +30,25 @@ public enum SusMods implements BoolSupplier {
     ModularUI(Names.MODULARUI),
     NomiLibs(Names.NOMI_LIBS),
     RFTools(Names.RFTOOLS),
-    OpenGL3(null) { // Well true this isn't a mod, technically...
 
-        @Override
-        public boolean isLoaded() {
-            if (this.loaded == null) {
-                this.loaded = Cleanroom.isLoaded() || Lwjgl3ify.isLoaded();
-            }
-            return this.loaded;
-        }
-    };
+    // Well true these aren't mods, technically...
+    OpenGL3(self -> Cleanroom.isLoaded() || Lwjgl3ify.isLoaded()),
+    DevEnv(self -> FMLLaunchHandler.isDeobfuscatedEnvironment()),
+    ;
 
     @Nullable
-    protected final String ID;
+    private final String ID;
     @Nullable
-    protected final Function<SusMods, Boolean> extraCheck;
+    private final Function<SusMods, Boolean> extraCheck;
     @Nullable
-    protected Boolean loaded;
+    private Boolean loaded;
 
-    SusMods(@Nullable String id) {
+    SusMods(@NotNull String id) {
         this(id, null);
+    }
+
+    SusMods(@NotNull Function<SusMods, Boolean> check) {
+        this(null, check);
     }
 
     SusMods(@Nullable String id, @Nullable Function<SusMods, Boolean> extraCheck) {
@@ -62,7 +62,7 @@ public enum SusMods implements BoolSupplier {
 
     public boolean isLoaded() {
         if (this.loaded == null) {
-            this.loaded = Loader.isModLoaded(this.ID);
+            this.loaded = this.ID == null || Loader.isModLoaded(this.ID);
             if (this.loaded) {
                 if (this.extraCheck != null && !this.extraCheck.apply(this)) {
                     this.loaded = false;
