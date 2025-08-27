@@ -1,0 +1,21 @@
+package dev.tianmi.sussypatches.core.mixin.api.recipeinfo;
+
+import dev.tianmi.sussypatches.api.core.mixin.extension.RecipeBuilderExtension;
+import dev.tianmi.sussypatches.api.recipes.InfoProperty;
+import gregtech.api.recipes.RecipeBuilder;
+import gregtech.api.recipes.recipeproperties.RecipeProperty;
+import gregtech.common.ConfigHolder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+
+@Mixin(value = RecipeBuilder.class, remap = false)
+public abstract class RecipeBuilderMixin<R extends RecipeBuilder<R>> implements RecipeBuilderExtension {
+    public Object info(@Nullable String translationKey) {
+        this.applyProperty(InfoProperty.getInstance(), translationKey);
+        return this;
+    }
+
+    @Shadow public abstract boolean applyProperty(@NotNull RecipeProperty<?> property, @Nullable Object value);
+}

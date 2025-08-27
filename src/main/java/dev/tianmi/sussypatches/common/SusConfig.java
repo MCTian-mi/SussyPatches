@@ -410,6 +410,13 @@ public class SusConfig {
         @Config.RequiresMcRestart
         @Config.Ignore // TODO: fix early config
         public boolean itemOverlayEvent = true;
+
+        @Config.Comment({
+                "Supports documentation being attached to GT recipes that can be shown in JEI."
+        })
+        @Config.Name("Enable Recipe Info")
+        @Config.RequiresMcRestart
+        public boolean recipeInfo = true;
     }
 
     static {

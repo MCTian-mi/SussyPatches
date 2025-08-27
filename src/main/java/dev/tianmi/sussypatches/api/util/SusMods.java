@@ -30,6 +30,7 @@ public enum SusMods implements BoolSupplier {
     ModularUI(Names.MODULARUI),
     NomiLibs(Names.NOMI_LIBS),
     RFTools(Names.RFTOOLS),
+    JEI(Names.JEI),
 
     // Well true these aren't mods, technically...
     OpenGL3(self -> Cleanroom.isLoaded() || Lwjgl3ify.isLoaded()),
@@ -98,5 +99,6 @@ public enum SusMods implements BoolSupplier {
         public static final String CLEANROOM = "cleanroom";
         public static final String NOMI_LIBS = "nomilabs";
         public static final String RFTOOLS = "rftools";
+        public static final String JEI = "jei";
     }
 }

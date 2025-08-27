@@ -69,6 +69,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("customsoundtype", SusConfig.TWEAK.customMTESounds);
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
+        API.add("recipeinfo", SusConfig.API.recipeInfo, SusMods.JEI);
     }
 
     public static int foo() {
