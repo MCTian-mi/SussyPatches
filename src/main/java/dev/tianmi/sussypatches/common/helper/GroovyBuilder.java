@@ -1,9 +1,6 @@
 package dev.tianmi.sussypatches.common.helper;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -18,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
+import com.cleanroommc.groovyscript.helper.ingredient.GroovyScriptCodeConverter;
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
@@ -49,7 +47,6 @@ import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.category.GTRecipeCategory;
 import gregtech.api.unification.OreDictUnifier;
-import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.util.ClipboardUtil;
 import gregtech.integration.RecipeCompatUtil;
 import gregtech.integration.jei.recipe.RecipeMapCategory;
@@ -290,14 +287,27 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
     }
 
     private String getImportItemGroovy(ItemStack stack) {
-        OrePrefix orePrefix = OreDictUnifier.getPrefix(stack);
-        if (orePrefix == null) {
+        Set<String> oreDictionaryNames = OreDictUnifier.getOreDictionaryNames(stack);
+        if (oreDictionaryNames.isEmpty()) {
             return getExportItemGroovy(stack);
         }
-        return addAmount("ore('" + orePrefix + "')", stack.getCount());
+        String preferred = null;
+        for (String name : oreDictionaryNames) {
+            if (OreDictUnifier.get(name).isItemEqual(stack)) {
+                preferred = name;
+            }
+        }
+        if (preferred == null) {
+            return getExportItemGroovy(stack);
+        }
+        return addAmount("ore('" + preferred + "')", stack.getCount());
     }
 
     private String getExportItemGroovy(ItemStack stack) {
+        String metaItemId = RecipeCompatUtil.getMetaItemId(stack);
+        if (metaItemId == null) {
+            return GroovyScriptCodeConverter.asGroovyCode(stack, false);
+        }
         return addAmount("metaitem('" + RecipeCompatUtil.getMetaItemId(stack) + "')", stack.getCount());
     }
 
