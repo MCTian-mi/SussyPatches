@@ -3,6 +3,10 @@ package dev.tianmi.sussypatches.modules;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.tianmi.sussypatches.common.helper.GroovyBuilder;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,5 +40,11 @@ public class SusCoreModule implements IGregTechModule {
         if (SusConfig.FEAT.interactiveStorage) list.add(QChestInteractions.class);
         if (SusConfig.FEAT.fluidContainerBar && SusConfig.API.itemOverlayEvent) list.add(FluidBarRenderer.class);
         return list;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void postInit(FMLPostInitializationEvent event) {
+        if (SusConfig.FEAT.recipeCreatorGUI && SusConfig.API.useMui2) new GroovyBuilder().onPostInit();
     }
 }
