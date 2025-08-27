@@ -1,12 +1,9 @@
 package dev.tianmi.sussypatches.client.widget;
 
-import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.network.NetworkUtils;
-import com.cleanroommc.modularui.screen.RichTooltip;
-import com.cleanroommc.modularui.utils.BooleanConsumer;
-import com.cleanroommc.modularui.utils.MouseData;
-import com.cleanroommc.modularui.value.sync.SyncHandler;
-import gregtech.api.util.GTUtility;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,12 +15,18 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.network.NetworkUtils;
+import com.cleanroommc.modularui.screen.RichTooltip;
+import com.cleanroommc.modularui.utils.BooleanConsumer;
+import com.cleanroommc.modularui.utils.MouseData;
+import com.cleanroommc.modularui.value.sync.SyncHandler;
+
+import gregtech.api.util.GTUtility;
 
 public class GTFluidSyncHandler extends SyncHandler {
 
@@ -227,13 +230,15 @@ public class GTFluidSyncHandler extends SyncHandler {
             tankFluid = getLockedFluid();
         }
 
-/*        if (tankFluid != null) {
-            FluidTooltipUtil.handleFluidTooltip(tooltip, tankFluid);
-
-            if (showAmountInTooltip()) {
-                FluidTooltipUtil.addIngotMolFluidTooltip(tooltip, tankFluid);
-            }
-        }*/
+        /*
+         * if (tankFluid != null) {
+         * FluidTooltipUtil.handleFluidTooltip(tooltip, tankFluid);
+         * 
+         * if (showAmountInTooltip()) {
+         * FluidTooltipUtil.addIngotMolFluidTooltip(tooltip, tankFluid);
+         * }
+         * }
+         */
     }
 
     @Override
