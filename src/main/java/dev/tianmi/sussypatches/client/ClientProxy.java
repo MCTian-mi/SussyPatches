@@ -9,5 +9,4 @@ import dev.tianmi.sussypatches.common.CommonProxy;
 
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid = Tags.MODID, value = Side.CLIENT)
-public class ClientProxy extends CommonProxy {
-}
+public class ClientProxy extends CommonProxy {}
