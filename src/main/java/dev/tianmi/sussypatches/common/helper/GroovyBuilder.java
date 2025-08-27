@@ -1,5 +1,23 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
+
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
@@ -24,6 +42,7 @@ import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
+
 import dev.tianmi.sussypatches.client.widget.GTFluidSlot;
 import dev.tianmi.sussypatches.client.widget.SussyMui2Utils;
 import gregtech.api.capability.impl.FluidTankList;
@@ -40,23 +59,6 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.transfer.RecipeTransferErrorTooltip;
 import mezz.jei.util.Translator;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class GroovyBuilder implements IGuiHolder<GuiData> {
 
@@ -80,7 +82,8 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
 
                 @Override
                 public @NotNull ModularPanel buildUI(ModularGuiContext context) {
-                    ModularPanel panel = ModularPanel.defaultPanel("recipe_creator_opener", gui.getXSize(), gui.getYSize())
+                    ModularPanel panel = ModularPanel
+                            .defaultPanel("recipe_creator_opener", gui.getXSize(), gui.getYSize())
                             .pos(gui.getGuiLeft(), gui.getGuiTop())
                             .background(IDrawable.EMPTY);
 
@@ -164,7 +167,9 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
                                     return true;
                                 })
                                 .addTooltipLine(IKey.lang("sussypatches.gui.recipe_creator.recipe_map_popup_button")))
-                        .child(IKey.lang(() -> map == null ? "sussypatches.gui.recipe_creator.unselected" : map.getUnlocalizedName())
+                        .child(IKey
+                                .lang(() -> map == null ? "sussypatches.gui.recipe_creator.unselected" :
+                                        map.getUnlocalizedName())
                                 .asWidget()
                                 .alignY(0.5f)
                                 .expanded()
@@ -175,28 +180,34 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
                         .heightRel(0.08f)
                         .alignY(0.08f)
                         .coverChildrenWidth()
-                        .child(IKey.lang("sussypatches.gui.recipe_creator.import_items").asWidget().alignX(Alignment.CenterLeft)
+                        .child(IKey.lang("sussypatches.gui.recipe_creator.import_items").asWidget()
+                                .alignX(Alignment.CenterLeft)
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxInputs() > 0))
                         .child(createIngredientRow(16, (i) -> new PhantomItemSlot().slot(this.importItems, i)
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxInputs() > i))
-                                .setEnabledIf((w) -> this.map != null && this.map.getMaxInputs() > 0))
-                        .child(IKey.lang("sussypatches.gui.recipe_creator.import_fluids").asWidget().alignX(Alignment.CenterLeft)
+                                        .setEnabledIf((w) -> this.map != null && this.map.getMaxInputs() > 0))
+                        .child(IKey.lang("sussypatches.gui.recipe_creator.import_fluids").asWidget()
+                                .alignX(Alignment.CenterLeft)
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidInputs() > 0))
                         .child(createIngredientRow(8, (i) -> new GTFluidSlot()
-                                .syncHandler(GTFluidSlot.sync(importFluids.getTankAt(i)).drawAlwaysFull(true).phantom(true))
+                                .syncHandler(
+                                        GTFluidSlot.sync(importFluids.getTankAt(i)).drawAlwaysFull(true).phantom(true))
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidInputs() > i))
-                                .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidInputs() > 0))
-                        .child(IKey.lang("sussypatches.gui.recipe_creator.export_items").asWidget().alignX(Alignment.CenterLeft)
+                                        .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidInputs() > 0))
+                        .child(IKey.lang("sussypatches.gui.recipe_creator.export_items").asWidget()
+                                .alignX(Alignment.CenterLeft)
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxOutputs() > 0))
                         .child(createIngredientRow(16, (i) -> new PhantomItemSlot().slot(this.exportItems, i)
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxOutputs() > i))
-                                .setEnabledIf((w) -> this.map != null && this.map.getMaxOutputs() > 0))
-                        .child(IKey.lang("sussypatches.gui.recipe_creator.export_fluids").asWidget().alignX(Alignment.CenterLeft)
+                                        .setEnabledIf((w) -> this.map != null && this.map.getMaxOutputs() > 0))
+                        .child(IKey.lang("sussypatches.gui.recipe_creator.export_fluids").asWidget()
+                                .alignX(Alignment.CenterLeft)
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidOutputs() > 0))
                         .child(createIngredientRow(8, (i) -> new GTFluidSlot()
-                                .syncHandler(GTFluidSlot.sync(exportFluids.getTankAt(i)).drawAlwaysFull(true).phantom(true))
+                                .syncHandler(
+                                        GTFluidSlot.sync(exportFluids.getTankAt(i)).drawAlwaysFull(true).phantom(true))
                                 .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidOutputs() > i))
-                                .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidOutputs() > 0))
+                                        .setEnabledIf((w) -> this.map != null && this.map.getMaxFluidOutputs() > 0))
                         .child(Flow.row()
                                 .childPadding(5)
                                 .child(IKey.lang("sussypatches.gui.recipe_creator.duration").asWidget())
@@ -210,16 +221,18 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
                                         .value(new LongValue.Dynamic(() -> EUt, this::setEUt)).width(100))
                                 .setEnabledIf((w) -> this.map != null)))
 
-                .child(new ButtonWidget<>().overlay(IKey.lang("sussypatches.gui.recipe_creator.copy_script")).widthRel(0.2f).onMousePressed((button) -> {
-                    if (button != 0) return false;
-                    ClipboardUtil.copyToClipboard(getGroovyScript());
-                    return true;
-                }).setEnabledIf((w) -> this.map != null).alignY(0.68f).rightRel(0.05f))
-                .child(new ButtonWidget<>().overlay(IKey.lang("sussypatches.gui.recipe_creator.clear")).widthRel(0.2f).onMousePressed((button) -> {
-                    if (button != 0) return false;
-                    clear();
-                    return true;
-                }).setEnabledIf((w) -> this.map != null).alignY(0.6f).rightRel(0.05f))
+                .child(new ButtonWidget<>().overlay(IKey.lang("sussypatches.gui.recipe_creator.copy_script"))
+                        .widthRel(0.2f).onMousePressed((button) -> {
+                            if (button != 0) return false;
+                            ClipboardUtil.copyToClipboard(getGroovyScript());
+                            return true;
+                        }).setEnabledIf((w) -> this.map != null).alignY(0.68f).rightRel(0.05f))
+                .child(new ButtonWidget<>().overlay(IKey.lang("sussypatches.gui.recipe_creator.clear")).widthRel(0.2f)
+                        .onMousePressed((button) -> {
+                            if (button != 0) return false;
+                            clear();
+                            return true;
+                        }).setEnabledIf((w) -> this.map != null).alignY(0.6f).rightRel(0.05f))
                 .bindPlayerInventory();
     }
 
@@ -233,10 +246,12 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
             result.append("\n\t.inputs(").append(getImportItemGroovy(this.importItems.getStackInSlot(i))).append(")");
         }
         for (int i = 0; i < map.getMaxFluidInputs(); i++) {
-            if (this.importFluids.getTankAt(i).getFluid() == null || this.importFluids.getTankAt(i).getFluidAmount() == 0) {
+            if (this.importFluids.getTankAt(i).getFluid() == null ||
+                    this.importFluids.getTankAt(i).getFluidAmount() == 0) {
                 continue;
             }
-            result.append("\n\t.fluidInputs(").append(getFluidGroovy(this.importFluids.getTankAt(i).getFluid())).append(")");
+            result.append("\n\t.fluidInputs(").append(getFluidGroovy(this.importFluids.getTankAt(i).getFluid()))
+                    .append(")");
         }
         for (int i = 0; i < map.getMaxOutputs(); i++) {
             if (this.exportItems.getStackInSlot(i).isEmpty()) {
@@ -245,10 +260,12 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
             result.append("\n\t.outputs(").append(getExportItemGroovy(this.exportItems.getStackInSlot(i))).append(")");
         }
         for (int i = 0; i < map.getMaxFluidOutputs(); i++) {
-            if (this.exportFluids.getTankAt(i).getFluid() == null || this.exportFluids.getTankAt(i).getFluidAmount() == 0) {
+            if (this.exportFluids.getTankAt(i).getFluid() == null ||
+                    this.exportFluids.getTankAt(i).getFluidAmount() == 0) {
                 continue;
             }
-            result.append("\n\t.fluidOutputs(").append(getFluidGroovy(this.exportFluids.getTankAt(i).getFluid())).append(")");
+            result.append("\n\t.fluidOutputs(").append(getFluidGroovy(this.exportFluids.getTankAt(i).getFluid()))
+                    .append(")");
         }
         result.append("\n\t.duration(").append(this.duration).append(")");
         result.append("\n\t.EUt(").append(this.EUt).append(")");
@@ -314,8 +331,8 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
                     .marginTop(6)
                     .value(searchValue);
 
-            for (RecipeMap<?> map :
-                    RecipeMap.getRecipeMaps().stream().sorted(Comparator.comparing(RecipeMap::getUnlocalizedName)).collect(Collectors.toList())) {
+            for (RecipeMap<?> map : RecipeMap.getRecipeMaps().stream()
+                    .sorted(Comparator.comparing(RecipeMap::getUnlocalizedName)).collect(Collectors.toList())) {
                 String name = map.getUnlocalizedName();
                 int id = RecipeMap.getRecipeMaps().indexOf(map);
                 mapList.add(Flow.row()
@@ -328,14 +345,10 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
                                     syncHandler.closePanel();
                                     return true;
                                 })
-                                .setEnabledIf((widget1) ->
-                                        name.contains(textFieldWidget.getText())
-                                )
+                                .setEnabledIf((widget1) -> name.contains(textFieldWidget.getText()))
                                 .addTooltipLine(IKey.lang("sussypatches.gui.recipe_creator.set_map"))
                                 .overlay(IKey.str(name)))
-                        .setEnabledIf((widget) ->
-                                name.contains(textFieldWidget.getText())
-                        ));
+                        .setEnabledIf((widget) -> name.contains(textFieldWidget.getText())));
             }
 
             return SussyMui2Utils.createPopupPanel("recipe_map_selector", 200, 200)
@@ -354,8 +367,7 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
                                     .collapseDisabledChild()
                                     .onUpdateListener((widget) -> {
                                         widget.getScrollData().clamp(widget.getScrollArea());
-                                    }))
-                    );
+                                    })));
         };
     }
 
@@ -367,14 +379,13 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
         return RecipeMap.getRecipeMaps().get(mapId);
     }
 
-
-
     @Override
     public ModularScreen createScreen(GuiData data, ModularPanel mainPanel) {
         return new RecipeCreatorScreen(mainPanel);
     }
 
     public class RecipeCreatorScreen extends ModularScreen implements JeiRecipeTransferHandler {
+
         public RecipeCreatorScreen(ModularPanel mainPanel) {
             super(mainPanel);
         }
@@ -382,13 +393,15 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
         @Override
         public IRecipeTransferError transferRecipe(IRecipeLayout recipeLayout, boolean maxTransfer, boolean simulate) {
             if (!(recipeLayout.getRecipeCategory() instanceof RecipeMapCategory))
-                return new RecipeTransferErrorTooltip(Translator.translateToLocal("sussypatches.gui.recipe_creator.transfer_error"));
+                return new RecipeTransferErrorTooltip(
+                        Translator.translateToLocal("sussypatches.gui.recipe_creator.transfer_error"));
             if (simulate)
                 return null;
             RecipeMapCategory category = (RecipeMapCategory) recipeLayout.getRecipeCategory();
             String categoryName = category.getUid().substring(category.getUid().lastIndexOf(":") + 1);
             map = GTRecipeCategory.getByName(categoryName).getRecipeMap();
-            List<IGuiIngredient<ItemStack>> guiIngredients = recipeLayout.getItemStacks().getGuiIngredients().entrySet().stream().sorted(
+            List<IGuiIngredient<ItemStack>> guiIngredients = recipeLayout.getItemStacks().getGuiIngredients().entrySet()
+                    .stream().sorted(
                             Map.Entry.comparingByKey())
                     .map(Map.Entry::getValue).collect(Collectors.toList());
             int inputIndex = 0;
@@ -405,7 +418,8 @@ public class GroovyBuilder implements IGuiHolder<GuiData> {
                 }
             }
 
-            List<IGuiIngredient<FluidStack>> fluidIngredients = recipeLayout.getFluidStacks().getGuiIngredients().entrySet().stream().sorted(
+            List<IGuiIngredient<FluidStack>> fluidIngredients = recipeLayout.getFluidStacks().getGuiIngredients()
+                    .entrySet().stream().sorted(
                             Map.Entry.comparingByKey())
                     .map(Map.Entry::getValue).collect(Collectors.toList());
             inputIndex = 0;

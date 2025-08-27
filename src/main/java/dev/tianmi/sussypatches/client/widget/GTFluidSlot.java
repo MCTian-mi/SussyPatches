@@ -1,5 +1,14 @@
 package dev.tianmi.sussypatches.client.widget;
 
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.cleanroommc.modularui.api.ITheme;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.GuiDraw;
@@ -17,18 +26,12 @@ import com.cleanroommc.modularui.utils.MouseData;
 import com.cleanroommc.modularui.utils.NumberFormat;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.Widget;
+
 import gregtech.api.util.GTUtility;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 // Copied from master branch of ceu
 public final class GTFluidSlot extends Widget<GTFluidSlot> implements Interactable, JeiIngredientProvider,
-        JeiGhostIngredientSlot<FluidStack> {
+                               JeiGhostIngredientSlot<FluidStack> {
 
     private final TextRenderer textRenderer = new TextRenderer();
     private GTFluidSyncHandler syncHandler;
@@ -107,7 +110,8 @@ public final class GTFluidSlot extends Widget<GTFluidSlot> implements Interactab
         GuiDraw.drawFluidTexture(content, 1, y, getArea().w() - 2, height, 0);
 
         if (content != null && this.syncHandler.showAmountOnSlot()) {
-            String amount = NumberFormat.format(content.amount, NumberFormat.paramsBuilder().maxLength(4).build()) + "L";
+            String amount = NumberFormat.format(content.amount, NumberFormat.paramsBuilder().maxLength(4).build()) +
+                    "L";
             this.textRenderer.setAlignment(Alignment.CenterRight, getArea().width - 1f);
             this.textRenderer.setPos(0, 12);
             this.textRenderer.draw(amount);
@@ -119,7 +123,7 @@ public final class GTFluidSlot extends Widget<GTFluidSlot> implements Interactab
             GlStateManager.colorMask(true, true, true, true);
         }
 
-        //RenderUtil.handleJeiGhostHighlight(this);
+        // RenderUtil.handleJeiGhostHighlight(this);
     }
 
     @Override
@@ -172,11 +176,11 @@ public final class GTFluidSlot extends Widget<GTFluidSlot> implements Interactab
             return stack;
         } else if (ingredient instanceof ItemStack stack &&
                 stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-            if (stack.getCount() > 1) stack = GTUtility.copy(1, stack);
+                    if (stack.getCount() > 1) stack = GTUtility.copy(1, stack);
 
-            var handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-            return handler == null ? null : handler.drain(Integer.MAX_VALUE, true);
-        }
+                    var handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+                    return handler == null ? null : handler.drain(Integer.MAX_VALUE, true);
+                }
         return null;
     }
 
