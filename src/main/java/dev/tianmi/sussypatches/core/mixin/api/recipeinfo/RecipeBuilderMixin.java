@@ -12,8 +12,14 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(value = RecipeBuilder.class, remap = false)
 public abstract class RecipeBuilderMixin<R extends RecipeBuilder<R>> implements RecipeBuilderExtension {
+
     public Object info(@Nullable String translationKey) {
-        this.applyProperty(InfoProperty.getInstance(), translationKey);
+        this.applyProperty(InfoProperty.getInstance(), new InfoProperty.TranslationData(translationKey));
+        return this;
+    }
+
+    public Object info(@Nullable String translationKey, Object... args) {
+        this.applyProperty(InfoProperty.getInstance(), new InfoProperty.TranslationData(translationKey, args));
         return this;
     }
 
