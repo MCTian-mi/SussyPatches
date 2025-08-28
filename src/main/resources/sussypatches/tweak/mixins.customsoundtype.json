@@ -10,12 +10,15 @@
   },
   "mixins": [
     "BlockMachineMixin",
+    "MetalCasingTypeMixin",
     "MTEsMixin",
     "MTEsMixin$CrateMixin",
     "MTEsMixin$DrumMixin",
     "MTEsMixin$MultiblockTankMixin",
     "MTEsMixin$StoneSoundMTEsMixin",
     "MTEsMixin$TankValveMixin",
-    "MTEsMixin$WoodSoundMTEsMixin"
+    "MTEsMixin$WoodSoundMTEsMixin",
+    "SteamCasingTypeMixin",
+    "VariantBlockMixin"
   ]
 }

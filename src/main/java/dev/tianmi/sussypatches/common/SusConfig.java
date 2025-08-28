@@ -136,7 +136,7 @@ public class SusConfig {
         @Config.Comment({
                 "Stops RFTools Storage Scanner adding GT pipes as inventories."
         })
-        @Config.Name("Exclude GT pipes from Storage Scanners.")
+        @Config.Name("Exclude GT pipes from Storage Scanners")
         @Config.RequiresMcRestart
         public boolean noPipeForScanner = true;
     }
@@ -382,12 +382,12 @@ public class SusConfig {
         public String cStorageInf = "";
 
         @Config.Comment({
-                "Basically just give GT MetaTileEntities proper sound types based on their materials.",
+                "Basically just give GT blocks and MetaTileEntities proper sound types based on their materials.",
                 "Backported from GregTechCEu#2853"
         })
-        @Config.Name("Give GT MTEs proper step sounds")
+        @Config.Name("Give GT blocks & MTEs proper step sounds")
         @Config.RequiresMcRestart
-        public boolean customMTESounds = false;
+        public boolean customMTESounds = true;
     }
 
     public static final class Api {
