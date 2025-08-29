@@ -23,7 +23,7 @@ public abstract class MultiblockWithDisplayBaseMixin extends MultiblockControlle
      */
     @Overwrite
     public void outputRecoveryItems() {
-        SussyPatches.LOGGER.error("Class {} is trying to call \"outputRecoveryItems()\", please report to the auther!",
+        SussyPatches.LOGGER.error("Class {} is trying to call \"outputRecoveryItems()\", please report to the author!",
                 this.getClass());
         throw new UnsupportedOperationException("Muffler logic has been removed!");
     }
@@ -35,7 +35,7 @@ public abstract class MultiblockWithDisplayBaseMixin extends MultiblockControlle
     @Overwrite
     public void outputRecoveryItems(int parallel) {
         SussyPatches.LOGGER.error(
-                "Class {} is trying to call \"outputRecoveryItems(int)\", please report to the auther!",
+                "Class {} is trying to call \"outputRecoveryItems(int)\", please report to the author!",
                 this.getClass());
         throw new UnsupportedOperationException("Muffler logic has been removed!");
     }

@@ -107,7 +107,7 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
     @Overwrite
     public void recoverItemsTable(List<ItemStack> recoveryItems) {
         SussyPatches.LOGGER.error("Class {} is trying to call \"recoverItemsTable(List<ItemStack> recoveryItems)\", " +
-                "please report to the auther!", this.getClass());
+                "please report to the author!", this.getClass());
         throw new UnsupportedOperationException("Muffler logic has been removed!");
     }
 
@@ -117,7 +117,7 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
      */
     @Overwrite
     private boolean calculateChance() {
-        SussyPatches.LOGGER.error("Class {} is trying to call \"calculateChance()\", " + "please report to the auther!",
+        SussyPatches.LOGGER.error("Class {} is trying to call \"calculateChance()\", " + "please report to the author!",
                 this.getClass());
         throw new UnsupportedOperationException("Muffler logic has been removed!");
     }

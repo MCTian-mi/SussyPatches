@@ -35,7 +35,7 @@ public abstract class MultiblockRecipeLogicMixin extends AbstractRecipeLogic {
     @Overwrite
     protected void performMufflerOperations() {
         SussyPatches.LOGGER.error(
-                "Class {} is trying to call \"performMufflerOperations()\", please report to the auther!",
+                "Class {} is trying to call \"performMufflerOperations()\", please report to the author!",
                 this.getClass());
         throw new UnsupportedOperationException("Muffler logic has been removed!");
     }
