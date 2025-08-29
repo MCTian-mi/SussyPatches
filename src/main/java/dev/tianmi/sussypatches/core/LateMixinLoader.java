@@ -67,6 +67,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("toolsubitems", SusConfig.TWEAK.showAllToolItems);
         TWEAK.add("cstorageinf", !SusConfig.TWEAK.cStorageInf.isEmpty());
         TWEAK.add("customsoundtype", SusConfig.TWEAK.customMTESounds);
+        TWEAK.add("mobspawnonstones", SusConfig.TWEAK.mobSpawnOnStones);
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
     }
