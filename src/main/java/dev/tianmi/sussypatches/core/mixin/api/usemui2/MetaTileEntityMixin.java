@@ -17,7 +17,7 @@ import com.cleanroommc.modularui.factory.PosGuiData;
 import codechicken.lib.raytracer.CuboidRayTraceResult;
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import dev.tianmi.sussypatches.api.core.mixin.extension.Mui2Extension;
-import dev.tianmi.sussypatches.api.metatileentity.mui2.MTEGuiFactory;
+import dev.tianmi.sussypatches.api.mui.factory.MTEGuiFactory;
 import gregtech.api.metatileentity.MetaTileEntity;
 
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2281")

@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.api.metatileentity.mui2;
+package dev.tianmi.sussypatches.api.mui.factory;
 
 import java.util.Objects;
 
@@ -20,7 +20,10 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 
 // Copied from CEu master branch
+@Deprecated
 @ApiStatus.Internal
+@ApiStatus.ScheduledForRemoval(inVersion = "CEu 2.9")
+@SuppressWarnings("DeprecatedIsStillUsed")
 public class MTEGuiFactory extends AbstractUIFactory<PosGuiData> {
 
     public static final MTEGuiFactory INSTANCE = new MTEGuiFactory();
