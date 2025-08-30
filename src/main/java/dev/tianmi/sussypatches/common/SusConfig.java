@@ -53,7 +53,8 @@ public class SusConfig {
         public boolean interactiveStorage = true;
 
         @Config.Comment({
-                "Render a durability bar for drums and quantum tanks, with the same color as the fluid within.",
+                "Render a durability bar for drums and quantum tanks, " +
+                        "with the same color as the fluid within.",
                 "Note: this won't work when you stack them.",
                 "Stacking non-empty containers is buggy, would not suggest you to do that.",
                 "Requires to turn on 'Enable RenderItemOverlayEvent' in the API option."
@@ -72,9 +73,9 @@ public class SusConfig {
         @Config.Comment({
                 "Add a recipe creator GUI for GroovyScript in creative mode."
         })
-        @Config.Name("Recipe creator GUI for GroovyScript")
+        @Config.Name("In-Game GroovyScript recipe creator")
         @Config.RequiresMcRestart
-        public boolean recipeCreatorGUI = true;
+        public boolean grsRecipeCreator = true;
     }
 
     public static final class Compat {

@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.client.widget;
+package dev.tianmi.sussypatches.api.mui.widget;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -26,8 +26,13 @@ import com.cleanroommc.modularui.utils.BooleanConsumer;
 import com.cleanroommc.modularui.utils.MouseData;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
+import dev.tianmi.sussypatches.api.util.SusUtil;
 import gregtech.api.util.GTUtility;
+import lombok.Getter;
+import lombok.experimental.ExtensionMethod;
 
+// Copied from CEu master branch
+@ExtensionMethod(SusUtil.class)
 public class GTFluidSyncHandler extends SyncHandler {
 
     public static final int TRY_CLICK_CONTAINER = 1;
@@ -44,6 +49,7 @@ public class GTFluidSyncHandler extends SyncHandler {
     private FluidStack phantomFluid;
     private boolean canDrainSlot = true;
     private boolean canFillSlot = true;
+    @Getter
     private boolean phantom;
     private BooleanSupplier showAmountInTooltip = () -> true;
     private BooleanSupplier showAmountOnSlot = () -> true;
@@ -138,10 +144,6 @@ public class GTFluidSyncHandler extends SyncHandler {
         return this;
     }
 
-    public boolean isPhantom() {
-        return phantom;
-    }
-
     public GTFluidSyncHandler showAmountInTooltip(boolean showAmount) {
         this.showAmountInTooltip = () -> showAmount;
         return this;
@@ -211,7 +213,7 @@ public class GTFluidSyncHandler extends SyncHandler {
         if (tankFluid == null && canLockFluid()) {
             tankFluid = lockedFluid.get();
         }
-        return tankFluid == null ? IKey.EMPTY : SussyMui2Utils.fluid(tankFluid);
+        return tankFluid == null ? IKey.EMPTY : tankFluid.asKey();
     }
 
     public void handleTooltip(@NotNull RichTooltip tooltip) {

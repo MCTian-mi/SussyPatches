@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.client.widget;
+package dev.tianmi.sussypatches.api.mui.widget;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ import com.cleanroommc.modularui.widget.Widget;
 
 import gregtech.api.util.GTUtility;
 
-// Copied from master branch of ceu
+// Copied from CEu master branch
 public final class GTFluidSlot extends Widget<GTFluidSlot> implements Interactable, JeiIngredientProvider,
                                JeiGhostIngredientSlot<FluidStack> {
 
