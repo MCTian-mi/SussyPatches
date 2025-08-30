@@ -1,12 +1,12 @@
 package dev.tianmi.sussypatches.api.capability.impl;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import org.jetbrains.annotations.Nullable;
 
 /// A read-only dummy impl of [FluidTank]
 public class FluidTankView extends FluidTank {
