@@ -4,13 +4,28 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.minecraftforge.fluids.FluidStack;
+
+import org.jetbrains.annotations.Nullable;
+
+import com.cleanroommc.modularui.api.drawable.IKey;
+
+import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import gregtech.api.GTValues;
+import gregtech.api.fluids.GTFluid.GTMaterialFluid;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
 import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
+import gregtech.api.util.LocalizationUtils;
+import mcp.MethodsReturnNonnullByDefault;
 
+/// This also serves as a Lombok method extension holder.
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class SusUtil {
 
     public static String getPrefix(Material material) {
@@ -56,5 +71,22 @@ public class SusUtil {
             case CABLE_HEX -> SusIconTypes.insulationHex;
             default -> SusIconTypes.insulationSide;
         };
+    }
+
+    public static boolean isEmpty(@Nullable FluidStack stack) {
+        return stack == null || stack.getFluid() == null || stack.amount <= 0;
+    }
+
+    public static IKey asKey(@Nullable FluidStack stack) {
+        if (isEmpty(stack)) return IKey.EMPTY;
+        var fluid = stack.getFluid();
+        if (fluid instanceof GTMaterialFluid matFluid) {
+            String translationKey = ((GTMaterialFluidAccessor) matFluid).getTranslationKey();
+            String override = "fluid." + matFluid.getMaterial().getUnlocalizedName();
+            IKey localizedName = LocalizationUtils.hasKey(override) ? IKey.lang(override) :
+                    IKey.lang(matFluid.getMaterial().getUnlocalizedName());
+            return translationKey == null ? localizedName : IKey.lang(translationKey, localizedName);
+        }
+        return IKey.lang(fluid.getUnlocalizedName(stack));
     }
 }

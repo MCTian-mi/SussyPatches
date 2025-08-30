@@ -10,8 +10,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.jetbrains.annotations.Nullable;
 
+import lombok.Getter;
 import mcp.MethodsReturnNonnullByDefault;
 
+@Getter
 @Cancelable
 @SideOnly(Side.CLIENT)
 @ParametersAreNonnullByDefault
@@ -26,10 +28,6 @@ public class RenderItemOverlayEvent extends Event {
 
     public void enqueue(RenderOperation operation) {
         this.operation = this.operation.andThen(operation);
-    }
-
-    public RenderOperation getOperation() {
-        return operation;
     }
 
     public void reset() {

@@ -18,10 +18,12 @@ import gregtech.api.items.metaitem.MetaItem.MetaValueItem;
 import gregtech.api.unification.material.Material;
 import gregtech.api.util.Mods;
 import gregtech.integration.RecipeCompatUtil;
+import lombok.experimental.ExtensionMethod;
 
 @Compat(mod = Mods.GroovyScript)
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2785")
 @Mixin(value = RecipeCompatUtil.class, remap = false)
+@ExtensionMethod(SusUtil.class)
 public abstract class RecipeCompatUtilMixin {
 
     @ModifyReturnValue(method = "getMetaItemId", at = @At(value = "RETURN", ordinal = 0))
@@ -38,6 +40,6 @@ public abstract class RecipeCompatUtilMixin {
                             target = "Lgregtech/api/unification/material/Material;toCamelCaseString()Ljava/lang/String;"),
                    require = 3)
     private static String addNameSpace(Material mat, Operation<String> method) {
-        return SusUtil.getPrefix(mat) + method.call(mat);
+        return mat.getPrefix() + method.call(mat);
     }
 }

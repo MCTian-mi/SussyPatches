@@ -38,6 +38,7 @@ import gregtech.client.renderer.cclop.ColourOperation;
 import gregtech.client.renderer.cclop.LightMapOperation;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.BloomEffectUtil;
+import lombok.Getter;
 import team.chisel.ctm.client.state.CTMExtendedState;
 
 // TODO: fix z-fighting properly
@@ -45,6 +46,7 @@ import team.chisel.ctm.client.state.CTMExtendedState;
 @ParametersAreNonnullByDefault
 public class VisualStateRenderer implements ICubeRenderer {
 
+    @Getter
     protected final IBlockState visualState;
     protected final boolean isActive;
 
@@ -65,10 +67,6 @@ public class VisualStateRenderer implements ICubeRenderer {
 
     public static VisualStateRenderer from(IBlockState visualState, boolean isActive) {
         return new VisualStateRenderer(visualState, isActive);
-    }
-
-    public IBlockState getVisualState() {
-        return visualState;
     }
 
     @Override
