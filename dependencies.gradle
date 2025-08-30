@@ -54,7 +54,7 @@ dependencies {
     compileOnly 'com.cleanroommc:groovyscript:1.2.5' transitive false
 
     compileOnlyApi 'com.cleanroommc:configanytime:3.0'
-    compileOnlyApi 'com.cleanroommc:modularui:2.5.0-rc6' transitive false
+    api 'com.cleanroommc:modularui:2.5.0-rc6' transitive false
 
     // # Optional dependencies. Uncomment the ones you need
 //    runtimeOnlyNonPublishable 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31' transitive false
