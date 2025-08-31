@@ -6,24 +6,35 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.widget.IWidget;
+import com.cleanroommc.modularui.drawable.ItemDrawable;
+import com.cleanroommc.modularui.utils.Color;
+import com.cleanroommc.modularui.widgets.ScrollingTextWidget;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import gregtech.api.GTValues;
 import gregtech.api.fluids.GTFluid.GTMaterialFluid;
+import gregtech.api.recipes.RecipeMap;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
 import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
 import gregtech.api.util.LocalizationUtils;
+import gregtech.integration.jei.JustEnoughItemsModule;
+import gregtech.integration.jei.recipe.RecipeMapCategory;
 import mcp.MethodsReturnNonnullByDefault;
 
-/// This also serves as a Lombok method extension holder.
+/// This also serves as a Lombok [ExtensionMethod] holder.
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SusUtil {
@@ -88,5 +99,36 @@ public class SusUtil {
             return translationKey == null ? localizedName : IKey.lang(translationKey, localizedName);
         }
         return IKey.lang(fluid.getUnlocalizedName(stack));
+    }
+
+    public static IDrawable getCatalystIcon(RecipeMap<?> recipeMap) {
+        for (var category : recipeMap.getRecipesByCategory().keySet()) {
+
+            var jeiCategory = RecipeMapCategory.getCategoryFor(category);
+            if (jeiCategory == null) return new ItemDrawable(Blocks.BARRIER); // TODO: Better fallback icon?
+
+            for (var catalyst : JustEnoughItemsModule.jeiRuntime.getRecipeRegistry().getRecipeCatalysts(jeiCategory)) {
+                if (catalyst instanceof ItemStack stack) {
+                    return new ItemDrawable(stack);
+                }
+            }
+        }
+
+        return new ItemDrawable(Blocks.BARRIER); // TODO: Better fallback icon?
+    }
+
+    public static IWidget asWidget(RecipeMap<?> recipeMap) {
+        return Flow.row()
+                .full()
+                .child(getCatalystIcon(recipeMap)
+                        .asWidget()
+                        .size(16)
+                        .margin(2))
+                .child(new ScrollingTextWidget(IKey.lang(recipeMap.getTranslationKey()))
+                        .color(Color.WHITE.main)
+                        .shadow(true)
+                        .margin(2)
+                        .expanded()
+                        .heightRel(1));
     }
 }
