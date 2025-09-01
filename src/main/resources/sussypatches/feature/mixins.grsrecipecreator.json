@@ -12,6 +12,7 @@
     "GTMaterialFluidAccessor"
   ],
   "mixins": [
+    "ExpandableAccessor",
     "ScrollingTextWidgetAccessor"
   ]
 }

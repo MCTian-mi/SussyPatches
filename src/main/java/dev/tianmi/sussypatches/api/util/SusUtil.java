@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -14,12 +13,9 @@ import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
-import com.cleanroommc.modularui.utils.Color;
-import com.cleanroommc.modularui.widgets.layout.Flow;
 
-import dev.tianmi.sussypatches.api.mui.widget.FixedScrollingTextWidget;
+import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import gregtech.api.GTValues;
 import gregtech.api.fluids.GTFluid.GTMaterialFluid;
@@ -30,6 +26,7 @@ import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
 import gregtech.api.util.LocalizationUtils;
+import gregtech.common.items.MetaItems;
 import gregtech.integration.jei.JustEnoughItemsModule;
 import gregtech.integration.jei.recipe.RecipeMapCategory;
 import mcp.MethodsReturnNonnullByDefault;
@@ -101,33 +98,27 @@ public class SusUtil {
         return IKey.lang(fluid.getUnlocalizedName(stack));
     }
 
+    public static ItemDrawable asDrawable(ItemStack stack) {
+        return new ItemDrawable(stack);
+    }
+
     public static IDrawable getCatalystIcon(RecipeMap<?> recipeMap) {
         for (var category : recipeMap.getRecipesByCategory().keySet()) {
 
             var jeiCategory = RecipeMapCategory.getCategoryFor(category);
-            if (jeiCategory == null) return new ItemDrawable(Blocks.BARRIER); // TODO: Better fallback icon?
+            if (jeiCategory == null) break;
 
             for (var catalyst : JustEnoughItemsModule.jeiRuntime.getRecipeRegistry().getRecipeCatalysts(jeiCategory)) {
                 if (catalyst instanceof ItemStack stack) {
-                    return new ItemDrawable(stack);
+                    return asDrawable(stack);
                 }
             }
         }
 
-        return new ItemDrawable(Blocks.BARRIER); // TODO: Better fallback icon?
+        return asDrawable(MetaItems.LOGO.getStackForm());
     }
 
-    @SuppressWarnings("deprecation")
-    public static IWidget asWidget(RecipeMap<?> recipeMap) {
-        return Flow.row()
-                .full()
-                .child(getCatalystIcon(recipeMap)
-                        .asWidget()
-                        .size(16)
-                        .margin(2))
-                .child(new FixedScrollingTextWidget(IKey.lang(recipeMap.getTranslationKey()))
-                        .color(Color.WHITE.main)
-                        .shadow(true)
-                        .expanded());
+    public static RecipeMapEntryWidget<?> asWidget(RecipeMap<?> recipeMap) {
+        return new RecipeMapEntryWidget<>(recipeMap);
     }
 }

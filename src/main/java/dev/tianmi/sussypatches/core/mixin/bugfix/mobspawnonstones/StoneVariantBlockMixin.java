@@ -42,6 +42,7 @@ public abstract class StoneVariantBlockMixin extends VariantBlock<StoneType> {
         return super.canCreatureSpawn(state, world, pos, type);
     }
 
+    @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2859")
     @Mixin(value = StoneType.class, remap = false)
     public static class StoneTypeMixin implements IStateSpawnControl {
 

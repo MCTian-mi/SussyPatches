@@ -41,11 +41,8 @@ dependencies {
 
     // # Lombok
     def lombok = 'org.projectlombok:lombok:1.18.38'
-    compileOnly lombok
-    annotationProcessor lombok
-
-    testCompileOnly lombok
-    testAnnotationProcessor lombok
+    compileOnly lombok; annotationProcessor lombok
+    testCompileOnly lombok; testAnnotationProcessor lombok
 
     // # Fix crashes on macOS with Narrator
     runtimeOnly 'com.cleanroommc:osxnarratorblocker:1.0'
@@ -90,5 +87,5 @@ dependencies {
 //    ant.get(src: 'https://github.com/SynArchive/OptiFine-Archive/raw/refs/heads/main/1.12.2/preview_OptiFine_1.12.2_HD_U_G6_pre1.jar',
 //            dest: 'libs/optifine/',
 //            skipexisting: 'true')
-//    runtimeOnly files('libs/optifine/*')
+//    runtimeOnly fileTree('libs/optifine/')
 }

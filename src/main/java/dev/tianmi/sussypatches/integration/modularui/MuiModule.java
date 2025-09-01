@@ -30,7 +30,7 @@ public class MuiModule extends IntegrationSubmodule {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         if (event.getSide().isClient() && SusConfig.FEAT.grsRecipeCreator) {
-            GrSRecipeCreator.INSTANCE.register();
+            GrSRecipeCreator.registerOverlay();
         }
     }
 }
