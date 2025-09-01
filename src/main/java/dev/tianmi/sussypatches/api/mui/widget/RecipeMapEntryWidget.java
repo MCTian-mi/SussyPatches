@@ -60,6 +60,7 @@ public class RecipeMapEntryWidget<W extends RecipeMapEntryWidget<W>> extends Sin
                         .color(Color.WHITE.main)
                         .shadow(true)
                         .expanded() // TODO: Fix vertical alignment
+                        .marginLeft(1)
                         .marginRight(2))); // TODO: Check stencil
     }
 }

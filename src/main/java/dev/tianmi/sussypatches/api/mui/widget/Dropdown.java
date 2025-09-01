@@ -36,15 +36,11 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
     protected Consumer<V> onSelected = $ -> {};
 
     @Nullable
-    protected IDrawable expandedBackground = null;
+    protected IDrawable expandedBackground;
     protected final Function<I, V> widgetToValue;
 
     protected final ButtonWidget<?> buttonWidget;
     protected final ListWidget<ButtonWidget<?>, ?> listWidget;
-
-    public static <V, I extends IWidget> Dropdown<V, I> of(Function<I, V> widgetToValue) {
-        return new Dropdown<>(widgetToValue);
-    }
 
     public Dropdown(Function<I, V> widgetToValue) {
         this.widgetToValue = widgetToValue;
@@ -54,7 +50,6 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
 
     @Override
     public void onInit() {
-        super.onInit();
         buttonWidget.size(120, 20)
                 .onMousePressed(mouseButton -> {
                     if (mouseButton == 0 || mouseButton == 1) {
@@ -66,13 +61,13 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
 
         int scrollWidth = 10;
         listWidget.size(120 - scrollWidth, 160)
-                .marginBottom(2)
+                .marginBottom(1)
                 .scrollDirection(new VanillaScrollData(scrollWidth));
 
         this.expandedBackground(GuiTextures.MC_BACKGROUND)
                 // .hoverBackground(GuiTextures.MC_BACKGROUND) // TODO: Handle hovering check
                 .background(GuiTextures.MC_BACKGROUND) // TODO: Handle hovering check
-                .padding(4)
+                .padding(5)
                 .excludeAreaInJei()
                 .normalView(Flow.column()
                         .coverChildren()
@@ -83,17 +78,20 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
                         .collapseDisabledChild()
                         .childPadding(2)
                         .child(buttonWidget)
-                        .child(new Rectangle().setColor(Color.GREY.darker(2))
+                        .child(new Rectangle()
+                                .setColor(Color.GREY.darker(2))
                                 .asWidget()
                                 .height(1)
                                 .widthRel(1)
                                 .horizontalCenter())
                         .child(listWidget));
+        super.onInit();
     }
 
     public Dropdown<V, I> children(Iterable<V> values, Function<V, I> widgetCreator) {
         for (V value : values) {
-            listWidget.child(new ButtonWidget<>().widthRel(1)
+            listWidget.child(new ButtonWidget<>()
+                    .widthRel(1)
                     .height(20)
                     .child(widgetCreator.apply(value))
                     .onMousePressed(mouseButton -> {
