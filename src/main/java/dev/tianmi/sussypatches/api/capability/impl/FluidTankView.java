@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import org.jetbrains.annotations.Nullable;
 
-/// A read-only dummy impl of [FluidTank]
+/// An unmodifiable view of [FluidTank] that wraps a [IFluidHandler].
 public class FluidTankView extends FluidTank {
 
     public static FluidTankView of(IFluidHandler handler) {

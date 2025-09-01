@@ -307,6 +307,14 @@ public class SusConfig {
         @Config.Name("Fix quad/nonuple pipes rendering")
         @Config.RequiresMcRestart
         public boolean thickPipeRender = true;
+
+        @Config.Comment({
+                "Literally. Just made it possible for mobs to spawn on GT stone blocks.",
+                "Backported from GregTechCEu#2859"
+        })
+        @Config.Name("Fix mob not spawning on GT stones")
+        @Config.RequiresMcRestart
+        public boolean mobSpawnOnStones = true;
     }
 
     public static final class Tweaks {
@@ -396,14 +404,6 @@ public class SusConfig {
         @Config.Name("Give GT blocks & MTEs proper step sounds")
         @Config.RequiresMcRestart
         public boolean customMTESounds = true;
-
-        @Config.Comment({
-                "Literally. Just made it possible for mobs to spawn on GT stone blocks.",
-                "Backported from GregTechCEu#2859"
-        })
-        @Config.Name("Allow mob spawning on GT stones")
-        @Config.RequiresMcRestart
-        public boolean mobSpawnOnStones = true;
     }
 
     public static final class Api {

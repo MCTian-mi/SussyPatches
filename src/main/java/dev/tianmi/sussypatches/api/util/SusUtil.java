@@ -17,9 +17,9 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.utils.Color;
-import com.cleanroommc.modularui.widgets.ScrollingTextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 
+import dev.tianmi.sussypatches.api.mui.widget.FixedScrollingTextWidget;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import gregtech.api.GTValues;
 import gregtech.api.fluids.GTFluid.GTMaterialFluid;
@@ -117,6 +117,7 @@ public class SusUtil {
         return new ItemDrawable(Blocks.BARRIER); // TODO: Better fallback icon?
     }
 
+    @SuppressWarnings("deprecation")
     public static IWidget asWidget(RecipeMap<?> recipeMap) {
         return Flow.row()
                 .full()
@@ -124,11 +125,9 @@ public class SusUtil {
                         .asWidget()
                         .size(16)
                         .margin(2))
-                .child(new ScrollingTextWidget(IKey.lang(recipeMap.getTranslationKey()))
+                .child(new FixedScrollingTextWidget(IKey.lang(recipeMap.getTranslationKey()))
                         .color(Color.WHITE.main)
                         .shadow(true)
-                        .margin(2)
-                        .expanded()
-                        .heightRel(1));
+                        .expanded());
     }
 }

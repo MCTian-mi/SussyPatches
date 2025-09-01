@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.tweak.mobspawnonstones",
+  "package": "dev.tianmi.sussypatches.core.mixin.bugfix.mobspawnonstones",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
@@ -9,6 +9,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "StoneVariantBlockMixin"
+    "StoneVariantBlockMixin",
+    "StoneVariantBlockMixin$StoneTypeMixin",
+    "VariantBlockMixin"
   ]
 }
