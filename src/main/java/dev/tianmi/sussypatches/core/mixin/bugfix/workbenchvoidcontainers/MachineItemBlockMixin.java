@@ -10,8 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.ModifyReceiver;
 
+import dev.tianmi.sussypatches.api.util.SusUtil;
 import gregtech.api.block.machines.MachineItemBlock;
+import lombok.experimental.ExtensionMethod;
 
+@ExtensionMethod(SusUtil.class)
 @Mixin(value = MachineItemBlock.class, remap = false)
 public abstract class MachineItemBlockMixin {
 
@@ -19,8 +22,6 @@ public abstract class MachineItemBlockMixin {
                     at = @At(value = "INVOKE",
                              target = "Lnet/minecraft/item/ItemStack;getCapability(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/util/EnumFacing;)Ljava/lang/Object;"))
     private ItemStack useSingleStack(ItemStack itemStack, Capability<IFluidHandlerItem> capability, EnumFacing _null) {
-        var singleStack = itemStack.copy();
-        singleStack.setCount(1);
-        return singleStack;
+        return itemStack.copy().tap(s -> s.setCount(1));
     }
 }

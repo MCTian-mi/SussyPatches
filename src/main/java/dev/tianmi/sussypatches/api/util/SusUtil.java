@@ -1,5 +1,9 @@
 package dev.tianmi.sussypatches.api.util;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
@@ -9,6 +13,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
@@ -35,6 +40,27 @@ import mcp.MethodsReturnNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SusUtil {
+
+    public static <T> T tap(T instance, Consumer<T> lambda) {
+        lambda.accept(instance);
+        return instance;
+    }
+
+    public static <T> void let(T instance, Consumer<T> lambda) {
+        lambda.accept(instance);
+    }
+
+    public static <V, T> V with(T instance, Function<T, V> lambda) {
+        return lambda.apply(instance);
+    }
+
+    public static <T> T orElse(@Nullable T instance, Supplier<@NotNull T> lambda) {
+        return instance == null ? lambda.get() : instance;
+    }
+
+    public static <T> T orElse(@Nullable T instance, T other) {
+        return instance == null ? other : instance;
+    }
 
     public static String getPrefix(Material material) {
         return material.getModid().equals(GTValues.MODID) ? "" : material.getModid() + ":";

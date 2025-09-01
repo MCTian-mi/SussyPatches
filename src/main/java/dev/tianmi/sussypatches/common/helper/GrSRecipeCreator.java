@@ -20,6 +20,7 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.mui.GTGuis;
+import dev.tianmi.sussypatches.api.mui.SusGuis;
 import dev.tianmi.sussypatches.api.mui.widget.Dropdown;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.api.util.SusUtil;
@@ -36,8 +37,7 @@ public class GrSRecipeCreator {
     @SuppressWarnings("UnstableApiUsage")
     public static void registerOverlay() {
         OverlayManager.register(new OverlayHandler(GuiContainerCreative.class::isInstance,
-                $ -> new ModularScreen(ModularPanel.defaultPanel("recipe_creator_opener")
-                        .full()
+                $ -> new ModularScreen(SusGuis.overlayPanel("recipe_creator_opener")
                         .background(IDrawable.EMPTY)
                         .child(new ButtonWidget<>()
                                 .align(Alignment.BottomCenter)
