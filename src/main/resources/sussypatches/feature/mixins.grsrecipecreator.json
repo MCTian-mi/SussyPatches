@@ -9,10 +9,8 @@
     "defaultRequire": 1
   },
   "client": [
-    "GTMaterialFluidAccessor"
-  ],
-  "mixins": [
     "ExpandableAccessor",
+    "GTMaterialFluidAccessor",
     "ScrollingTextWidgetAccessor"
   ]
 }

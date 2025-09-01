@@ -10,8 +10,8 @@ import com.cleanroommc.modularui.widgets.ScrollingTextWidget;
 
 @Deprecated
 @ApiStatus.ScheduledForRemoval(inVersion = "Mui 2.5")
-@Mixin(value = ScrollingTextWidget.class, remap = false)
 @SuppressWarnings("DeprecatedIsStillUsed")
+@Mixin(value = ScrollingTextWidget.class, remap = false)
 public interface ScrollingTextWidgetAccessor {
 
     @Accessor("hovering")

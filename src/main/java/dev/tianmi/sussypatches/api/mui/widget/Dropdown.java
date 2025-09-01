@@ -33,6 +33,8 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
     @Getter
     @Nullable
     protected V selected;
+    protected Consumer<V> onSelected = $ -> {};
+
     @Nullable
     protected IDrawable expandedBackground = null;
     protected final Function<I, V> widgetToValue;
@@ -106,7 +108,12 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
     @ApiStatus.OverrideOnly
     protected void setSelected(I widget) {
         buttonWidget.child(widget).scheduleResize();
-        this.selected = widgetToValue.apply(widget);
+        onSelected.accept(this.selected = widgetToValue.apply(widget));
+    }
+
+    public Dropdown<V, I> onSelected(Consumer<V> consumer) {
+        this.onSelected = consumer;
+        return getThis();
     }
 
     public Dropdown<V, I> button(Consumer<ButtonWidget<?>> operator) {

@@ -19,6 +19,7 @@ import com.cleanroommc.modularui.utils.Interpolation;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 
 import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.api.mui.GTGuis;
 import dev.tianmi.sussypatches.api.mui.widget.Dropdown;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.api.util.SusUtil;
@@ -48,6 +49,7 @@ public class GrSRecipeCreator {
                                         .asIcon()
                                         .center())
                                 .onMousePressed(mouseButton -> {
+                                    // TODO: Check JEI
                                     // var jeiSetting = new JeiSettingsImpl();
                                     // jeiSetting.enableJei();
                                     // ClientGUI.open(new Screen(), jeiSetting);
@@ -60,28 +62,34 @@ public class GrSRecipeCreator {
     @ExtensionMethod(SusUtil.class)
     @ParametersAreNonnullByDefault
     @MethodsReturnNonnullByDefault
-    public static class Screen extends CustomModularScreen implements JeiRecipeTransferHandler {
+    public static class Screen extends CustomModularScreen implements JeiRecipeTransferHandler { // TODO: singleton
 
         @Setter
         @Nullable
         protected RecipeMap<?> currentMap;
 
-        private Screen() {
+        protected Screen() {
             super(Tags.MODID);
         }
 
+        protected Dropdown<?, ?> recipeMapSelector() {
+            return new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(RecipeMapEntryWidget::getWidgetValue)
+                    .children(RecipeMap.getRecipeMaps(), SusUtil::asWidget)
+                    .setDefault(RecipeMapEntryWidget.EMPTY)
+                    .onSelected(this::setCurrentMap)
+                    .interpolation(Interpolation.EXP_OUT);
+        }
+
         @Override
+        @SuppressWarnings("deprecation")
         public ModularPanel buildUI(ModularGuiContext context) {
-            return ModularPanel.defaultPanel("grs_recipe_creator")
-                    .child(new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(RecipeMapEntryWidget::getWidgetValue)
-                            .children(RecipeMap.getRecipeMaps(), SusUtil::asWidget)
-                            .setDefault(RecipeMapEntryWidget.EMPTY)
-                            .interpolation(Interpolation.EXP_OUT));
+            return GTGuis.createPanel("grs_recipe_creator")
+                    .child(recipeMapSelector());
         }
 
         @Override
         public IRecipeTransferError transferRecipe(IRecipeLayout recipeLayout, boolean maxTransfer, boolean simulate) {
-            return null;
+            return null; // TODO: impl transfer
         }
     }
 }
