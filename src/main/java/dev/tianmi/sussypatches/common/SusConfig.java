@@ -68,6 +68,15 @@ public class SusConfig {
         @Config.Name("Render quantum tanks fluids in inventories")
         @Config.RequiresMcRestart
         public boolean visibleStorage = true;
+
+        @Config.Comment({
+                "Let all material cable and pipe textures be configurable with its icon set texture.",
+                "Note: if this option is enabled, then the correspondenced textures in default path will invalid,",
+                "only the textures in its icon set path will be rendered."
+        })
+        @Config.Name("Render cable and pipe textures from its icon set")
+        @Config.RequiresMcRestart
+        public boolean cablePipeTextures = true;
     }
 
     public static final class Compat {
