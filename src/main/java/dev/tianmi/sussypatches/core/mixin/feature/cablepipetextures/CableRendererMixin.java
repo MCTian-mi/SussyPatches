@@ -1,5 +1,23 @@
 package dev.tianmi.sussypatches.core.mixin.feature.cablepipetextures;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import codechicken.lib.render.pipeline.ColourMultiplier;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.uv.IconTransformation;
@@ -13,22 +31,6 @@ import gregtech.api.util.GTUtility;
 import gregtech.client.renderer.pipe.CableRenderer;
 import gregtech.client.renderer.pipe.PipeRenderer;
 import gregtech.common.pipelike.cable.Insulation;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mixin(value = CableRenderer.class, remap = false)
 public abstract class CableRendererMixin {
@@ -44,8 +46,8 @@ public abstract class CableRendererMixin {
             at = @At("TAIL"))
     private void registerSpecifiedIcon(@NotNull TextureMap textureMap, CallbackInfo ci) {
         for (MaterialIconSet iconSet : MaterialIconSet.ICON_SETS.values()) {
-            sus$wireTextures.put(iconSet, textureMap.registerSprite(GTUtility.gregtechId("blocks/material_sets/"
-                    + iconSet.getName().toLowerCase() + "/wire")));
+            sus$wireTextures.put(iconSet, textureMap.registerSprite(
+                    GTUtility.gregtechId("blocks/material_sets/" + iconSet.getName().toLowerCase() + "/wire")));
         }
     }
 
@@ -108,7 +110,7 @@ public abstract class CableRendererMixin {
             IPipeType<?> pipeType = pipeTile.getPipeType();
             if (pipeType instanceof Insulation cableType) {
                 Material material;
-                if (pipeTile instanceof TileEntityMaterialPipeBase<?, ?> pipeBase) {
+                if (pipeTile instanceof TileEntityMaterialPipeBase<?, ?>pipeBase) {
                     material = pipeBase.getPipeMaterial();
                 } else {
                     material = null;
@@ -130,5 +132,4 @@ public abstract class CableRendererMixin {
             }
         }
     }
-
 }

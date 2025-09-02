@@ -1,8 +1,23 @@
 package dev.tianmi.sussypatches.core.mixin.feature.cablepipetextures;
 
-import codechicken.lib.vec.uv.IconTransformation;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+
+import codechicken.lib.vec.uv.IconTransformation;
 import gregtech.api.pipenet.block.BlockPipe;
 import gregtech.api.pipenet.block.IPipeType;
 import gregtech.api.pipenet.tile.IPipeTile;
@@ -13,18 +28,6 @@ import gregtech.client.renderer.pipe.ItemPipeRenderer;
 import gregtech.client.renderer.pipe.PipeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mixin(value = ItemPipeRenderer.class, remap = false)
 public abstract class ItemPipeRendererMixin {
@@ -41,8 +44,8 @@ public abstract class ItemPipeRendererMixin {
         for (MaterialIconSet iconSet : MaterialIconSet.ICON_SETS.values()) {
             for (ItemPipeType pipeType : ItemPipeType.VALUES) {
                 sus$pipeTextures.put(pipeType, iconSet, textureMap.registerSprite(
-                        GTUtility.gregtechId("blocks/material_sets/" + iconSet.getName().toLowerCase()
-                                + "/pipe_" + pipeType.getSizeForTexture() + "_in")));
+                        GTUtility.gregtechId("blocks/material_sets/" + iconSet.getName().toLowerCase() + "/pipe_" +
+                                pipeType.getSizeForTexture() + "_in")));
             }
 
             sus$pipeSideTextures.put(iconSet, textureMap.registerSprite(
@@ -83,5 +86,4 @@ public abstract class ItemPipeRendererMixin {
         MaterialIconSet iconSet = material == null ? MaterialIconSet.DULL : material.getMaterialIconSet();
         cir.setReturnValue(sus$pipeSideTextures.get(iconSet));
     }
-
 }
