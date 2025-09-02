@@ -20,7 +20,6 @@ import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 
-import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import gregtech.api.GTValues;
 import gregtech.api.fluids.GTFluid.GTMaterialFluid;
@@ -34,11 +33,8 @@ import gregtech.api.util.LocalizationUtils;
 import gregtech.common.items.MetaItems;
 import gregtech.integration.jei.JustEnoughItemsModule;
 import gregtech.integration.jei.recipe.RecipeMapCategory;
-import mcp.MethodsReturnNonnullByDefault;
 
 /// This also serves as a Lombok [ExtensionMethod] holder.
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class SusUtil {
 
     public static <T> T tap(T instance, Consumer<T> lambda) {
@@ -142,9 +138,5 @@ public class SusUtil {
         }
 
         return asDrawable(MetaItems.LOGO.getStackForm());
-    }
-
-    public static RecipeMapEntryWidget<?> asWidget(RecipeMap<?> recipeMap) {
-        return new RecipeMapEntryWidget<>(recipeMap);
     }
 }

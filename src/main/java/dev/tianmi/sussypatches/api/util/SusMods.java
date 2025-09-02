@@ -2,13 +2,10 @@ package dev.tianmi.sussypatches.api.util;
 
 import java.util.function.Function;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GLContext;
 
@@ -16,7 +13,6 @@ import gregtech.api.util.Mods;
 
 /// Mods that are :sus:
 /// Basically a re-implementation of [Mods]
-@ParametersAreNonnullByDefault
 public enum SusMods implements BoolSupplier {
 
     GCyM(Names.GCYM),
@@ -44,11 +40,11 @@ public enum SusMods implements BoolSupplier {
     @Nullable
     private Boolean loaded;
 
-    SusMods(@NotNull String id) {
+    SusMods(String id) {
         this(id, null);
     }
 
-    SusMods(@NotNull Function<SusMods, Boolean> check) {
+    SusMods(Function<SusMods, Boolean> check) {
         this(null, check);
     }
 
@@ -78,7 +74,6 @@ public enum SusMods implements BoolSupplier {
         return isLoaded();
     }
 
-    @NotNull
     public String version() {
         if (this.ID == null) return "";
         ModContainer container = Loader.instance().getIndexedModList().get(this.ID);

@@ -48,7 +48,7 @@ public class RecipeMapEntryWidget<W extends RecipeMapEntryWidget<W>> extends Sin
             key = widgetValue.getTranslationKey();
         } else {
             icon = new ItemDrawable(Blocks.BARRIER);
-            key = "sussypatches.gui.recipe_creator.empty_selection";
+            key = "sussypatches.gui.recipe_creator.unselected";
         }
 
         this.full().child(Flow.row()

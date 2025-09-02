@@ -1,6 +1,5 @@
 package dev.tianmi.sussypatches.api.mui.widget;
 
-import java.awt.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -33,7 +32,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
     @Getter
     @Nullable
     protected V selected;
-    protected Consumer<V> onSelected = $ -> {};
+    protected Consumer<V> onSelected = v -> {};
 
     @Nullable
     protected IDrawable expandedBackground;
@@ -88,7 +87,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
         super.onInit();
     }
 
-    public Dropdown<V, I> children(Iterable<V> values, Function<V, I> widgetCreator) {
+    public Dropdown<V, I> values(Iterable<V> values, Function<V, I> widgetCreator) {
         for (V value : values) {
             listWidget.child(new ButtonWidget<>()
                     .widthRel(1)
@@ -105,7 +104,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
 
     @ApiStatus.OverrideOnly
     protected void setSelected(I widget) {
-        buttonWidget.child(widget).scheduleResize();
+        buttonWidget.child(widget).scheduleResize(); // TODO: Remove resize in future mui as it's called automatically
         onSelected.accept(this.selected = widgetToValue.apply(widget));
     }
 
