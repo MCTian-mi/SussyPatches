@@ -1,0 +1,20 @@
+{
+  "package": "dev.tianmi.sussypatches.core.mixin.api.pipeicontypes",
+  "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
+  "refmap": "mixins.sussypatches.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.0-rc.1"
+  },
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "CableRendererMixin",
+    "FluidPipeRendererMixin",
+    "ItemPipeRendererMixin",
+    "PipeRendererMixin"
+  ]
+}

@@ -119,7 +119,7 @@ public class QChestInteractions {
             RayTraceResult rayTraceResult = traceCuboidAt(pos, player, hitFace);
             if (rayTraceResult == null) return;
 
-            // This fails sliently for the cChest
+            // This fails silently for the cChest
             if (qChestRightClick(qChest, player, event.getHand())) {
                 event.setCanceled(true);
             } else {

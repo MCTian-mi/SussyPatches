@@ -1,0 +1,56 @@
+package dev.tianmi.sussypatches.core.mixin.api.pipeicontypes;
+
+import static dev.tianmi.sussypatches.api.unification.info.SusIconTypes.*;
+
+import java.util.Arrays;
+import java.util.EnumMap;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+
+import dev.tianmi.sussypatches.api.util.SusUtil;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.info.MaterialIconType;
+import gregtech.client.renderer.pipe.FluidPipeRenderer;
+import gregtech.common.pipelike.fluidpipe.FluidPipeType;
+
+@Mixin(value = FluidPipeRenderer.class, remap = false)
+public abstract class FluidPipeRendererMixin extends PipeRendererMixin {
+
+    @Unique
+    @Override
+    public Iterable<MaterialIconType> sus$getPipeIconTypes() {
+        return Arrays.asList(
+                pipeTiny,
+                pipeQuadruple,
+                pipeNonuple);
+    }
+
+    // This is a hard rewrite, any conflict should result in a hard crash
+    @Redirect(method = "buildRenderer",
+              at = @At(value = "INVOKE",
+                       target = "Ljava/util/EnumMap;get(Ljava/lang/Object;)Ljava/lang/Object;"),
+              require = 3)
+    private Object getIconFromType(EnumMap<?, ?> ignored, Object pipeType,
+                                   @Local(argsOnly = true) Material material) {
+        return SusUtil.getBlockSprite(SusUtil.getIconType((FluidPipeType) pipeType), material);
+    }
+
+    @ModifyExpressionValue(method = "buildRenderer",
+                           at = { // spotless:off
+                                   @At(target = "Lgregtech/client/renderer/texture/Textures;PIPE_SIDE:Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;", opcode = Opcodes.GETSTATIC, value = "FIELD"),
+                                   @At(target = "Lgregtech/client/renderer/texture/Textures;PIPE_SIDE_WOOD:Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;", opcode = Opcodes.GETSTATIC, value = "FIELD")
+                           }) // spotless:on
+    private TextureAtlasSprite getIconFromType(TextureAtlasSprite ignored,
+                                               @Local(argsOnly = true) Material material) {
+        return SusUtil.getBlockSprite(pipeSide, material);
+    }
+}

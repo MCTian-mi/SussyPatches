@@ -1,11 +1,60 @@
 package dev.tianmi.sussypatches.api.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+
+import dev.tianmi.sussypatches.api.unification.info.SusIconTypes;
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.info.MaterialIconType;
+import gregtech.common.pipelike.cable.Insulation;
+import gregtech.common.pipelike.fluidpipe.FluidPipeType;
+import gregtech.common.pipelike.itempipe.ItemPipeType;
 
 public class SusUtil {
 
     public static String getPrefix(Material material) {
         return material.getModid().equals(GTValues.MODID) ? "" : material.getModid() + ":";
+    }
+
+    // TODO: as a method extension
+    public static TextureAtlasSprite getBlockSprite(MaterialIconType iconType, Material material) {
+        return Minecraft.getMinecraft().getTextureMapBlocks()
+                .getAtlasSprite(iconType.getBlockTexturePath(material.getMaterialIconSet()).toString());
+    }
+
+    // TODO: as a method extension
+    public static MaterialIconType getIconType(ItemPipeType itemPipeType) {
+        return switch (itemPipeType) {
+            case SMALL, RESTRICTIVE_SMALL -> SusIconTypes.pipeSmall;
+            case LARGE, RESTRICTIVE_LARGE -> SusIconTypes.pipeLarge;
+            case HUGE, RESTRICTIVE_HUGE -> SusIconTypes.pipeHuge;
+            default -> SusIconTypes.pipeNormal;
+        };
+    }
+
+    // TODO: as a method extension
+    public static MaterialIconType getIconType(FluidPipeType fluidPipeType) {
+        return switch (fluidPipeType) {
+            case TINY -> SusIconTypes.pipeTiny;
+            case SMALL -> SusIconTypes.pipeSmall;
+            case LARGE -> SusIconTypes.pipeLarge;
+            case HUGE -> SusIconTypes.pipeHuge;
+            case QUADRUPLE -> SusIconTypes.pipeQuadruple;
+            case NONUPLE -> SusIconTypes.pipeNonuple;
+            default -> SusIconTypes.pipeNormal;
+        };
+    }
+
+    // TODO: as a method extension
+    public static MaterialIconType getIconType(Insulation insulation) {
+        return switch (insulation) {
+            case WIRE_SINGLE -> SusIconTypes.insulationSingle;
+            case WIRE_DOUBLE -> SusIconTypes.insulationDouble;
+            case WIRE_QUADRUPLE -> SusIconTypes.insulationQuadruple;
+            case WIRE_OCTAL -> SusIconTypes.insulationOctal;
+            case WIRE_HEX -> SusIconTypes.insulationHex;
+            default -> SusIconTypes.insulationSide;
+        };
     }
 }
