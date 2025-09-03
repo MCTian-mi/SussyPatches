@@ -31,7 +31,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
     @Override
     public Iterable<MaterialIconType> sus$getPipeIconTypes() {
         return Arrays.asList(
-                cable,
+                wire,
                 insulationSingle,
                 insulationDouble,
                 insulationQuadruple,
@@ -46,7 +46,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
                                     opcode = Opcodes.GETFIELD))
     private TextureAtlasSprite getIconFromType(TextureAtlasSprite ignored,
                                                @Local(argsOnly = true) Material material) {
-        return SusUtil.getBlockSprite(cable, material);
+        return SusUtil.getBlockSprite(wire, material);
     }
 
     /// I should have used a hard injector like [Redirect] here,
@@ -60,6 +60,27 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
     private TextureAtlasSprite getInsulationTextures(TextureAtlasSprite[] ignored, int insulationLevel,
                                                      Operation<TextureAtlasSprite> insn_ignored,
                                                      @Local(argsOnly = true) Material material) {
-        return SusUtil.getBlockSprite(SusUtil.getIconType(Insulation.values()[insulationLevel]), material);
+        var values = Insulation.values();
+        return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
+    }
+
+    @ModifyExpressionValue(method = "getParticleTexture(Lgregtech/api/pipenet/tile/IPipeTile;)Lorg/apache/commons/lang3/tuple/Pair;",
+                           at = @At(value = "FIELD",
+                                    target = "Lgregtech/client/renderer/pipe/CableRenderer;wireTexture:Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;",
+                                    opcode = Opcodes.GETFIELD))
+    public TextureAtlasSprite getWireSprite(TextureAtlasSprite ignored, @Local(name = "material") Material material) {
+        return SusUtil.getBlockSprite(wire, material);
+    }
+
+    /// same as [#getInsulationTextures]
+    @Definition(id = "insulationTextures",
+                field = "Lgregtech/client/renderer/pipe/CableRenderer;insulationTextures:[Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;")
+    @Expression("this.insulationTextures[?]")
+    @WrapOperation(method = "buildRenderer", at = @At("MIXINEXTRAS:EXPRESSION"), require = 3)
+    public TextureAtlasSprite getInsulationSprite(TextureAtlasSprite[] ignored, int insulationLevel,
+                                                  Operation<TextureAtlasSprite> insn_ignored,
+                                                  @Local(name = "material") Material material) {
+        var values = Insulation.values();
+        return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
     }
 }

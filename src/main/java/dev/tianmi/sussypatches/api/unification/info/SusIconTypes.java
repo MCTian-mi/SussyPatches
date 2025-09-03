@@ -14,8 +14,8 @@ public interface SusIconTypes {
     MaterialIconType pipeNonuple = namely("pipeNonuple");
     MaterialIconType pipeSide = namely("pipeSide");
 
-    // Cables & wires
-    MaterialIconType cable = namely("cable"); // All cables & wires uses the same base texture
+    // Wires & cables
+    MaterialIconType wire = namely("wire"); // All wires & cables uses the same base texture
     MaterialIconType insulationSingle = namely("insulationSingle");
     MaterialIconType insulationDouble = namely("insulationDouble");
     MaterialIconType insulationQuadruple = namely("insulationQuadruple");

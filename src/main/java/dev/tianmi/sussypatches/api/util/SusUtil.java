@@ -49,11 +49,11 @@ public class SusUtil {
     // TODO: as a method extension
     public static MaterialIconType getIconType(Insulation insulation) {
         return switch (insulation) {
-            case WIRE_SINGLE -> SusIconTypes.insulationSingle;
-            case WIRE_DOUBLE -> SusIconTypes.insulationDouble;
-            case WIRE_QUADRUPLE -> SusIconTypes.insulationQuadruple;
-            case WIRE_OCTAL -> SusIconTypes.insulationOctal;
-            case WIRE_HEX -> SusIconTypes.insulationHex;
+            case CABLE_SINGLE -> SusIconTypes.insulationSingle;
+            case CABLE_DOUBLE -> SusIconTypes.insulationDouble;
+            case CABLE_QUADRUPLE -> SusIconTypes.insulationQuadruple;
+            case CABLE_OCTAL -> SusIconTypes.insulationOctal;
+            case CABLE_HEX -> SusIconTypes.insulationHex;
             default -> SusIconTypes.insulationSide;
         };
     }
