@@ -12,6 +12,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,10 +20,14 @@ import org.jetbrains.annotations.Nullable;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
+import com.cleanroommc.modularui.drawable.UITexture;
 
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
+import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.RecipeMapAccessor;
 import gregtech.api.GTValues;
+import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.fluids.GTFluid.GTMaterialFluid;
+import gregtech.api.gui.resources.TextureArea;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
@@ -138,5 +143,24 @@ public class SusUtil {
         }
 
         return asDrawable(MetaItems.LOGO.getStackForm());
+    }
+
+    public static UITexture toMuiTexture(TextureArea t) {
+        return UITexture.builder()
+                .location(t.imageLocation)
+                .uv((float) t.offsetX, (float) t.offsetY, (float) t.imageWidth, (float) t.imageHeight)
+                .build();
+    }
+
+    public static UITexture getProgressBar(RecipeMap<?> recipeMap) {
+        return toMuiTexture(((RecipeMapAccessor) recipeMap).getProgressBarTexture());
+    }
+
+    public static FluidTankList createTankList(int size) {
+        var tanks = new FluidTank[size];
+        for (int i = 0; i < size; i++) {
+            tanks[i] = new FluidTank(Integer.MAX_VALUE);
+        }
+        return new FluidTankList(false, tanks);
     }
 }

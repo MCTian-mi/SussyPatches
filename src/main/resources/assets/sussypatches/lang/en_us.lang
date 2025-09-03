@@ -8,6 +8,8 @@ sussypatches.jei.gs_recipe.tooltip=GroovyScript Recipe
 
 sussypatches.gui.recipe_creator.open=Recipe Creator
 sussypatches.gui.recipe_creator.unselected=No RecipeMap Selected
+sussypatches.gui.recipe_creator.transfer_error.illegal_recipe=Not a GT recipe!
+sussypatches.gui.recipe_creator.transfer_error.insufficient_slots=Not enough slots!
 
 
 
@@ -23,4 +25,3 @@ sussypatches.gui.recipe_creator.copy_script=Copy Script
 sussypatches.gui.recipe_creator.clear=Clear
 sussypatches.gui.recipe_creator.set_map=Set Recipe Map
 sussypatches.gui.recipe_creator.recipe_maps=Available Recipe Maps:
-sussypatches.gui.recipe_creator.transfer_error=This isn't a GT recipe!

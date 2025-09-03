@@ -11,6 +11,8 @@
   "client": [
     "ExpandableAccessor",
     "GTMaterialFluidAccessor",
+    "RecipeLayoutAccessor",
+    "RecipeMapAccessor",
     "ScrollingTextWidgetAccessor"
   ]
 }
