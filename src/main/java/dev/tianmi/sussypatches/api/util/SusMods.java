@@ -33,7 +33,7 @@ public enum SusMods implements BoolSupplier {
     RFTools(Names.RFTOOLS),
 
     // Well true these aren't mods, technically...
-    OpenGL3(self -> (Cleanroom.isLoaded() || Lwjgl3ify.isLoaded()) && GLContext.getCapabilities().OpenGL30),
+    OpenGL3(self -> GLContext.getCapabilities().OpenGL30),
     DevEnv(self -> FMLLaunchHandler.isDeobfuscatedEnvironment()),
     ;
 
