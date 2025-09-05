@@ -68,6 +68,13 @@ public class SusConfig {
         @Config.Name("Render quantum tanks fluids in inventories")
         @Config.RequiresMcRestart
         public boolean visibleStorage = true;
+
+        @Config.Comment({
+                "Add a recipe creator GUI for GroovyScript in creative mode."
+        })
+        @Config.Name("Recipe creator GUI for GroovyScript")
+        @Config.RequiresMcRestart
+        public boolean recipeCreatorGUI = true;
     }
 
     public static final class Compat {
