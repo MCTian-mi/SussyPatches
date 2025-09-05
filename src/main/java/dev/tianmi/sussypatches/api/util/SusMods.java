@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GLContext;
 
 import gregtech.api.util.Mods;
 
@@ -32,7 +33,7 @@ public enum SusMods implements BoolSupplier {
     RFTools(Names.RFTOOLS),
 
     // Well true these aren't mods, technically...
-    OpenGL3(self -> Cleanroom.isLoaded() || Lwjgl3ify.isLoaded()),
+    OpenGL3(self -> (Cleanroom.isLoaded() || Lwjgl3ify.isLoaded()) && GLContext.getCapabilities().OpenGL30),
     DevEnv(self -> FMLLaunchHandler.isDeobfuscatedEnvironment()),
     ;
 
