@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.api.unification.info;
+package dev.tianmi.sussypatches.api.unification.material.info;
 
 import gregtech.api.unification.material.info.MaterialIconType;
 

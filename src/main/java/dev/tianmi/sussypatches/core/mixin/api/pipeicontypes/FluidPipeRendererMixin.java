@@ -1,6 +1,6 @@
 package dev.tianmi.sussypatches.core.mixin.api.pipeicontypes;
 
-import static dev.tianmi.sussypatches.api.unification.info.SusIconTypes.*;
+import static dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes.*;
 
 import java.util.Arrays;
 import java.util.EnumMap;

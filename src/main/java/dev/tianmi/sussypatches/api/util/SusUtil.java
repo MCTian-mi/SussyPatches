@@ -3,7 +3,7 @@ package dev.tianmi.sussypatches.api.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import dev.tianmi.sussypatches.api.unification.info.SusIconTypes;
+import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
