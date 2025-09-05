@@ -20,10 +20,10 @@ import gregtech.api.util.Mods;
 import gregtech.integration.RecipeCompatUtil;
 import lombok.experimental.ExtensionMethod;
 
+@ExtensionMethod(SusUtil.class)
 @Compat(mod = Mods.GroovyScript)
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2785")
 @Mixin(value = RecipeCompatUtil.class, remap = false)
-@ExtensionMethod(SusUtil.class)
 public abstract class RecipeCompatUtilMixin {
 
     @ModifyReturnValue(method = "getMetaItemId", at = @At(value = "RETURN", ordinal = 0))

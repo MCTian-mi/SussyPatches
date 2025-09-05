@@ -23,7 +23,9 @@ import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
 import gregtech.client.renderer.pipe.CableRenderer;
 import gregtech.common.pipelike.cable.Insulation;
+import lombok.experimental.ExtensionMethod;
 
+@ExtensionMethod(SusUtil.class)
 @Mixin(value = CableRenderer.class, remap = false)
 public abstract class CableRendererMixin extends PipeRendererMixin {
 
@@ -46,7 +48,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
                                     opcode = Opcodes.GETFIELD))
     private TextureAtlasSprite getIconFromType(TextureAtlasSprite ignored,
                                                @Local(argsOnly = true) Material material) {
-        return SusUtil.getBlockSprite(wire, material);
+        return wire.getBlockSprite((material));
     }
 
     /// I should have used a hard injector like [Redirect] here,
@@ -61,7 +63,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
                                                      Operation<TextureAtlasSprite> insn_ignored,
                                                      @Local(argsOnly = true) Material material) {
         var values = Insulation.values();
-        return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
+        return (values[(insulationLevel + 5) % values.length]).getIconType().getBlockSprite((material));
     }
 
     @ModifyExpressionValue(method = "getParticleTexture(Lgregtech/api/pipenet/tile/IPipeTile;)Lorg/apache/commons/lang3/tuple/Pair;",
@@ -69,7 +71,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
                                     target = "Lgregtech/client/renderer/pipe/CableRenderer;wireTexture:Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;",
                                     opcode = Opcodes.GETFIELD))
     public TextureAtlasSprite getWireSprite(TextureAtlasSprite ignored, @Local(name = "material") Material material) {
-        return SusUtil.getBlockSprite(wire, material);
+        return wire.getBlockSprite((material));
     }
 
     /// same as [#getInsulationTextures]
@@ -81,6 +83,6 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
                                                   Operation<TextureAtlasSprite> insn_ignored,
                                                   @Local(name = "material") Material material) {
         var values = Insulation.values();
-        return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
+        return SusUtil.getIconType(values[(insulationLevel + 5) % values.length]).getBlockSprite((material));
     }
 }

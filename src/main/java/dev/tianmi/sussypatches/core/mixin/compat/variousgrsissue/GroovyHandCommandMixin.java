@@ -12,10 +12,10 @@ import gregtech.api.util.Mods;
 import gregtech.integration.groovy.GroovyHandCommand;
 import lombok.experimental.ExtensionMethod;
 
+@ExtensionMethod(SusUtil.class)
 @Compat(mod = Mods.GroovyScript)
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2785")
 @Mixin(value = GroovyHandCommand.class, remap = false)
-@ExtensionMethod(SusUtil.class)
 public abstract class GroovyHandCommandMixin {
 
     @ModifyArg(method = "onHandCommand",

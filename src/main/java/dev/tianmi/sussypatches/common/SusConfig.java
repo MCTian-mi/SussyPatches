@@ -428,13 +428,13 @@ public class SusConfig {
         @Ignore // TODO: fix early config
         public boolean itemOverlayEvent = true;
 
-        @Config.Comment({
+        @Comment({
                 "Let all material cable and pipe textures be configurable with its icon set texture.",
                 "Note: if this option is enabled, then the correspondence textures in default path will invalid,",
                 "only the textures in its icon set path will be rendered."
         })
-        @Config.Name("Render cable and pipe textures from its icon set")
-        @Config.RequiresMcRestart
+        @Name("Render cable and pipe textures from its icon set")
+        @RequiresMcRestart
         public boolean pipeIconTypes = true;
     }
 

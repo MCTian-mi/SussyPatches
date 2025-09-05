@@ -1,15 +1,12 @@
 package dev.tianmi.sussypatches.api.util;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
-import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -22,6 +19,7 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
 
+import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.RecipeMapAccessor;
 import gregtech.api.GTValues;
@@ -31,11 +29,11 @@ import gregtech.api.gui.resources.TextureArea;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
+import gregtech.api.util.LocalizationUtils;
+import gregtech.common.items.MetaItems;
 import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
-import gregtech.api.util.LocalizationUtils;
-import gregtech.common.items.MetaItems;
 import gregtech.integration.jei.JustEnoughItemsModule;
 import gregtech.integration.jei.recipe.RecipeMapCategory;
 
@@ -56,24 +54,22 @@ public class SusUtil {
     }
 
     public static <T> T orElse(@Nullable T instance, Supplier<@NotNull T> lambda) {
-        return instance == null ? lambda.get() : instance;
+        return Objects.requireNonNullElseGet(instance, lambda);
     }
 
     public static <T> T orElse(@Nullable T instance, T other) {
-        return instance == null ? other : instance;
+        return Objects.requireNonNullElse(instance, other);
     }
 
     public static String getPrefix(Material material) {
         return material.getModid().equals(GTValues.MODID) ? "" : material.getModid() + ":";
     }
 
-    // TODO: as a method extension
     public static TextureAtlasSprite getBlockSprite(MaterialIconType iconType, Material material) {
         return Minecraft.getMinecraft().getTextureMapBlocks()
                 .getAtlasSprite(iconType.getBlockTexturePath(material.getMaterialIconSet()).toString());
     }
 
-    // TODO: as a method extension
     public static MaterialIconType getIconType(ItemPipeType itemPipeType) {
         return switch (itemPipeType) {
             case SMALL, RESTRICTIVE_SMALL -> SusIconTypes.pipeSmall;
@@ -83,7 +79,6 @@ public class SusUtil {
         };
     }
 
-    // TODO: as a method extension
     public static MaterialIconType getIconType(FluidPipeType fluidPipeType) {
         return switch (fluidPipeType) {
             case TINY -> SusIconTypes.pipeTiny;
@@ -96,7 +91,6 @@ public class SusUtil {
         };
     }
 
-    // TODO: as a method extension
     public static MaterialIconType getIconType(Insulation insulation) {
         return switch (insulation) {
             case CABLE_SINGLE -> SusIconTypes.insulationSingle;

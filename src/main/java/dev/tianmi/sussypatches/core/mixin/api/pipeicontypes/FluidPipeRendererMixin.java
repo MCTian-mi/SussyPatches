@@ -24,7 +24,9 @@ import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
 import gregtech.client.renderer.pipe.FluidPipeRenderer;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
+import lombok.experimental.ExtensionMethod;
 
+@ExtensionMethod(SusUtil.class)
 @Mixin(value = FluidPipeRenderer.class, remap = false)
 public abstract class FluidPipeRendererMixin extends PipeRendererMixin {
 
@@ -44,7 +46,7 @@ public abstract class FluidPipeRendererMixin extends PipeRendererMixin {
               require = 3)
     private Object getIconFromType(EnumMap<?, ?> ignored, Object pipeType,
                                    @Local(argsOnly = true) Material material) {
-        return SusUtil.getBlockSprite(SusUtil.getIconType((FluidPipeType) pipeType), material);
+        return ((FluidPipeType) pipeType).getIconType().getBlockSprite((material));
     }
 
     @ModifyExpressionValue(method = "buildRenderer",
@@ -54,7 +56,7 @@ public abstract class FluidPipeRendererMixin extends PipeRendererMixin {
                            }) // spotless:on
     private TextureAtlasSprite getIconFromType(TextureAtlasSprite ignored,
                                                @Local(argsOnly = true) Material material) {
-        return SusUtil.getBlockSprite(pipeSide, material);
+        return pipeSide.getBlockSprite((material));
     }
 
     @WrapOperation(method = "getParticleTexture",
@@ -63,6 +65,6 @@ public abstract class FluidPipeRendererMixin extends PipeRendererMixin {
                             opcode = Opcodes.GETSTATIC))
     public TextureAtlasSprite getIconFromType(Operation<TextureAtlasSprite> insn,
                                               @Local(argsOnly = true) @Nullable Material material) {
-        return material == null ? insn.call() : SusUtil.getBlockSprite(pipeSide, material);
+        return material == null ? insn.call() : pipeSide.getBlockSprite((material));
     }
 }
