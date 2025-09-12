@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.FluidTank;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
@@ -112,7 +111,7 @@ public class SusUtil {
         return new ItemDrawable(stack);
     }
 
-    public static IDrawable getCatalystIcon(RecipeMap<?> recipeMap) {
+    public static ItemStack getCatalyst(RecipeMap<?> recipeMap) {
         for (var category : recipeMap.getRecipesByCategory().keySet()) {
 
             var jeiCategory = RecipeMapCategory.getCategoryFor(category);
@@ -120,12 +119,12 @@ public class SusUtil {
 
             for (var catalyst : JustEnoughItemsModule.jeiRuntime.getRecipeRegistry().getRecipeCatalysts(jeiCategory)) {
                 if (catalyst instanceof ItemStack stack) {
-                    return asDrawable(stack);
+                    return stack;
                 }
             }
         }
 
-        return asDrawable(MetaItems.LOGO.getStackForm());
+        return MetaItems.LOGO.getStackForm();
     }
 
     public static UITexture toMuiTexture(TextureArea t) {

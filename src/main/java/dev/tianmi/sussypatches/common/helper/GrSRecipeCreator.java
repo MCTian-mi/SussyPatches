@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -30,12 +31,12 @@ import com.cleanroommc.modularui.widget.EmptyWidget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
-import com.cleanroommc.modularui.widgets.slot.FluidSlot;
-import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 
 import dev.tianmi.sussypatches.api.mui.GTGuis;
 import dev.tianmi.sussypatches.api.mui.SusGuis;
 import dev.tianmi.sussypatches.api.mui.widget.Dropdown;
+import dev.tianmi.sussypatches.api.mui.widget.PhantomFluidSlot;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeProgressWidget;
 import dev.tianmi.sussypatches.api.util.SusUtil;
@@ -71,13 +72,12 @@ public class GrSRecipeCreator {
                                         .asIcon()
                                         .center())
                                 .onMousePressed(m -> {
-                                    // For now slots are synced-only
                                     GuiManager.openFromClient(UI_FACTORY, new GuiData(Minecraft.getMinecraft().player));
                                     return true;
                                 })))));
     }
 
-    @SuppressWarnings("UnstableApiUsage")
+    @SuppressWarnings({ "UnstableApiUsage", "deprecation" })
     @ExtensionMethod(SusUtil.class)
     @ParametersAreNonnullByDefault
     @MethodsReturnNonnullByDefault
@@ -132,13 +132,13 @@ public class GrSRecipeCreator {
             if (currentMap == null) return new EmptyWidget();
 
             var inputItemsMatrix = Grid.mapToMatrix(3, maxInputs,
-                    i -> new ItemSlot().slot(importItems, i));
+                    i -> new PhantomItemSlot().slot(importItems, i));
             var outputItemsMatrix = Grid.mapToMatrix(3, maxOutputs,
-                    i -> new ItemSlot().slot(exportItems, i));
+                    i -> new PhantomItemSlot().slot(exportItems, i));
             var inputFluidsMatrix = Grid.mapToMatrix(3, maxFluidInputs,
-                    i -> new FluidSlot().syncHandler(importFluids.getTankAt(i)));
+                    i -> new PhantomFluidSlot().tank(importFluids, i));
             var outputFluidsMatrix = Grid.mapToMatrix(3, maxFluidOutputs,
-                    i -> new FluidSlot().syncHandler(exportFluids.getTankAt(i)));
+                    i -> new PhantomFluidSlot().tank(exportFluids, i));
 
             return Flow.row()
                     .coverChildren()
@@ -200,7 +200,7 @@ public class GrSRecipeCreator {
                                                        boolean simulate) {
                 if (!(recipeLayout.getRecipeCategory() instanceof RecipeMapCategory)) {
                     return new RecipeTransferErrorTooltip(
-                            IKey.lang("sussypatches.gui.recipe_creator.transfer_error").get());
+                            I18n.format("sussypatches.gui.recipe_creator.transfer_error.illegal_recipe"));
                 }
 
                 if (simulate) return null;

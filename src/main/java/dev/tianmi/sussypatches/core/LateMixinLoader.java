@@ -25,7 +25,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE.add("interactivestorage", SusConfig.FEAT.interactiveStorage);
         FEATURE.add("fluidcontainerbar", SusConfig.FEAT.fluidContainerBar, SusConfig.API.itemOverlayEvent);
         FEATURE.add("visiblestorage", SusConfig.FEAT.visibleStorage);
-        FEATURE.add("grsrecipecreator", SusConfig.FEAT.grsRecipeCreator);
+        FEATURE.add("grsrecipecreator", SusConfig.FEAT.grsRecipeCreator, SusMods.ModularUI, SusMods.of(GroovyScript));
 
         COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));

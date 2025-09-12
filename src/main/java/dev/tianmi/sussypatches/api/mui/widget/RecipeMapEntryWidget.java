@@ -44,7 +44,7 @@ public class RecipeMapEntryWidget<W extends RecipeMapEntryWidget<W>> extends Sin
         IDrawable icon;
         String key;
         if (widgetValue != null) {
-            icon = widgetValue.getCatalystIcon();
+            icon = widgetValue.getCatalyst().asDrawable();
             key = widgetValue.getTranslationKey();
         } else {
             icon = new ItemDrawable(Blocks.BARRIER);

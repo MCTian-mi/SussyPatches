@@ -10,6 +10,7 @@ import dev.tianmi.sussypatches.common.SusConfig;
 import dev.tianmi.sussypatches.common.helper.GrSRecipeCreator;
 import dev.tianmi.sussypatches.modules.SusModules;
 import gregtech.api.modules.GregTechModule;
+import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
 
 @GregTechModule(moduleID = SusModules.MUI_ID,
@@ -29,7 +30,7 @@ public class MuiModule extends IntegrationSubmodule {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        if (event.getSide().isClient() && SusConfig.FEAT.grsRecipeCreator) {
+        if (event.getSide().isClient() && Mods.GroovyScript.isModLoaded() && SusConfig.FEAT.grsRecipeCreator) {
             GrSRecipeCreator.registerOverlay();
         }
     }
