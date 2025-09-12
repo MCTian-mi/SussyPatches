@@ -57,7 +57,7 @@ public class GrSRecipeCreator {
     private static final UIFactory<GuiData> UI_FACTORY = GuiFactories.createSimple("grs_recipe_creator", Gui::new);
 
     @SuppressWarnings("UnstableApiUsage")
-    public static void registerOverlay() { // TODO: Singleton overlay screen
+    public static void registerOverlay() { // TODO)) Singleton overlay screen
         OverlayManager.register(new OverlayHandler(GuiContainerCreative.class::isInstance,
                 s -> new ModularScreen(SusGuis.overlayPanel("recipe_creator_opener")
                         .background(IDrawable.EMPTY)
@@ -81,7 +81,7 @@ public class GrSRecipeCreator {
     @ExtensionMethod(SusUtil.class)
     @ParametersAreNonnullByDefault
     @MethodsReturnNonnullByDefault
-    public static class Gui implements IGuiHolder<GuiData> { // TODO: Singleton
+    public static class Gui implements IGuiHolder<GuiData> { // TODO)) Singleton
 
         @Nullable
         protected RecipeMap<?> currentMap;
@@ -180,7 +180,7 @@ public class GrSRecipeCreator {
                             .coverChildren()
                             .child(recipeMapSelector())
                             .child(recipeMapGui()))
-                    .bindPlayerInventory(); // TODO: Fix depth order
+                    .bindPlayerInventory(); // TODO)) Fix depth order
         }
 
         @SideOnly(Side.CLIENT)

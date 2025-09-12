@@ -64,8 +64,8 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
                 .scrollDirection(new VanillaScrollData(scrollWidth));
 
         this.expandedBackground(GuiTextures.MC_BACKGROUND)
-                // .hoverBackground(GuiTextures.MC_BACKGROUND) // TODO: Handle hovering check
-                .background(GuiTextures.MC_BACKGROUND) // TODO: Handle hovering check
+                // .hoverBackground(GuiTextures.MC_BACKGROUND) // TODO)) Handle hovering check
+                .background(GuiTextures.MC_BACKGROUND) // TODO)) Handle hovering check
                 .padding(5)
                 .excludeAreaInJei()
                 .normalView(Flow.column()
@@ -104,7 +104,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
 
     @ApiStatus.OverrideOnly
     protected void setSelected(I widget) {
-        buttonWidget.child(widget).scheduleResize(); // TODO: Remove resize in future mui as it's called automatically
+        buttonWidget.child(widget).scheduleResize(); // TODO)) Remove resize in future mui as it's called automatically
         onSelected.accept(this.selected = widgetToValue.apply(widget));
     }
 

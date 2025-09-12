@@ -33,6 +33,7 @@ public class FixedScrollingTextWidget extends ScrollingTextWidget {
             TextRenderer renderer = TextRenderer.SHARED;
             renderer.setColor(getColor() != null ? getColor().getAsInt() : widgetTheme.getTextColor());
             renderer.setAlignment(getAlignment(), getArea().w() + 1, getArea().h());
+            // noinspection DataFlowIssue
             renderer.setShadow(isShadow() != null ? isShadow() : widgetTheme.getTextShadow());
             renderer.setPos(getArea().getPadding().left, getArea().getPadding().top);
             renderer.setScale(getScale());

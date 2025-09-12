@@ -59,8 +59,8 @@ public class RecipeMapEntryWidget<W extends RecipeMapEntryWidget<W>> extends Sin
                 .child(new FixedScrollingTextWidget(IKey.lang(key))
                         .color(Color.WHITE.main)
                         .shadow(true)
-                        .expanded() // TODO: Fix vertical alignment
+                        .expanded() // FIXME)) vertical alignment
                         .marginLeft(1)
-                        .marginRight(2))); // TODO: Check stencil
+                        .marginRight(2))); // FIXME)) Check stencil
     }
 }

@@ -22,7 +22,7 @@ public class LoadingPlugin implements ILoadingPlugin, IEarlyMixinLoader {
     private static final Map<String, BoolSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        // TODO: fix early config
+        // FIXME)) early config
         API.add("itemoverlayevent"/* , SusConfig.API.itemOverlayEvent */);
     }
 

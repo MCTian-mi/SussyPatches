@@ -41,8 +41,8 @@ import gregtech.client.utils.BloomEffectUtil;
 import lombok.Getter;
 import team.chisel.ctm.client.state.CTMExtendedState;
 
-// TODO: fix z-fighting properly
-// TODO: investigate lighting issue
+// FIXME)) fix z-fighting properly
+// FIXME)) investigate lighting issue
 @ParametersAreNonnullByDefault
 public class VisualStateRenderer implements ICubeRenderer {
 

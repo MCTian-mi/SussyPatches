@@ -30,8 +30,9 @@ public class RecipeProgressWidget extends ProgressWidget implements Interactable
         return this;
     }
 
+    @NotNull
     @Override
-    public @NotNull Result onMousePressed(int mouseButton) {
+    public Result onMousePressed(int mouseButton) {
         if (recipeMap == null) {
             return Result.IGNORE;
         }

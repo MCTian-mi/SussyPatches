@@ -425,7 +425,7 @@ public class SusConfig {
         })
         @Name("Enable RenderItemOverlayEvent")
         @RequiresMcRestart
-        @Ignore // TODO: fix early config
+        @Ignore // TODO)) fix early config
         public boolean itemOverlayEvent = true;
 
         @Comment({

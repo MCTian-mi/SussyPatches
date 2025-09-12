@@ -19,7 +19,7 @@ import gregtech.integration.groovy.GroovyScriptModule;
 @Mixin(value = GroovyScriptModule.class, remap = false)
 public class GroovyScriptModuleMixin {
 
-    // TODO: more impl
+    // TODO)) more impl
     @SuppressWarnings({ "UnstableApiUsage", "DuplicateBranchesInSwitch" })
     @WrapOperation(method = "onCompatLoaded",
                    at = @At(value = "INVOKE",

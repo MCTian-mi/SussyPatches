@@ -1,9 +1,7 @@
 package dev.tianmi.sussypatches.api.util;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -11,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
@@ -51,14 +48,6 @@ public class SusUtil {
 
     public static <V, T> V with(T instance, Function<T, V> lambda) {
         return lambda.apply(instance);
-    }
-
-    public static <T> T orElse(@Nullable T instance, Supplier<@NotNull T> lambda) {
-        return Objects.requireNonNullElseGet(instance, lambda);
-    }
-
-    public static <T> T orElse(@Nullable T instance, T other) {
-        return Objects.requireNonNullElse(instance, other);
     }
 
     public static String getPrefix(Material material) {
