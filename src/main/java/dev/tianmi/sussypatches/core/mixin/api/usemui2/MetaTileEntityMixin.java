@@ -20,6 +20,7 @@ import dev.tianmi.sussypatches.api.core.mixin.extension.Mui2Extension;
 import dev.tianmi.sussypatches.api.mui.factory.MTEGuiFactory;
 import gregtech.api.metatileentity.MetaTileEntity;
 
+@SuppressWarnings("deprecation")
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2281")
 @Mixin(value = MetaTileEntity.class, remap = false)
 public abstract class MetaTileEntityMixin implements Mui2Extension {

@@ -40,18 +40,17 @@ public class QChestInteractions {
     private static final EnumMap<EnumFacing, IndexedCuboid6> HITBOXES = new EnumMap<>(EnumFacing.class);
 
     static { // Don't laugh, it just works.
-        HITBOXES.put(EnumFacing.UP, new IndexedCuboid6(null,
-                new Cuboid6(2 / 16.0, 15 / 16.0, 2 / 16.0, 14 / 16.0, 15 / 16.0, 14 / 16.0)));
-        HITBOXES.put(EnumFacing.DOWN, new IndexedCuboid6(null,
-                new Cuboid6(2 / 16.0, 1 / 16.0, 2 / 16.0, 14 / 16.0, 1 / 16.0, 14 / 16.0)));
-        HITBOXES.put(EnumFacing.WEST, new IndexedCuboid6(null,
-                new Cuboid6(1 / 16.0, 2 / 16.0, 2 / 16.0, 1 / 16.0, 14 / 16.0, 14 / 16.0)));
-        HITBOXES.put(EnumFacing.EAST, new IndexedCuboid6(null,
-                new Cuboid6(15 / 16.0, 2 / 16.0, 2 / 16.0, 15 / 16.0, 14 / 16.0, 14 / 16.0)));
-        HITBOXES.put(EnumFacing.SOUTH, new IndexedCuboid6(null,
-                new Cuboid6(2 / 16.0, 2 / 16.0, 15 / 16.0, 14 / 16.0, 14 / 16.0, 15 / 16.0)));
-        HITBOXES.put(EnumFacing.NORTH, new IndexedCuboid6(null,
-                new Cuboid6(2 / 16.0, 2 / 16.0, 1 / 16.0, 14 / 16.0, 14 / 16.0, 1 / 16.0)));
+        HITBOXES.put(EnumFacing.UP, box(2, 15, 2, 14, 15, 14));
+        HITBOXES.put(EnumFacing.DOWN, box(2, 1, 2, 14, 1, 14));
+        HITBOXES.put(EnumFacing.WEST, box(1, 2, 2, 1, 14, 14));
+        HITBOXES.put(EnumFacing.EAST, box(15, 2, 2, 15, 14, 14));
+        HITBOXES.put(EnumFacing.SOUTH, box(2, 2, 15, 14, 14, 15));
+        HITBOXES.put(EnumFacing.NORTH, box(2, 2, 1, 14, 14, 1));
+    }
+
+    private static IndexedCuboid6 box(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        return new IndexedCuboid6(null, new Cuboid6(minX / 16.0, minY / 16.0, minZ / 16.0,
+                maxX / 16.0, maxY / 16.0, maxZ / 16.0));
     }
 
     @SubscribeEvent

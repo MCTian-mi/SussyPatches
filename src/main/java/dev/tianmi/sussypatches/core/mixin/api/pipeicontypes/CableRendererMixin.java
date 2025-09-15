@@ -60,7 +60,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
     @Expression("this.insulationTextures[?]")
     @WrapOperation(method = "buildRenderer", at = @At("MIXINEXTRAS:EXPRESSION"), require = 3)
     private TextureAtlasSprite getInsulationTextures(TextureAtlasSprite[] ignored, int insulationLevel,
-                                                     Operation<TextureAtlasSprite> insn_ignored,
+                                                     Operation<TextureAtlasSprite> insn,
                                                      @Local(argsOnly = true) Material material) {
         var values = Insulation.values();
         return (values[(insulationLevel + 5) % values.length]).getIconType().getBlockSprite((material));
@@ -80,7 +80,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
     @Expression("this.insulationTextures[?]")
     @WrapOperation(method = "buildRenderer", at = @At("MIXINEXTRAS:EXPRESSION"), require = 3)
     public TextureAtlasSprite getInsulationSprite(TextureAtlasSprite[] ignored, int insulationLevel,
-                                                  Operation<TextureAtlasSprite> insn_ignored,
+                                                  Operation<TextureAtlasSprite> insn,
                                                   @Local(name = "material") Material material) {
         var values = Insulation.values();
         return SusUtil.getIconType(values[(insulationLevel + 5) % values.length]).getBlockSprite((material));

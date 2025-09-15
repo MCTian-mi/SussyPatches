@@ -2,13 +2,16 @@ package dev.tianmi.sussypatches.api.util;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -19,6 +22,7 @@ import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.RecipeMapAccessor;
 import gregtech.api.GTValues;
+import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.fluids.GTFluid.GTMaterialFluid;
 import gregtech.api.gui.resources.TextureArea;
@@ -47,6 +51,14 @@ public class SusUtil {
 
     public static <V, T> V with(T instance, Function<T, V> lambda) {
         return lambda.apply(instance);
+    }
+
+    public static <T> T orElse(@Nullable T instance, T fallback) {
+        return instance != null ? instance : fallback;
+    }
+
+    public static <T> T orElse(@Nullable T instance, Supplier<@NotNull T> fallback) {
+        return instance != null ? instance : fallback.get();
     }
 
     public static String getPrefix(Material material) {
@@ -144,5 +156,17 @@ public class SusUtil {
             tanks[i] = new FluidTank(Integer.MAX_VALUE);
         }
         return new FluidTankList(false, tanks);
+    }
+
+    public static void clear(IItemHandlerModifiable itemHandler) {
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            itemHandler.setStackInSlot(i, ItemStack.EMPTY);
+        }
+    }
+
+    public static void clear(IMultipleTankHandler tankHandler) {
+        for (int i = 0; i < tankHandler.getTanks(); i++) {
+            tankHandler.getTankAt(i).drain(Integer.MAX_VALUE, true);
+        }
     }
 }

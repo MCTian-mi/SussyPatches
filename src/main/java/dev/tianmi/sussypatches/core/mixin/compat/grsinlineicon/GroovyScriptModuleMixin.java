@@ -12,9 +12,13 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import dev.tianmi.sussypatches.api.annotation.Compat;
+import dev.tianmi.sussypatches.api.util.SusUtil;
+import gregtech.api.recipes.RecipeMap;
 import gregtech.api.util.Mods;
 import gregtech.integration.groovy.GroovyScriptModule;
+import lombok.experimental.ExtensionMethod;
 
+@ExtensionMethod(SusUtil.class)
 @Compat(mod = Mods.GroovyScript)
 @Mixin(value = GroovyScriptModule.class, remap = false)
 public class GroovyScriptModuleMixin {
@@ -28,7 +32,8 @@ public class GroovyScriptModuleMixin {
                                                          Operation<ObjectMapper.Builder<V>> method) {
         var builder = method.call(container, name, returnType);
         return switch (name) {
-            case "recipemap" -> builder;
+            case "recipemap" -> builder
+                    .textureBinder(TextureBinder.of(v -> ((RecipeMap<?>) v).getCatalyst(), TextureBinder.ofItem()));
             case "material" -> builder;
             case "oreprefix" -> builder;
             case "metaitem" -> builder.textureBinder(TextureBinder.of(v -> (ItemStack) v, TextureBinder.ofItem()));

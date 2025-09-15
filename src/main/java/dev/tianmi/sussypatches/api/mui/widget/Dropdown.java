@@ -11,6 +11,8 @@ import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IInterpolation;
+import com.cleanroommc.modularui.api.value.IValue;
+import com.cleanroommc.modularui.api.widget.IValueWidget;
 import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.drawable.Rectangle;
@@ -22,17 +24,13 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 
 import dev.tianmi.sussypatches.api.mui.widget.scroll.VanillaScrollData;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.ExpandableAccessor;
-import lombok.Getter;
 import mcp.MethodsReturnNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class Dropdown<V, I extends IWidget> extends Expandable {
+public class Dropdown<V, I extends IWidget> extends Expandable implements IValueWidget<V> {
 
-    @Getter
-    @Nullable
-    protected V selected;
-    protected Consumer<V> onSelected = v -> {};
+    protected IValue<V> value;
 
     @Nullable
     protected IDrawable expandedBackground;
@@ -41,7 +39,8 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
     protected final ButtonWidget<?> buttonWidget;
     protected final ListWidget<ButtonWidget<?>, ?> listWidget;
 
-    public Dropdown(Function<I, V> widgetToValue) {
+    public Dropdown(IValue<V> value, Function<I, V> widgetToValue) {
+        this.value = value;
         this.widgetToValue = widgetToValue;
         this.buttonWidget = new ButtonWidget<>();
         this.listWidget = new ListWidget<>();
@@ -94,7 +93,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
                     .height(20)
                     .child(widgetCreator.apply(value))
                     .onMousePressed(mouseButton -> {
-                        setSelected(widgetCreator.apply(value));
+                        setValue(widgetCreator.apply(value));
                         toggle();
                         return true;
                     }));
@@ -102,15 +101,9 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
         return getThis();
     }
 
-    @ApiStatus.OverrideOnly
-    protected void setSelected(I widget) {
+    protected void setValue(I widget) {
         buttonWidget.child(widget).scheduleResize(); // TODO)) Remove resize in future mui as it's called automatically
-        onSelected.accept(this.selected = widgetToValue.apply(widget));
-    }
-
-    public Dropdown<V, I> onSelected(Consumer<V> consumer) {
-        this.onSelected = consumer;
-        return getThis();
+        value.setValue(widgetToValue.apply(widget));
     }
 
     public Dropdown<V, I> button(Consumer<ButtonWidget<?>> operator) {
@@ -119,7 +112,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
     }
 
     public Dropdown<V, I> setDefault(I defaultWidget) {
-        setSelected(defaultWidget);
+        setValue(defaultWidget);
         return getThis();
     }
 
@@ -194,5 +187,11 @@ public class Dropdown<V, I extends IWidget> extends Expandable {
     public Dropdown<V, I> expandedView(IWidget expandedView) {
         super.expandedView(expandedView);
         return getThis();
+    }
+
+    @Nullable
+    @Override
+    public V getWidgetValue() {
+        return value.getValue();
     }
 }

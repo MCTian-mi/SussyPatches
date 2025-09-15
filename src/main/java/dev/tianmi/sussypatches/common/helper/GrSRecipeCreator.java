@@ -1,13 +1,13 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import org.jetbrains.annotations.Nullable;
@@ -20,13 +20,16 @@ import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.factory.*;
 import com.cleanroommc.modularui.integration.jei.JeiRecipeTransferHandler;
+import com.cleanroommc.modularui.network.NetworkUtils;
 import com.cleanroommc.modularui.overlay.OverlayHandler;
 import com.cleanroommc.modularui.overlay.OverlayManager;
 import com.cleanroommc.modularui.screen.*;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.utils.Interpolation;
+import com.cleanroommc.modularui.value.sync.GenericSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.ValueSyncHandler;
 import com.cleanroommc.modularui.widget.EmptyWidget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
@@ -41,15 +44,17 @@ import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeProgressWidget;
 import dev.tianmi.sussypatches.api.util.SusUtil;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.RecipeLayoutAccessor;
-import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.integration.jei.recipe.GTRecipeWrapper;
 import gregtech.integration.jei.recipe.RecipeMapCategory;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import lombok.Getter;
 import lombok.experimental.ExtensionMethod;
 import mcp.MethodsReturnNonnullByDefault;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
+import mezz.jei.config.ServerInfo;
 import mezz.jei.transfer.RecipeTransferErrorTooltip;
 
 @ExtensionMethod(SusUtil.class)
@@ -83,21 +88,30 @@ public class GrSRecipeCreator {
     @MethodsReturnNonnullByDefault
     public static class Gui implements IGuiHolder<GuiData> { // TODO)) Singleton
 
+        protected static final int SLOTS = 16; // Enough for most recipe maps
+        protected static final int ROW_LENGTH = 3;
+
+        @Getter
         @Nullable
         protected RecipeMap<?> currentMap;
+
+        protected final ValueSyncHandler<RecipeMap<?>> recipeMapValue = new GenericSyncValue<>(this::getCurrentMap,
+                this::setCurrentMap,
+                buf -> RecipeMap.getByName(NetworkUtils.readStringSafe(buf)),
+                (buf, map) -> NetworkUtils.writeStringSafe(buf, map != null ? map.getUnlocalizedName() : ""));
 
         protected long eut = 0;
         protected int duration = 0;
 
         protected int maxInputs = 0;
         protected int maxOutputs = 0;
-        protected IItemHandlerModifiable importItems = new ItemStackHandler(0);
-        protected IItemHandlerModifiable exportItems = new ItemStackHandler(0);
-
         protected int maxFluidInputs = 0;
         protected int maxFluidOutputs = 0;
-        protected FluidTankList importFluids = new FluidTankList(false);
-        protected FluidTankList exportFluids = new FluidTankList(false);
+
+        protected final ItemStackHandler importItems = new ItemStackHandler(SLOTS);
+        protected final ItemStackHandler exportItems = new ItemStackHandler(SLOTS);
+        protected final IMultipleTankHandler importFluids = SusUtil.createTankList(SLOTS);
+        protected final IMultipleTankHandler exportFluids = SusUtil.createTankList(SLOTS);
 
         protected void setCurrentMap(RecipeMap<?> recipeMap) {
             this.currentMap = recipeMap;
@@ -111,34 +125,44 @@ public class GrSRecipeCreator {
 
             this.maxInputs = currentMap.getMaxInputs();
             this.maxOutputs = currentMap.getMaxOutputs();
-            this.importItems = new ItemStackHandler(maxInputs);
-            this.exportItems = new ItemStackHandler(maxOutputs);
-
             this.maxFluidInputs = currentMap.getMaxFluidInputs();
             this.maxFluidOutputs = currentMap.getMaxFluidOutputs();
-            this.importFluids = SusUtil.createTankList(maxFluidInputs);
-            this.exportFluids = SusUtil.createTankList(maxFluidOutputs);
+
+            this.importItems.clear();
+            this.exportItems.clear();
+            this.importFluids.clear();
+            this.exportFluids.clear();
         }
 
         protected Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>> recipeMapSelector() {
-            return new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(RecipeMapEntryWidget::getWidgetValue)
-                    .values(RecipeMap.getRecipeMaps(), RecipeMapEntryWidget::new)
-                    .setDefault(RecipeMapEntryWidget.EMPTY)
-                    .onSelected(this::setCurrentMap)
-                    .interpolation(Interpolation.EXP_OUT);
+            return new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(recipeMapValue,
+                    RecipeMapEntryWidget::getWidgetValue)
+                            .values(RecipeMap.getRecipeMaps().stream()
+                                    .sorted(Comparator.comparing(RecipeMap::getLocalizedName,
+                                            Comparator.naturalOrder()))
+                                    .collect(Collectors.toList()), RecipeMapEntryWidget::new)
+                            // .setDefault(RecipeMapEntryWidget.EMPTY)
+                            .interpolation(Interpolation.EXP_OUT);
         }
 
         protected IWidget recipeMapGui() {
             if (currentMap == null) return new EmptyWidget();
 
-            var inputItemsMatrix = Grid.mapToMatrix(3, maxInputs,
-                    i -> new PhantomItemSlot().slot(importItems, i));
-            var outputItemsMatrix = Grid.mapToMatrix(3, maxOutputs,
-                    i -> new PhantomItemSlot().slot(exportItems, i));
-            var inputFluidsMatrix = Grid.mapToMatrix(3, maxFluidInputs,
-                    i -> new PhantomFluidSlot().tank(importFluids, i));
-            var outputFluidsMatrix = Grid.mapToMatrix(3, maxFluidOutputs,
-                    i -> new PhantomFluidSlot().tank(exportFluids, i));
+            var inputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+                    i -> new PhantomItemSlot().slot(importItems, i)
+                            .setEnabledIf(s -> i < maxInputs));
+
+            var inputFluidsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+                    i -> new PhantomFluidSlot().tank(importFluids, i)
+                            .setEnabledIf(s -> i < maxFluidInputs));
+
+            var outputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+                    i -> new PhantomItemSlot().slot(exportItems, i)
+                            .setEnabledIf(s -> i < maxOutputs));
+
+            var outputFluidsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+                    i -> new PhantomFluidSlot().tank(exportFluids, i)
+                            .setEnabledIf(s -> i < maxFluidOutputs));
 
             return Flow.row()
                     .coverChildren()
@@ -149,41 +173,43 @@ public class GrSRecipeCreator {
                     .child(Flow.column()
                             .coverChildren()
                             .collapseDisabledChild()
-                            .child(new Grid()
+                            .child(new Grid() // TODO)) Align right
                                     .matrix(inputItemsMatrix)
+                                    .collapseDisabledChild()
                                     .coverChildren())
                             .child(new Grid()
                                     .matrix(inputFluidsMatrix)
+                                    .collapseDisabledChild()
                                     .coverChildren()))
                     .child(new RecipeProgressWidget()
-                            .recipeMap(currentMap)
-                            .debugName("recipe.progress")
-                            .progress(0)
-                            .texture(currentMap.getProgressBar(), 20)
+                            .recipeMap(recipeMapValue)
+                            .progress(0) // TODO)) Dynamic progress
+                            .texture(currentMap.getProgressBar(), 20) // FIXME)) Dynamic texture
                             .size(20))
                     .child(Flow.column()
                             .coverChildren()
                             .collapseDisabledChild()
-                            .child(new Grid()
+                            .child(new Grid() // TODO)) Align left
                                     .matrix(outputItemsMatrix)
+                                    .collapseDisabledChild()
                                     .coverChildren())
                             .child(new Grid()
                                     .matrix(outputFluidsMatrix)
+                                    .collapseDisabledChild()
                                     .coverChildren()));
         }
 
         @Override
-        @SuppressWarnings("deprecation")
         public ModularPanel buildUI(GuiData data, PanelSyncManager syncManager, UISettings settings) {
+            syncManager.syncValue("recipeMap", recipeMapValue);
+
             return GTGuis.createPanel("grs_recipe_creator")
                     .child(Flow.column()
                             .coverChildren()
                             .child(recipeMapSelector())
-                            .child(recipeMapGui()))
-                    .bindPlayerInventory(); // TODO)) Fix depth order
+                            .child(recipeMapGui())); // FIXME)) Fix depth order
         }
 
-        @SideOnly(Side.CLIENT)
         public ModularScreen createScreen(GuiData data, ModularPanel mainPanel) {
             return new Screen(mainPanel);
         }
@@ -198,6 +224,11 @@ public class GrSRecipeCreator {
             @Override
             public IRecipeTransferError transferRecipe(IRecipeLayout recipeLayout, boolean maxTransfer,
                                                        boolean simulate) {
+                if (!ServerInfo.isJeiOnServer()) {
+                    return new RecipeTransferErrorTooltip(
+                            I18n.format("jei.tooltip.error.recipe.transfer.no.server"));
+                }
+
                 if (!(recipeLayout.getRecipeCategory() instanceof RecipeMapCategory)) {
                     return new RecipeTransferErrorTooltip(
                             I18n.format("sussypatches.gui.recipe_creator.transfer_error.illegal_recipe"));
