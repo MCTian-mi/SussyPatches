@@ -68,6 +68,15 @@ public class SusConfig {
         @Config.Name("Render quantum tanks fluids in inventories")
         @Config.RequiresMcRestart
         public boolean visibleStorage = true;
+
+        @Config.Comment({
+                "Allows maintaining multiblocks with tools from containers in the player's inventory.",
+                "E.g., tool belt or backpacks.",
+                "Note: may slightly affect performance."
+        })
+        @Config.Name("Reach deeper in your pocket when maintaining multis")
+        @Config.RequiresMcRestart
+        public boolean deepMaintenance = true;
     }
 
     public static final class Compat {
