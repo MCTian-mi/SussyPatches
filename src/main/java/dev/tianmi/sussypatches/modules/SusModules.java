@@ -27,6 +27,10 @@ public class SusModules implements IModuleContainer {
     public static final String JEI_NAME = "Sus JEI Integration";
     public static final String JEI_DESC = "Integration module for JustEnoughItems";
 
+    public static final String BAUBLES_ID = "baubles_integration";
+    public static final String BAUBLES_NAME = "Sus Baubles Integration";
+    public static final String BAUBLES_DESC = "Integration module for Baubles";
+
     @Override
     public String getID() {
         return Tags.MODID;

@@ -69,6 +69,8 @@ dependencies {
 //    runtimeOnlyNonPublishable 'maven.modrinth:zbgt:0.16.1'
 //    runtimeOnlyNonPublishable 'maven.modrinth:mcjtylib-refilmed:Tlunl1cN' // 3.5.5, I messed up with versioning sorry.
 //    runtimeOnlyNonPublishable 'maven.modrinth:refinedtools:7.77'
+//    runtimeOnlyNonPublishable rfg.deobf('curse.maven:tool-belt-260262:3459767')
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:baubles-lts-655747:3916343")
 
     // # OptiFine
 //    // Copied from GTCEu, originally used to download latest Vintagium from GitHub

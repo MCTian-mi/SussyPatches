@@ -1,12 +1,22 @@
 package dev.tianmi.sussypatches.api.util;
 
+import java.util.Arrays;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
+import dev.tianmi.sussypatches.integration.baubles.BaublesModule;
 import gregtech.api.GTValues;
+import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
+import gregtech.api.util.Mods;
 import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
@@ -15,6 +25,30 @@ public class SusUtil {
 
     public static String getPrefix(Material material) {
         return material.getModid().equals(GTValues.MODID) ? "" : material.getModid() + ":";
+    }
+
+    public static NonNullList<ItemStack> addAll(NonNullList<ItemStack> items, IItemHandler handler, boolean recursive) {
+        for (int slot = 0; slot < handler.getSlots(); slot++) {
+            var stack = handler.getStackInSlot(slot);
+            if (stack.isEmpty()) continue;
+            items.add(stack);
+
+            if (!recursive || stack.getCount() > 1) continue;
+            var stackHandler = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            if (stackHandler != null) {
+                addAll(items, stackHandler, true);
+            }
+        }
+        return items;
+    }
+
+    public static NonNullList<ItemStack> gatherAllItems(EntityPlayer player) {
+        IItemHandler playerInv = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        if (Mods.Baubles.isModLoaded()) {
+            playerInv = new ItemHandlerList(Arrays.asList(playerInv, BaublesModule.getBaublesInvWrapper(player)));
+        }
+        assert playerInv != null;
+        return addAll(NonNullList.create(), playerInv, true);
     }
 
     // TODO: as a method extension
