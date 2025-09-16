@@ -97,7 +97,6 @@ public class SusUtil {
         return addAll(NonNullList.create(), playerInv, true);
     }
 
-    // TODO: as a method extension
     public static TextureAtlasSprite getBlockSprite(MaterialIconType iconType, Material material) {
         return Minecraft.getMinecraft().getTextureMapBlocks()
                 .getAtlasSprite(iconType.getBlockTexturePath(material.getMaterialIconSet()).toString());
