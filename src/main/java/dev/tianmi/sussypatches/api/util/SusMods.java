@@ -1,6 +1,6 @@
 package dev.tianmi.sussypatches.api.util;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -36,7 +36,7 @@ public enum SusMods implements BoolSupplier {
     @Nullable
     private final String ID;
     @Nullable
-    private final Function<SusMods, Boolean> extraCheck;
+    private final Predicate<SusMods> extraCheck;
     @Nullable
     private Boolean loaded;
 
@@ -44,11 +44,11 @@ public enum SusMods implements BoolSupplier {
         this(id, null);
     }
 
-    SusMods(Function<SusMods, Boolean> check) {
+    SusMods(Predicate<SusMods> check) {
         this(null, check);
     }
 
-    SusMods(@Nullable String id, @Nullable Function<SusMods, Boolean> extraCheck) {
+    SusMods(@Nullable String id, @Nullable Predicate<SusMods> extraCheck) {
         this.ID = id;
         this.extraCheck = extraCheck;
     }
@@ -61,7 +61,7 @@ public enum SusMods implements BoolSupplier {
         if (this.loaded == null) {
             this.loaded = this.ID == null || Loader.isModLoaded(this.ID);
             if (this.loaded) {
-                if (this.extraCheck != null && !this.extraCheck.apply(this)) {
+                if (this.extraCheck != null && !this.extraCheck.test(this)) {
                     this.loaded = false;
                 }
             }
