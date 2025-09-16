@@ -11,7 +11,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import dev.tianmi.sussypatches.api.util.SusUtil;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMaintenanceHatch;
+import lombok.experimental.ExtensionMethod;
 
+@ExtensionMethod(SusUtil.class)
 @Mixin(value = MetaTileEntityMaintenanceHatch.class, remap = false)
 public class MaintenanceHatchMixin {
 
@@ -23,6 +25,6 @@ public class MaintenanceHatchMixin {
                        remap = true),
               require = 2)
     public NonNullList<ItemStack> gatherAllItems(InventoryPlayer inventoryPlayer) {
-        return SusUtil.gatherAllItems(inventoryPlayer.player); // TODO)) As a method extension
+        return inventoryPlayer.player.gatherAllItems();
     }
 }
