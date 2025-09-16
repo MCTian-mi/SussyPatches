@@ -4,8 +4,15 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import java.util.Arrays;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -19,9 +26,11 @@ import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
 
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
+import dev.tianmi.sussypatches.integration.baubles.BaublesModule;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
 import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.RecipeMapAccessor;
 import gregtech.api.GTValues;
+import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.fluids.GTFluid.GTMaterialFluid;
@@ -29,6 +38,7 @@ import gregtech.api.gui.resources.TextureArea;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.info.MaterialIconType;
+import gregtech.api.util.Mods;
 import gregtech.api.util.LocalizationUtils;
 import gregtech.common.items.MetaItems;
 import gregtech.common.pipelike.cable.Insulation;
@@ -65,6 +75,31 @@ public class SusUtil {
         return material.getModid().equals(GTValues.MODID) ? "" : material.getModid() + ":";
     }
 
+    public static NonNullList<ItemStack> addAll(NonNullList<ItemStack> items, IItemHandler handler, boolean recursive) {
+        for (int slot = 0; slot < handler.getSlots(); slot++) {
+            var stack = handler.getStackInSlot(slot);
+            if (stack.isEmpty()) continue;
+            items.add(stack);
+
+            if (!recursive || stack.getCount() > 1) continue;
+            var stackHandler = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            if (stackHandler != null) {
+                addAll(items, stackHandler, true);
+            }
+        }
+        return items;
+    }
+
+    public static NonNullList<ItemStack> gatherAllItems(EntityPlayer player) {
+        IItemHandler playerInv = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        if (Mods.Baubles.isModLoaded()) {
+            playerInv = new ItemHandlerList(Arrays.asList(playerInv, BaublesModule.getBaublesInvWrapper(player)));
+        }
+        assert playerInv != null;
+        return addAll(NonNullList.create(), playerInv, true);
+    }
+
+    // TODO: as a method extension
     public static TextureAtlasSprite getBlockSprite(MaterialIconType iconType, Material material) {
         return Minecraft.getMinecraft().getTextureMapBlocks()
                 .getAtlasSprite(iconType.getBlockTexturePath(material.getMaterialIconSet()).toString());

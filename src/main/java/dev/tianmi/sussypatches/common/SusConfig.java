@@ -72,6 +72,15 @@ public class SusConfig {
         public boolean visibleStorage = true;
 
         @Comment({
+                "Allows maintaining multiblocks with tools from containers in the player's inventory.",
+                "E.g., tool belt or backpacks.",
+                "Note: may slightly affect performance."
+        })
+        @Name("Reach deeper in your pocket when maintaining multis")
+        @RequiresMcRestart
+        public boolean deepMaintenance = true;
+
+        @Comment({
                 "Add a recipe creator GUI for GroovyScript in creative mode."
         })
         @Name("In-Game GroovyScript recipe creator")
