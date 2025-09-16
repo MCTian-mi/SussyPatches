@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -93,7 +93,7 @@ jobs:
           fi
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -102,13 +102,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build jars
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: build
 
       - name: Publish to GitHub
         if: env.publish-gh == 'true'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: "v${{ inputs.version }}"
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -130,7 +130,7 @@ jobs:
 
       - name: Publish to Curseforge
         if: ${{ inputs.publish-cf }}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_TOKEN }}
           CHANGELOG_LOCATION: ${{ env.CHANGELOG_LOCATION }}
@@ -141,7 +141,7 @@ jobs:
 
       - name: Publish to Modrinth
         if: ${{ inputs.publish-mr }}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         env:
           MODRINTH_API_KEY: ${{ secrets.MODRINTH_TOKEN }}
           CHANGELOG_LOCATION: ${{ env.CHANGELOG_LOCATION }}
