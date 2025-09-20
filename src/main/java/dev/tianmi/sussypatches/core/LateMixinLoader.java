@@ -26,6 +26,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE.add("fluidcontainerbar", SusConfig.FEAT.fluidContainerBar, SusConfig.API.itemOverlayEvent);
         FEATURE.add("visiblestorage", SusConfig.FEAT.visibleStorage);
         FEATURE.add("deepmaintenance", SusConfig.FEAT.deepMaintenance);
+        FEATURE.add("coverretainexact", SusConfig.FEAT.coverRetainExact);
 
         COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));

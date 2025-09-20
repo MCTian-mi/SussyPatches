@@ -2,6 +2,8 @@ sussypatches.muffler.recovery_removed.tooltip=§6回收机制已移除
 sussypatches.muffler.recovery_removed.tooltip.1=§6不再凭空产生灰烬
 sussypatches.gui.muffler.recovery_removed=消声仓回收机制已被SussyPatches移除
 
+sussypatches.cover.robotic_arm.transfer_mode.retain_exact=精确保留
+
 sussypatches.jei.remove_recipe.tooltip=复制用于移除该配方的%s代码
 sussypatches.jei.ct_recipe.tooltip=CraftTweaker配方
 sussypatches.jei.gs_recipe.tooltip=GroovyScript配方
