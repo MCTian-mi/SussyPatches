@@ -23,7 +23,7 @@ import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 
 import dev.tianmi.sussypatches.api.mui.widget.scroll.VanillaScrollData;
-import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.ExpandableAccessor;
+import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.ExpandableAccessor;
 import mcp.MethodsReturnNonnullByDefault;
 
 @ParametersAreNonnullByDefault

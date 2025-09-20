@@ -24,8 +24,8 @@ import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
 
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
-import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.GTMaterialFluidAccessor;
-import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.RecipeMapAccessor;
+import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.GTMaterialFluidAccessor;
+import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.RecipeMapAccessor;
 import dev.tianmi.sussypatches.integration.baubles.BaublesModule;
 import gregtech.api.GTValues;
 import gregtech.api.capability.IMultipleTankHandler;

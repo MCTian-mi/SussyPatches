@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator;
+package dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;

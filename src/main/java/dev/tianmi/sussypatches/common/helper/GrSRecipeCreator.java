@@ -43,7 +43,7 @@ import dev.tianmi.sussypatches.api.mui.widget.PhantomFluidSlot;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeProgressWidget;
 import dev.tianmi.sussypatches.api.util.SusUtil;
-import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.RecipeLayoutAccessor;
+import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.RecipeLayoutAccessor;
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.integration.jei.recipe.GTRecipeWrapper;

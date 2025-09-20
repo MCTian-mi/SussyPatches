@@ -12,7 +12,7 @@ import com.cleanroommc.modularui.theme.WidgetTheme;
 import com.cleanroommc.modularui.widget.sizer.Area;
 import com.cleanroommc.modularui.widgets.ScrollingTextWidget;
 
-import dev.tianmi.sussypatches.core.mixin.feature.grsrecipecreator.ScrollingTextWidgetAccessor;
+import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.ScrollingTextWidgetAccessor;
 
 @Deprecated
 @ApiStatus.ScheduledForRemoval(inVersion = "Mui 2.5")

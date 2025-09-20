@@ -27,7 +27,6 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE.add("visiblestorage", SusConfig.FEAT.visibleStorage);
         FEATURE.add("deepmaintenance", SusConfig.FEAT.deepMaintenance);
         FEATURE.add("coverretainexact", SusConfig.FEAT.coverRetainExact);
-        FEATURE.add("grsrecipecreator", SusConfig.FEAT.grsRecipeCreator, SusMods.ModularUI, SusMods.of(GroovyScript));
 
         COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
@@ -39,6 +38,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         COMPAT.add("tweakerinfo", SusConfig.COMPAT.tweakerInfo, SusMods.of(GroovyScript)
                 .or(SusMods.of(CraftTweaker)), SusMods.of(JustEnoughItems));
         COMPAT.add("nopipeforscanner", SusConfig.COMPAT.noPipeForScanner, SusMods.RFTools);
+        COMPAT.add("grsrecipecreator", SusConfig.COMPAT.grsRecipeCreator, SusMods.ModularUI, SusMods.of(GroovyScript));
 
         BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
         BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);

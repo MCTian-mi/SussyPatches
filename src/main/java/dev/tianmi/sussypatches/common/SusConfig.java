@@ -90,13 +90,6 @@ public class SusConfig {
         @Name("Reach deeper in your pocket when maintaining multis")
         @RequiresMcRestart
         public boolean coverRetainExact = true;
-
-        @Comment({
-                "Add a recipe creator GUI for GroovyScript in creative mode."
-        })
-        @Name("In-Game GroovyScript recipe creator")
-        @RequiresMcRestart
-        public boolean grsRecipeCreator = true;
     }
 
     public static final class Compat {
@@ -168,6 +161,13 @@ public class SusConfig {
         @Name("Exclude GT pipes from Storage Scanners")
         @RequiresMcRestart
         public boolean noPipeForScanner = true;
+
+        @Comment({
+                "Add a recipe creator GUI for GroovyScript in creative mode."
+        })
+        @Name("In-Game GroovyScript recipe creator")
+        @RequiresMcRestart
+        public boolean grsRecipeCreator = true;
     }
 
     public static final class Bugfix {
