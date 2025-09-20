@@ -23,6 +23,7 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
 
+import dev.tianmi.sussypatches.api.mui.SusGuiTextures;
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.GTMaterialFluidAccessor;
 import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.RecipeMapAccessor;
@@ -179,7 +180,8 @@ public class SusUtil {
     }
 
     public static UITexture getProgressBar(RecipeMap<?> recipeMap) {
-        return toMuiTexture(((RecipeMapAccessor) recipeMap).getProgressBarTexture());
+        return SusGuiTextures.PROGRESS_BARS.computeIfAbsent(recipeMap,
+                map -> toMuiTexture(((RecipeMapAccessor) map).getProgressBarTexture()));
     }
 
     public static FluidTankList createTankList(int size) {

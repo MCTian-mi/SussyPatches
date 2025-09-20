@@ -30,7 +30,6 @@ import com.cleanroommc.modularui.utils.Interpolation;
 import com.cleanroommc.modularui.value.sync.GenericSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.ValueSyncHandler;
-import com.cleanroommc.modularui.widget.EmptyWidget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
@@ -42,6 +41,7 @@ import dev.tianmi.sussypatches.api.mui.widget.Dropdown;
 import dev.tianmi.sussypatches.api.mui.widget.PhantomFluidSlot;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeProgressWidget;
+import dev.tianmi.sussypatches.api.util.BoolSupplier;
 import dev.tianmi.sussypatches.api.util.SusUtil;
 import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.RecipeLayoutAccessor;
 import gregtech.api.capability.IMultipleTankHandler;
@@ -146,8 +146,6 @@ public class GrSRecipeCreator {
         }
 
         protected IWidget recipeMapGui() {
-            if (currentMap == null) return new EmptyWidget();
-
             var inputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
                     i -> new PhantomItemSlot().slot(importItems, i)
                             .setEnabledIf(s -> i < maxInputs));
@@ -165,6 +163,7 @@ public class GrSRecipeCreator {
                             .setEnabledIf(s -> i < maxFluidOutputs));
 
             return Flow.row()
+                    .setEnabledIf(s -> getCurrentMap() != null)
                     .coverChildren()
                     .collapseDisabledChild()
                     .background(GuiTextures.MC_BACKGROUND)
@@ -181,10 +180,10 @@ public class GrSRecipeCreator {
                                     .matrix(inputFluidsMatrix)
                                     .collapseDisabledChild()
                                     .coverChildren()))
-                    .child(new RecipeProgressWidget()
-                            .recipeMap(recipeMapValue)
-                            .progress(0) // TODO)) Dynamic progress
-                            .texture(currentMap.getProgressBar(), 20) // FIXME)) Dynamic texture
+                    .childIf(BoolSupplier.TRUE, () -> new RecipeProgressWidget()
+                            .dynamic(recipeMapValue)
+                            .autoIncrementProgress(() -> duration)
+                            // .progress(() -> () / duration) // TODO)) Dynamic progress
                             .size(20))
                     .child(Flow.column()
                             .coverChildren()

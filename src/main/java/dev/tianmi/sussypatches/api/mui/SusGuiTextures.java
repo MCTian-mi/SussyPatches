@@ -1,10 +1,16 @@
 package dev.tianmi.sussypatches.api.mui;
 
+import java.util.Map;
+
 import com.cleanroommc.modularui.drawable.UITexture;
 
 import dev.tianmi.sussypatches.Tags;
+import gregtech.api.recipes.RecipeMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 
 public interface SusGuiTextures {
+
+    Map<RecipeMap<?>, UITexture> PROGRESS_BARS = new Object2ObjectArrayMap<>(RecipeMap.getRecipeMaps().size());
 
     UITexture VANILLA_SCROLL_BAR = UITexture.builder()
             .location(Tags.MODID, "gui/widgets/mc_scroll_bar")
