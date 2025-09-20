@@ -81,6 +81,17 @@ public class SusConfig {
         public boolean deepMaintenance = true;
 
         @Comment({
+                "Adds the retain exact mode to fluid regulators and robot arms.",
+                "It keeps specified amount of item/fluids in the source container.",
+                "Backported from GregTechCEu#2684",
+                "CAUTION: You will HAVE to change this into other transfer modes in your covers " +
+                        "before disabling this option or removing this mod. Otherwise your machines may got evaporated.",
+        })
+        @Name("Reach deeper in your pocket when maintaining multis")
+        @RequiresMcRestart
+        public boolean coverRetainExact = true;
+
+        @Comment({
                 "Add a recipe creator GUI for GroovyScript in creative mode."
         })
         @Name("In-Game GroovyScript recipe creator")
