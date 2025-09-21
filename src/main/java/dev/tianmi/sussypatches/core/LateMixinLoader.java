@@ -28,7 +28,8 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE.add("deepmaintenance", SusConfig.FEAT.deepMaintenance);
         FEATURE.add("coverretainexact", SusConfig.FEAT.coverRetainExact);
 
-        COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
+        COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemandAnimation, SusMods.LoliASM,
+                SusMods.OptiFine.negate());
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
         COMPAT.add("lampbakedmodel", SusConfig.COMPAT.fixLampModel, SusMods.VintageFix, SusMods.of(CTM));
         COMPAT.add("inworldpreviewcrash", SusConfig.COMPAT.fixInworldPreview, SusMods.FluidloggedAPI_2);
@@ -38,6 +39,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         COMPAT.add("tweakerinfo", SusConfig.COMPAT.tweakerInfo, SusMods.of(GroovyScript)
                 .or(SusMods.of(CraftTweaker)), SusMods.of(JustEnoughItems));
         COMPAT.add("nopipeforscanner", SusConfig.COMPAT.noPipeForScanner, SusMods.RFTools);
+        COMPAT.add("smartanimation", SusConfig.COMPAT.fixSmartAnimation, SusMods.OptiFine);
         COMPAT.add("grsrecipecreator", SusConfig.COMPAT.grsRecipeCreator, SusMods.ModularUI, SusMods.of(GroovyScript));
 
         BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);

@@ -100,7 +100,7 @@ public class SusConfig {
         })
         @Name("Fix on-demand animations")
         @RequiresMcRestart
-        public boolean fixOnDemand = true;
+        public boolean fixOnDemandAnimation = true;
 
         @Comment({
                 "Fixes GregTech's DummyWorld crashs with Alfheim v1.6+, " +
@@ -161,6 +161,14 @@ public class SusConfig {
         @Name("Exclude GT pipes from Storage Scanners")
         @RequiresMcRestart
         public boolean noPipeForScanner = true;
+
+        @Comment({
+                "Fixes GregTech machines lost their animations when " +
+                        "'Smart Animations' is turned on in OptiFine."
+        })
+        @Name("Fix smart animations")
+        @RequiresMcRestart
+        public boolean fixSmartAnimation = true;
 
         @Comment({
                 "Add a recipe creator GUI for GroovyScript in creative mode."

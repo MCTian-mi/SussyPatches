@@ -1,9 +1,9 @@
-package dev.tianmi.sussypatches.core.mixin.compat.ondemandanimation;
+package dev.tianmi.sussypatches.core.mixin.compat.smartanimation;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.optifine.SmartAnimations;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,14 +15,11 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import dev.tianmi.sussypatches.api.annotation.Compat;
+import dev.tianmi.sussypatches.api.util.OptiFineHelper;
 import dev.tianmi.sussypatches.api.util.SusMods;
 import gregtech.client.renderer.texture.Textures;
-import zone.rong.loliasm.client.sprite.ondemand.IAnimatedSpriteActivator;
-import zone.rong.loliasm.client.sprite.ondemand.IAnimatedSpritePrimer;
-import zone.rong.loliasm.client.sprite.ondemand.ICompiledChunkExpander;
-import zone.rong.loliasm.config.LoliConfig;
 
-@Compat(mods = SusMods.LoliASM)
+@Compat(mods = SusMods.OptiFine)
 @Mixin(value = Textures.class, remap = false)
 public abstract class TexturesMixin {
 
@@ -37,14 +34,8 @@ public abstract class TexturesMixin {
                                             TextureAtlasSprite sprite,
                                             BlockRenderLayer right,
                                             CallbackInfo now) {
-        if (LoliConfig.instance.onDemandAnimatedTextures && sprite.hasAnimationMetadata()) {
-            var vertexFormat = renderState.getVertexFormat();
-            if (vertexFormat == DefaultVertexFormats.ITEM) {
-                ((IAnimatedSpriteActivator) sprite).setActive(true);
-            } else if (IAnimatedSpritePrimer.CURRENT_COMPILED_CHUNK.get() instanceof ICompiledChunkExpander expander) {
-                expander.resolve(sprite);
-            }
-
+        if (SmartAnimations.isActive() && sprite.hasAnimationMetadata()) {
+            OptiFineHelper.setSprite(renderState.getBuffer(), sprite);
         }
     }
 }

@@ -2,6 +2,7 @@ package dev.tianmi.sussypatches.api.util;
 
 import java.util.function.Predicate;
 
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -27,10 +28,15 @@ public enum SusMods implements BoolSupplier {
     ModularUI(Names.MODULARUI),
     NomiLibs(Names.NOMI_LIBS),
     RFTools(Names.RFTOOLS),
+    /// Unlike [Mods#Optifine], this doesn't care about whether you use shaders or not.
+    OptiFine(self -> FMLClientHandler.instance().hasOptifine()),
 
     // Well true these aren't mods, technically...
     OpenGL3(self -> GLContext.getCapabilities().OpenGL30),
     DevEnv(self -> FMLLaunchHandler.isDeobfuscatedEnvironment()),
+    /// Basically the same as [Mods#Optifine], but with a more accurate name.
+    /// Use with this in mind: The value of this is checked only once and never changed afterward.
+    OFShader(self -> Mods.Optifine.isModLoaded()),
     ;
 
     @Nullable
