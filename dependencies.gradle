@@ -39,6 +39,14 @@
  */
 dependencies {
 
+    // # Lombok
+    def lombok = 'org.projectlombok:lombok:1.18.38'
+    compileOnly lombok
+    annotationProcessor lombok
+
+    testCompileOnly lombok
+    testAnnotationProcessor lombok
+
     // # Fix crashes on macOS with Narrator
     runtimeOnly 'com.cleanroommc:osxnarratorblocker:1.0'
 
