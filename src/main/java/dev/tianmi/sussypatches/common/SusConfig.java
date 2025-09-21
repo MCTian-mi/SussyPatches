@@ -98,7 +98,7 @@ public class SusConfig {
         })
         @Config.Name("Fix on-demand animations")
         @Config.RequiresMcRestart
-        public boolean fixOnDemand = true;
+        public boolean fixOnDemandAnimation = true;
 
         @Config.Comment({
                 "Fixes GregTech's DummyWorld crashs with Alfheim v1.6+, " +
@@ -159,6 +159,14 @@ public class SusConfig {
         @Config.Name("Exclude GT pipes from Storage Scanners")
         @Config.RequiresMcRestart
         public boolean noPipeForScanner = true;
+
+        @Config.Comment({
+                "Fixes GregTech machines lost their animations when " +
+                        "'Smart Animations' is turned on in OptiFine."
+        })
+        @Config.Name("Fix smart animations")
+        @Config.RequiresMcRestart
+        public boolean fixSmartAnimation = true;
     }
 
     public static final class Bugfix {
