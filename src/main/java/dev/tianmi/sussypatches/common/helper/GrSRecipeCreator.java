@@ -20,14 +20,12 @@ import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.factory.*;
 import com.cleanroommc.modularui.integration.jei.JeiRecipeTransferHandler;
-import com.cleanroommc.modularui.network.NetworkUtils;
 import com.cleanroommc.modularui.overlay.OverlayHandler;
 import com.cleanroommc.modularui.overlay.OverlayManager;
 import com.cleanroommc.modularui.screen.*;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.utils.Interpolation;
-import com.cleanroommc.modularui.value.sync.GenericSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.ValueSyncHandler;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -37,6 +35,7 @@ import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 
 import dev.tianmi.sussypatches.api.mui.GTGuis;
 import dev.tianmi.sussypatches.api.mui.SusGuis;
+import dev.tianmi.sussypatches.api.mui.value.sync.SusSyncValues;
 import dev.tianmi.sussypatches.api.mui.widget.Dropdown;
 import dev.tianmi.sussypatches.api.mui.widget.PhantomFluidSlot;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
@@ -95,11 +94,6 @@ public class GrSRecipeCreator {
         @Nullable
         protected RecipeMap<?> currentMap;
 
-        protected final ValueSyncHandler<RecipeMap<?>> recipeMapValue = new GenericSyncValue<>(this::getCurrentMap,
-                this::setCurrentMap,
-                buf -> RecipeMap.getByName(NetworkUtils.readStringSafe(buf)),
-                (buf, map) -> NetworkUtils.writeStringSafe(buf, map != null ? map.getUnlocalizedName() : ""));
-
         protected long eut = 0;
         protected int duration = 0;
 
@@ -134,7 +128,7 @@ public class GrSRecipeCreator {
             this.exportFluids.clear();
         }
 
-        protected Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>> recipeMapSelector() {
+        protected Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>> recipeMapSelector(ValueSyncHandler<RecipeMap<?>> recipeMapValue) {
             return new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(recipeMapValue,
                     RecipeMapEntryWidget::getWidgetValue)
                             .values(RecipeMap.getRecipeMaps().stream()
@@ -145,7 +139,7 @@ public class GrSRecipeCreator {
                             .interpolation(Interpolation.EXP_OUT);
         }
 
-        protected IWidget recipeMapGui() {
+        protected IWidget recipeMapGui(ValueSyncHandler<RecipeMap<?>> recipeMapValue) {
             var inputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
                     i -> new PhantomItemSlot().slot(importItems, i)
                             .setEnabledIf(s -> i < maxInputs));
@@ -200,13 +194,14 @@ public class GrSRecipeCreator {
 
         @Override
         public ModularPanel buildUI(GuiData data, PanelSyncManager syncManager, UISettings settings) {
+            var recipeMapValue = SusSyncValues.ofMap(this::getCurrentMap, this::setCurrentMap);
             syncManager.syncValue("recipeMap", recipeMapValue);
 
             return GTGuis.createPanel("grs_recipe_creator")
                     .child(Flow.column()
                             .coverChildren()
-                            .child(recipeMapSelector())
-                            .child(recipeMapGui())); // FIXME)) Fix depth order
+                            .child(recipeMapSelector(recipeMapValue))
+                            .child(recipeMapGui(recipeMapValue))); // FIXME)) Fix depth order
         }
 
         public ModularScreen createScreen(GuiData data, ModularPanel mainPanel) {

@@ -45,6 +45,7 @@ public class RecipeProgressWidget extends ProgressWidget implements Interactable
     protected int ticker = 0;
     protected int duration = 100;
 
+    @SuppressWarnings("UnusedReturnValue")
     public RecipeProgressWidget recipeMap(RecipeMap<?> recipeMap) {
         setWidgetValue(recipeMap);
         var value = recipeMap.orElse(RecipeMaps.FURNACE_RECIPES); // FallBack to default progress icon;
