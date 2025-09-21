@@ -26,9 +26,12 @@ import com.cleanroommc.modularui.screen.*;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.utils.Interpolation;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
+import com.cleanroommc.modularui.value.sync.LongSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.ValueSyncHandler;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
@@ -40,7 +43,6 @@ import dev.tianmi.sussypatches.api.mui.widget.Dropdown;
 import dev.tianmi.sussypatches.api.mui.widget.PhantomFluidSlot;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeMapEntryWidget;
 import dev.tianmi.sussypatches.api.mui.widget.RecipeProgressWidget;
-import dev.tianmi.sussypatches.api.util.BoolSupplier;
 import dev.tianmi.sussypatches.api.util.SusUtil;
 import dev.tianmi.sussypatches.core.mixin.compat.grsrecipecreator.RecipeLayoutAccessor;
 import gregtech.api.capability.IMultipleTankHandler;
@@ -49,6 +51,7 @@ import gregtech.integration.jei.recipe.GTRecipeWrapper;
 import gregtech.integration.jei.recipe.RecipeMapCategory;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.ExtensionMethod;
 import mcp.MethodsReturnNonnullByDefault;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -94,12 +97,24 @@ public class GrSRecipeCreator {
         @Nullable
         protected RecipeMap<?> currentMap;
 
+        @Getter
+        @Setter
         protected long eut = 0;
+        @Getter
+        @Setter
         protected int duration = 0;
 
+        @Getter
+        @Setter
         protected int maxInputs = 0;
+        @Getter
+        @Setter
         protected int maxOutputs = 0;
+        @Getter
+        @Setter
         protected int maxFluidInputs = 0;
+        @Getter
+        @Setter
         protected int maxFluidOutputs = 0;
 
         protected final ItemStackHandler importItems = new ItemStackHandler(MAX_SLOTS);
@@ -128,8 +143,8 @@ public class GrSRecipeCreator {
             this.exportFluids.clear();
         }
 
-        protected Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>> recipeMapSelector(ValueSyncHandler<RecipeMap<?>> recipeMapValue) {
-            return new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(recipeMapValue,
+        protected Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>> recipeMapSelector(ValueSyncHandler<RecipeMap<?>> recipeMap) {
+            return new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(recipeMap,
                     RecipeMapEntryWidget::getWidgetValue, RecipeMapEntryWidget::new)
                             .values(RecipeMap.getRecipeMaps().stream()
                                     .sorted(Comparator.comparing(RecipeMap::getLocalizedName,
@@ -138,7 +153,8 @@ public class GrSRecipeCreator {
                             .interpolation(Interpolation.EXP_OUT);
         }
 
-        protected IWidget recipeMapGui(ValueSyncHandler<RecipeMap<?>> recipeMapValue) {
+        protected IWidget recipeMapGui(ValueSyncHandler<RecipeMap<?>> recipeMap, LongSyncValue eut,
+                                       IntSyncValue duration) {
             var inputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, MAX_SLOTS,
                     i -> new PhantomItemSlot().slot(importItems, i)
                             .setEnabledIf(s -> i < maxInputs));
@@ -155,52 +171,65 @@ public class GrSRecipeCreator {
                     i -> new PhantomFluidSlot().tank(exportFluids, i)
                             .setEnabledIf(s -> i < maxFluidOutputs));
 
-            return Flow.row()
+            return Flow.column()
                     .setEnabledIf(s -> getCurrentMap() != null)
                     .coverChildren()
                     .collapseDisabledChild()
                     .background(GuiTextures.MC_BACKGROUND)
-                    .padding(8)
-                    .childPadding(4)
-                    .child(Flow.column()
+                    .crossAxisAlignment(Alignment.CrossAxis.START)
+                    .child(Flow.row()
                             .coverChildren()
                             .collapseDisabledChild()
-                            .child(new Grid() // TODO)) Align right
-                                    .matrix(inputItemsMatrix)
+                            .padding(8)
+                            .childPadding(4)
+                            .child(Flow.column()
+                                    .coverChildren()
                                     .collapseDisabledChild()
-                                    .coverChildren())
-                            .child(new Grid()
-                                    .matrix(inputFluidsMatrix)
+                                    .child(new Grid() // TODO)) Align right
+                                            .matrix(inputItemsMatrix)
+                                            .collapseDisabledChild()
+                                            .coverChildren())
+                                    .child(new Grid()
+                                            .matrix(inputFluidsMatrix)
+                                            .collapseDisabledChild()
+                                            .coverChildren()))
+                            .child(new RecipeProgressWidget()
+                                    .dynamic(recipeMap)
+                                    .tickDuration(duration::getValue)
+                                    .size(20))
+                            .child(Flow.column()
+                                    .coverChildren()
                                     .collapseDisabledChild()
-                                    .coverChildren()))
-                    .childIf(BoolSupplier.TRUE, () -> new RecipeProgressWidget()
-                            .dynamic(recipeMapValue)
-                            .autoIncrementProgress(() -> duration)
-                            // .progress(() -> () / duration) // TODO)) Dynamic progress
-                            .size(20))
-                    .child(Flow.column()
-                            .coverChildren()
-                            .collapseDisabledChild()
-                            .child(new Grid() // TODO)) Align left
-                                    .matrix(outputItemsMatrix)
-                                    .collapseDisabledChild()
-                                    .coverChildren())
-                            .child(new Grid()
-                                    .matrix(outputFluidsMatrix)
-                                    .collapseDisabledChild()
-                                    .coverChildren()));
+                                    .child(new Grid() // TODO)) Align left
+                                            .matrix(outputItemsMatrix)
+                                            .collapseDisabledChild()
+                                            .coverChildren())
+                                    .child(new Grid()
+                                            .matrix(outputFluidsMatrix)
+                                            .collapseDisabledChild()
+                                            .coverChildren())))
+                    .child(new RichTextWidget()
+                            .widthRel(1)
+                            .alignment(Alignment.CenterLeft)
+                            .addLine("dasdasd")
+                            .addLine("dasdasddfadasdafa"));
         }
 
         @Override
         public ModularPanel buildUI(GuiData data, PanelSyncManager syncManager, UISettings settings) {
-            var recipeMapValue = SusSyncValues.ofMap(this::getCurrentMap, this::setCurrentMap);
-            syncManager.syncValue("recipeMap", recipeMapValue);
+            var recipeMap = SusSyncValues.ofMap(this::getCurrentMap, this::setCurrentMap);
+            var eut = new LongSyncValue(this::getEut, this::getEut);
+            var duration = new IntSyncValue(this::getDuration, this::setDuration);
+
+            syncManager.syncValue("recipeMap", recipeMap);
+            syncManager.syncValue("eut", eut);
+            syncManager.syncValue("duration", duration);
 
             return GTGuis.createPanel("grs_recipe_creator")
                     .child(Flow.column()
                             .coverChildren()
-                            .child(recipeMapSelector(recipeMapValue))
-                            .child(recipeMapGui(recipeMapValue))); // FIXME)) Fix depth order
+                            .child(recipeMapSelector(recipeMap))
+                            .child(recipeMapGui(recipeMap, eut, duration))); // FIXME)) Fix depth order
         }
 
         public ModularScreen createScreen(GuiData data, ModularPanel mainPanel) {

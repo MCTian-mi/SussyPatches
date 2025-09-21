@@ -19,8 +19,6 @@ public interface SusSyncValues {
     }
 
     static ValueSyncHandler<RecipeMap<?>> ofMap(IValue<RecipeMap<?>> value) {
-        return new GenericSyncValue<>(value::getValue, value::setValue,
-                buf -> RecipeMap.getByName(NetworkUtils.readStringSafe(buf)),
-                (buf, map) -> NetworkUtils.writeStringSafe(buf, map != null ? map.getUnlocalizedName() : ""));
+        return ofMap(value::getValue, value::setValue);
     }
 }

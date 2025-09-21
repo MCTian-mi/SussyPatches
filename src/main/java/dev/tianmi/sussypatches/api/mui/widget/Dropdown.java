@@ -51,7 +51,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable implements IValue
     @Override
     public void onInit() {
         buttonWidget.size(120, 20)
-                .child(valueToWidget.apply(null))
+                .child(valueToWidget.apply(value.getValue()))
                 .onMousePressed(mouseButton -> {
                     if (mouseButton == 0 || mouseButton == 1) {
                         toggle();

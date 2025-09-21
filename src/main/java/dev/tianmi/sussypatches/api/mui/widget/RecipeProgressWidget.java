@@ -107,7 +107,7 @@ public class RecipeProgressWidget extends ProgressWidget implements Interactable
         return this;
     }
 
-    public RecipeProgressWidget autoIncrementProgress(IntSupplier durationSupplier) {
+    public RecipeProgressWidget tickDuration(IntSupplier durationSupplier) {
         progress(() -> {
             if (duration <= 0) return 0D;
             return ticker / (double) duration;
