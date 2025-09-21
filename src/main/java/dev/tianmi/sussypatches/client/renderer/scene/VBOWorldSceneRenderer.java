@@ -33,7 +33,6 @@ import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.client.renderer.buffer.VertexArrayObject;
 import gregtech.api.metatileentity.IFastRenderMetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
-import gregtech.api.util.Mods;
 import gregtech.client.renderer.scene.ISceneRenderHook;
 import gregtech.client.renderer.scene.ImmediateWorldSceneRenderer;
 import gregtech.client.renderer.scene.WorldSceneRenderer;
@@ -208,7 +207,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
     }
 
     protected void setupArrayPointers() {
-        if (Mods.Optifine.isModLoaded()) {
+        if (SusMods.OFShader.isLoaded()) {
             // OptiFine I hate you
             ShadersRender.setupArrayPointersVbo();
         } else {
