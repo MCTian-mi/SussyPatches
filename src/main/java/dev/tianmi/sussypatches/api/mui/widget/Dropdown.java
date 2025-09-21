@@ -35,13 +35,15 @@ public class Dropdown<V, I extends IWidget> extends Expandable implements IValue
     @Nullable
     protected IDrawable expandedBackground;
     protected final Function<I, V> widgetToValue;
+    protected final Function<V, I> valueToWidget;
 
     protected final ButtonWidget<?> buttonWidget;
     protected final ListWidget<ButtonWidget<?>, ?> listWidget;
 
-    public Dropdown(IValue<V> value, Function<I, V> widgetToValue) {
+    public Dropdown(IValue<V> value, Function<I, V> widgetToValue, Function<@Nullable V, I> valueToWidget) {
         this.value = value;
         this.widgetToValue = widgetToValue;
+        this.valueToWidget = valueToWidget;
         this.buttonWidget = new ButtonWidget<>();
         this.listWidget = new ListWidget<>();
     }
@@ -49,6 +51,7 @@ public class Dropdown<V, I extends IWidget> extends Expandable implements IValue
     @Override
     public void onInit() {
         buttonWidget.size(120, 20)
+                .child(valueToWidget.apply(null))
                 .onMousePressed(mouseButton -> {
                     if (mouseButton == 0 || mouseButton == 1) {
                         toggle();
@@ -83,17 +86,18 @@ public class Dropdown<V, I extends IWidget> extends Expandable implements IValue
                                 .widthRel(1)
                                 .horizontalCenter())
                         .child(listWidget));
+
         super.onInit();
     }
 
-    public Dropdown<V, I> values(Iterable<V> values, Function<V, I> widgetCreator) {
+    public Dropdown<V, I> values(Iterable<V> values) {
         for (V value : values) {
             listWidget.child(new ButtonWidget<>()
                     .widthRel(1)
                     .height(20)
-                    .child(widgetCreator.apply(value))
+                    .child(valueToWidget.apply(value))
                     .onMousePressed(mouseButton -> {
-                        setValue(widgetCreator.apply(value));
+                        setValue(value);
                         toggle();
                         return true;
                     }));
@@ -101,18 +105,14 @@ public class Dropdown<V, I extends IWidget> extends Expandable implements IValue
         return getThis();
     }
 
-    protected void setValue(I widget) {
-        buttonWidget.child(widget).scheduleResize(); // TODO)) Remove resize in future mui as it's called automatically
-        value.setValue(widgetToValue.apply(widget));
+    protected void setValue(V value) {
+        buttonWidget.child(valueToWidget.apply(value)).scheduleResize(); // TODO)) Remove resize in future mui as it's
+                                                                         // called automatically
+        this.value.setValue(value);
     }
 
     public Dropdown<V, I> button(Consumer<ButtonWidget<?>> operator) {
         operator.accept(buttonWidget);
-        return getThis();
-    }
-
-    public Dropdown<V, I> setDefault(I defaultWidget) {
-        setValue(defaultWidget);
         return getThis();
     }
 

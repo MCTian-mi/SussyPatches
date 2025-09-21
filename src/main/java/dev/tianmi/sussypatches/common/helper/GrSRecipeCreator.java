@@ -87,7 +87,7 @@ public class GrSRecipeCreator {
     @MethodsReturnNonnullByDefault
     public static class Gui implements IGuiHolder<GuiData> { // TODO)) Singleton
 
-        protected static final int SLOTS = 16; // Enough for most recipe maps
+        protected static final int MAX_SLOTS = 16; // Enough for most recipe maps
         protected static final int ROW_LENGTH = 3;
 
         @Getter
@@ -102,10 +102,10 @@ public class GrSRecipeCreator {
         protected int maxFluidInputs = 0;
         protected int maxFluidOutputs = 0;
 
-        protected final ItemStackHandler importItems = new ItemStackHandler(SLOTS);
-        protected final ItemStackHandler exportItems = new ItemStackHandler(SLOTS);
-        protected final IMultipleTankHandler importFluids = SusUtil.createTankList(SLOTS);
-        protected final IMultipleTankHandler exportFluids = SusUtil.createTankList(SLOTS);
+        protected final ItemStackHandler importItems = new ItemStackHandler(MAX_SLOTS);
+        protected final ItemStackHandler exportItems = new ItemStackHandler(MAX_SLOTS);
+        protected final IMultipleTankHandler importFluids = SusUtil.createTankList(MAX_SLOTS);
+        protected final IMultipleTankHandler exportFluids = SusUtil.createTankList(MAX_SLOTS);
 
         protected void setCurrentMap(RecipeMap<?> recipeMap) {
             this.currentMap = recipeMap;
@@ -130,29 +130,28 @@ public class GrSRecipeCreator {
 
         protected Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>> recipeMapSelector(ValueSyncHandler<RecipeMap<?>> recipeMapValue) {
             return new Dropdown<RecipeMap<?>, RecipeMapEntryWidget<?>>(recipeMapValue,
-                    RecipeMapEntryWidget::getWidgetValue)
+                    RecipeMapEntryWidget::getWidgetValue, RecipeMapEntryWidget::new)
                             .values(RecipeMap.getRecipeMaps().stream()
                                     .sorted(Comparator.comparing(RecipeMap::getLocalizedName,
                                             Comparator.naturalOrder()))
-                                    .collect(Collectors.toList()), RecipeMapEntryWidget::new)
-                            // .setDefault(RecipeMapEntryWidget.EMPTY)
+                                    .collect(Collectors.toList()))
                             .interpolation(Interpolation.EXP_OUT);
         }
 
         protected IWidget recipeMapGui(ValueSyncHandler<RecipeMap<?>> recipeMapValue) {
-            var inputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+            var inputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, MAX_SLOTS,
                     i -> new PhantomItemSlot().slot(importItems, i)
                             .setEnabledIf(s -> i < maxInputs));
 
-            var inputFluidsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+            var inputFluidsMatrix = Grid.mapToMatrix(ROW_LENGTH, MAX_SLOTS,
                     i -> new PhantomFluidSlot().tank(importFluids, i)
                             .setEnabledIf(s -> i < maxFluidInputs));
 
-            var outputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+            var outputItemsMatrix = Grid.mapToMatrix(ROW_LENGTH, MAX_SLOTS,
                     i -> new PhantomItemSlot().slot(exportItems, i)
                             .setEnabledIf(s -> i < maxOutputs));
 
-            var outputFluidsMatrix = Grid.mapToMatrix(ROW_LENGTH, SLOTS,
+            var outputFluidsMatrix = Grid.mapToMatrix(ROW_LENGTH, MAX_SLOTS,
                     i -> new PhantomFluidSlot().tank(exportFluids, i)
                             .setEnabledIf(s -> i < maxFluidOutputs));
 
