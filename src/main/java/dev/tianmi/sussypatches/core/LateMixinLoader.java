@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.BoolSupplier;
 import dev.tianmi.sussypatches.api.util.SusMods;
@@ -75,11 +74,6 @@ public class LateMixinLoader implements ILateMixinLoader {
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
         API.add("pipeicontypes", SusConfig.API.pipeIconTypes);
-    }
-
-    public static int foo() {
-        SussyPatches.LOGGER.info("dashdaoisdaoh");
-        return 0;
     }
 
     @Override
