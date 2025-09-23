@@ -15,7 +15,7 @@ import mcp.MethodsReturnNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public interface GTToolExtension {
 
-    Map<String, Collection<gregtech.api.unification.material.Material>> TOOL_MATERIALS = new Object2ObjectArrayMap<>();
+    Map<String, Collection<Material>> TOOL_MATERIALS = new Object2ObjectArrayMap<>();
 
     static GTToolExtension cast(IGTTool tool) {
         return (GTToolExtension) tool;

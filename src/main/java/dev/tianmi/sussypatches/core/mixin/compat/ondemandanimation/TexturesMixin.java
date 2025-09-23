@@ -1,6 +1,5 @@
 package dev.tianmi.sussypatches.core.mixin.compat.ondemandanimation;
 
-import net.minecraft.client.renderer.chunk.CompiledChunk;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.BlockRenderLayer;
@@ -17,8 +16,8 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import dev.tianmi.sussypatches.api.annotation.Compat;
 import dev.tianmi.sussypatches.api.util.SusMods;
-import gregtech.api.util.Mods;
 import gregtech.client.renderer.texture.Textures;
+import zone.rong.loliasm.client.sprite.ondemand.IAnimatedSpriteActivator;
 import zone.rong.loliasm.client.sprite.ondemand.IAnimatedSpritePrimer;
 import zone.rong.loliasm.client.sprite.ondemand.ICompiledChunkExpander;
 import zone.rong.loliasm.config.LoliConfig;
@@ -38,16 +37,14 @@ public abstract class TexturesMixin {
                                             TextureAtlasSprite sprite,
                                             BlockRenderLayer right,
                                             CallbackInfo now) {
-        if (!LoliConfig.instance.onDemandAnimatedTextures || Mods.Optifine.isModLoaded()
-        // To prevent adding animated sprites when rendering items
-                || renderState.getVertexFormat() == DefaultVertexFormats.ITEM) {
-            return;
-        }
-        if (sprite.hasAnimationMetadata()) {
-            CompiledChunk chunk = IAnimatedSpritePrimer.CURRENT_COMPILED_CHUNK.get();
-            if (chunk instanceof ICompiledChunkExpander expander) {
+        if (LoliConfig.instance.onDemandAnimatedTextures && sprite.hasAnimationMetadata()) {
+            var vertexFormat = renderState.getVertexFormat();
+            if (vertexFormat == DefaultVertexFormats.ITEM) {
+                ((IAnimatedSpriteActivator) sprite).setActive(true);
+            } else if (IAnimatedSpritePrimer.CURRENT_COMPILED_CHUNK.get() instanceof ICompiledChunkExpander expander) {
                 expander.resolve(sprite);
             }
+
         }
     }
 }

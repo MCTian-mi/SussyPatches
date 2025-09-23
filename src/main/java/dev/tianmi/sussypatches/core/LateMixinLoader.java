@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.BoolSupplier;
 import dev.tianmi.sussypatches.api.util.SusMods;
@@ -25,8 +24,11 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE.add("interactivestorage", SusConfig.FEAT.interactiveStorage);
         FEATURE.add("fluidcontainerbar", SusConfig.FEAT.fluidContainerBar, SusConfig.API.itemOverlayEvent);
         FEATURE.add("visiblestorage", SusConfig.FEAT.visibleStorage);
+        FEATURE.add("deepmaintenance", SusConfig.FEAT.deepMaintenance);
+        FEATURE.add("coverretainexact", SusConfig.FEAT.coverRetainExact);
 
-        COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemand, SusMods.LoliASM);
+        COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemandAnimation, SusMods.LoliASM,
+                SusMods.OptiFine.negate());
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
         COMPAT.add("lampbakedmodel", SusConfig.COMPAT.fixLampModel, SusMods.VintageFix, SusMods.of(CTM));
         COMPAT.add("inworldpreviewcrash", SusConfig.COMPAT.fixInworldPreview, SusMods.FluidloggedAPI_2);
@@ -36,6 +38,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         COMPAT.add("tweakerinfo", SusConfig.COMPAT.tweakerInfo, SusMods.of(GroovyScript)
                 .or(SusMods.of(CraftTweaker)), SusMods.of(JustEnoughItems));
         COMPAT.add("nopipeforscanner", SusConfig.COMPAT.noPipeForScanner, SusMods.RFTools);
+        COMPAT.add("smartanimation", SusConfig.COMPAT.fixSmartAnimation, SusMods.OptiFine);
 
         BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
         BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);
@@ -67,15 +70,13 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("toolsubitems", SusConfig.TWEAK.showAllToolItems);
         TWEAK.add("cstorageinf", !SusConfig.TWEAK.cStorageInf.isEmpty());
         TWEAK.add("customsoundtype", SusConfig.TWEAK.customMTESounds);
+        TWEAK.add("mobspawnonstones", SusConfig.TWEAK.mobSpawnOnStones);
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
         API.add("recipeinfo", SusConfig.API.recipeInfo, SusMods.JEI);
+        API.add("pipeicontypes", SusConfig.API.pipeIconTypes);
     }
 
-    public static int foo() {
-        SussyPatches.LOGGER.info("dashdaoisdaoh");
-        return 0;
-    }
 
     @Override
     public List<String> getMixinConfigs() {

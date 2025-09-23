@@ -3,6 +3,7 @@ package dev.tianmi.sussypatches;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -35,7 +36,7 @@ public class SussyPatches {
                 serverSide = "dev.tianmi.sussypatches.common.CommonProxy")
     public static CommonProxy proxy;
 
-    @Mod.Instance(Tags.MODID)
+    @Instance(Tags.MODID)
     public static SussyPatches instance;
 
     @EventHandler

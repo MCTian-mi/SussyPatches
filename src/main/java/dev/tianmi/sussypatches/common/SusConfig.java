@@ -68,6 +68,26 @@ public class SusConfig {
         @Config.Name("Render quantum tanks fluids in inventories")
         @Config.RequiresMcRestart
         public boolean visibleStorage = true;
+
+        @Config.Comment({
+                "Allows maintaining multiblocks with tools from containers in the player's inventory.",
+                "E.g., tool belt or backpacks.",
+                "Note: may slightly affect performance."
+        })
+        @Config.Name("Reach deeper in your pocket when maintaining multis")
+        @Config.RequiresMcRestart
+        public boolean deepMaintenance = true;
+
+        @Config.Comment({
+                "Adds the retain exact mode to fluid regulators and robot arms.",
+                "It keeps specified amount of item/fluids in the source container.",
+                "Backported from GregTechCEu#2684",
+                "CAUTION: You will HAVE to change this into other transfer modes in your covers " +
+                        "before disabling this option or removing this mod. Otherwise your machines may got evaporated.",
+        })
+        @Config.Name("Reach deeper in your pocket when maintaining multis")
+        @Config.RequiresMcRestart
+        public boolean coverRetainExact = true;
     }
 
     public static final class Compat {
@@ -78,7 +98,7 @@ public class SusConfig {
         })
         @Config.Name("Fix on-demand animations")
         @Config.RequiresMcRestart
-        public boolean fixOnDemand = true;
+        public boolean fixOnDemandAnimation = true;
 
         @Config.Comment({
                 "Fixes GregTech's DummyWorld crashs with Alfheim v1.6+, " +
@@ -136,9 +156,17 @@ public class SusConfig {
         @Config.Comment({
                 "Stops RFTools Storage Scanner adding GT pipes as inventories."
         })
-        @Config.Name("Exclude GT pipes from Storage Scanners.")
+        @Config.Name("Exclude GT pipes from Storage Scanners")
         @Config.RequiresMcRestart
         public boolean noPipeForScanner = true;
+
+        @Config.Comment({
+                "Fixes GregTech machines lost their animations when " +
+                        "'Smart Animations' is turned on in OptiFine."
+        })
+        @Config.Name("Fix smart animations")
+        @Config.RequiresMcRestart
+        public boolean fixSmartAnimation = true;
     }
 
     public static final class Bugfix {
@@ -382,12 +410,20 @@ public class SusConfig {
         public String cStorageInf = "";
 
         @Config.Comment({
-                "Basically just give GT MetaTileEntities proper sound types based on their materials.",
+                "Basically just give GT blocks and MetaTileEntities proper sound types based on their materials.",
                 "Backported from GregTechCEu#2853"
         })
-        @Config.Name("Give GT MTEs proper step sounds")
+        @Config.Name("Give GT blocks & MTEs proper step sounds")
         @Config.RequiresMcRestart
-        public boolean customMTESounds = false;
+        public boolean customMTESounds = true;
+
+        @Config.Comment({
+                "Literally. Just made it possible for mobs to spawn on GT stone blocks.",
+                "Backported from GregTechCEu#2859"
+        })
+        @Config.Name("Allow mob spawning on GT stones")
+        @Config.RequiresMcRestart
+        public boolean mobSpawnOnStones = true;
     }
 
     public static final class Api {
@@ -410,6 +446,15 @@ public class SusConfig {
         @Config.RequiresMcRestart
         @Config.Ignore // TODO: fix early config
         public boolean itemOverlayEvent = true;
+
+        @Config.Comment({
+                "Let all material cable and pipe textures be configurable with its icon set texture.",
+                "Note: if this option is enabled, then the correspondence textures in default path will invalid,",
+                "only the textures in its icon set path will be rendered."
+        })
+        @Config.Name("Render cable and pipe textures from its icon set")
+        @Config.RequiresMcRestart
+        public boolean pipeIconTypes = true;
 
         @Config.Comment({
                 "Supports documentation being attached to GT recipes that can be shown in JEI."
