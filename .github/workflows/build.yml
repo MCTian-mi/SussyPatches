@@ -1,12 +1,13 @@
+name: Build Artifacts
+
 on:
   push:
     branches:
       - main
   pull_request:
 
-
 concurrency:
-  group: publish-${{ github.head_ref || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
