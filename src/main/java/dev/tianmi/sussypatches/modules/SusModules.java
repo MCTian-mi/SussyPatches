@@ -31,6 +31,10 @@ public class SusModules implements IModuleContainer {
     public static final String BAUBLES_NAME = "Sus Baubles Integration";
     public static final String BAUBLES_DESC = "Integration module for Baubles";
 
+    public static final String GS_ID = "gs_integration";
+    public static final String GS_NAME = "Sus GroovyScript Integration";
+    public static final String GS_DESC = "Integration module for GroovyScript";
+
     @Override
     public String getID() {
         return Tags.MODID;

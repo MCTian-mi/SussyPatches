@@ -73,10 +73,8 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("mobspawnonstones", SusConfig.TWEAK.mobSpawnOnStones);
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
-        API.add("recipeinfo", SusConfig.API.recipeInfo, SusMods.JEI);
         API.add("pipeicontypes", SusConfig.API.pipeIconTypes);
     }
-
 
     @Override
     public List<String> getMixinConfigs() {
