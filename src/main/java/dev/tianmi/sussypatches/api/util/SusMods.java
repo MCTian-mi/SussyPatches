@@ -32,7 +32,6 @@ public enum SusMods implements BoolSupplier {
     ModularUI(Names.MODULARUI),
     NomiLibs(Names.NOMI_LIBS),
     RFTools(Names.RFTOOLS),
-    JEI(Names.JEI),
     /// Unlike [Mods#Optifine], this doesn't care about whether you use shaders or not.
     OptiFine(self -> FMLClientHandler.instance().hasOptifine()),
 
