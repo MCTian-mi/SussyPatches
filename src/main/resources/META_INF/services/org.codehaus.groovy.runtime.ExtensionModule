@@ -1,0 +1,3 @@
+moduleName=grs-module
+moduleVersion=1.0
+extensionClasses=dev.tianmi.sussypatches.integration.grs.SusGroovyExpansions,

@@ -455,6 +455,13 @@ public class SusConfig {
         @Config.Name("Render cable and pipe textures from its icon set")
         @Config.RequiresMcRestart
         public boolean pipeIconTypes = true;
+
+        @Config.Comment({
+                "Supports documentation being attached to GT recipes that can be shown in JEI."
+        })
+        @Config.Name("Enable Recipe Info")
+        @Config.RequiresMcRestart
+        public boolean recipeInfo = true;
     }
 
     static {
