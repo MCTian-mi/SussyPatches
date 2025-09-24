@@ -12,14 +12,15 @@ import gregtech.api.recipes.recipeproperties.RecipeProperty;
 import gregtech.api.util.LocalizationUtils;
 import lombok.Getter;
 
-public class InfoProperty extends RecipeProperty<InfoProperty.TranslationData> {
+public final class InfoProperty extends RecipeProperty<InfoProperty.TranslationData> {
 
-    public static final String KEY = "info";
     @Getter(lazy = true)
     private final static InfoProperty Instance = new InfoProperty();
+    public static final String KEY = "info";
+
     private int currentY = 0;
 
-    protected InfoProperty() {
+    private InfoProperty() {
         super(KEY, InfoProperty.TranslationData.class);
     }
 
@@ -35,8 +36,7 @@ public class InfoProperty extends RecipeProperty<InfoProperty.TranslationData> {
     public void getTooltipStrings(List<String> tooltip, int mouseX, int mouseY, Object value) {
         TranslationData data = castValue(value);
         if (mouseY >= currentY && mouseY <= currentY + 10)
-            tooltip.addAll(
-                    Arrays.asList(LocalizationUtils.formatLines(data.translationKey(), data.args())));
+            tooltip.addAll(Arrays.asList(LocalizationUtils.formatLines(data.translationKey(), data.args())));
     }
 
     @Desugar

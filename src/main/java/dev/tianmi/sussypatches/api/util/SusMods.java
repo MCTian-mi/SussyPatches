@@ -105,6 +105,5 @@ public enum SusMods implements BoolSupplier {
         public static final String CLEANROOM = "cleanroom";
         public static final String NOMI_LIBS = "nomilabs";
         public static final String RFTOOLS = "rftools";
-        public static final String JEI = "jei";
     }
 }

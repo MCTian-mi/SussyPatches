@@ -1,6 +1,4 @@
-package dev.tianmi.sussypatches.integration.groovy;
-
-import net.minecraftforge.fml.common.Optional;
+package dev.tianmi.sussypatches.integration.grs;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,28 +14,29 @@ import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
 
-@GregTechModule(moduleID = SusModules.BAUBLES_ID,
+@GregTechModule(moduleID = SusModules.GrS_ID,
                 containerID = Tags.MODID,
-                modDependencies = Mods.Names.BAUBLES,
-                name = SusModules.BAUBLES_NAME,
-                description = SusModules.BAUBLES_DESC)
-public class GroovyModule extends IntegrationSubmodule implements GroovyPlugin {
+                modDependencies = Mods.Names.GROOVY_SCRIPT,
+                name = SusModules.GrS_NAME,
+                description = SusModules.GrS_DESC)
+public class GrSModule extends IntegrationSubmodule implements GroovyPlugin {
 
+    @NotNull
     @Override
-    public @NotNull String getModId() {
+    public String getModId() {
         return Tags.MODID;
     }
 
+    @NotNull
     @Override
-    public @NotNull String getContainerName() {
-        return Tags.MODID;
+    public String getContainerName() {
+        return Tags.MODNAME;
     }
 
-    @Optional.Method(modid = Mods.Names.GROOVY_SCRIPT)
     @Override
     public void onCompatLoaded(GroovyContainer<?> container) {
         if (SusConfig.API.recipeInfo) {
-            ExpansionHelper.mixinMethod(RecipeBuilder.class, SusGroovyExpansions.class, "info");
+            ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "info");
         }
     }
 }

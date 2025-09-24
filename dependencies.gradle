@@ -59,7 +59,7 @@ dependencies {
     compileOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.700'
     compileOnly 'appeng:ae2-uel:v0.56.7' transitive false
     // GroovyScript
-    implementation 'com.cleanroommc:groovyscript:1.2.5' transitive false
+    compileOnly 'com.cleanroommc:groovyscript:1.2.5' transitive false
 
     compileOnlyApi 'com.cleanroommc:configanytime:3.0'
     compileOnlyApi 'com.cleanroommc:modularui:2.5.0-rc6' transitive false
@@ -79,6 +79,7 @@ dependencies {
 //    runtimeOnlyNonPublishable 'maven.modrinth:refinedtools:7.77'
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:tool-belt-260262:3459767')
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:baubles-lts-655747:3916343")
+//    runtimeOnlyNonPublishable 'com.cleanroommc:groovyscript:1.2.5' transitive false
 
     // # OptiFine
 //    // Copied from GTCEu, originally used to download latest Vintagium from GitHub
