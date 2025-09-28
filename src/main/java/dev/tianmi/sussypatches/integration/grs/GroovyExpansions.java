@@ -5,8 +5,7 @@ import gregtech.api.recipes.RecipeBuilder;
 
 public final class GroovyExpansions {
 
-    public static <R extends RecipeBuilder<R>> R info(R builder, String translationKey,
-                                                                     Object... args) {
+    public static <R extends RecipeBuilder<R>> R info(R builder, String translationKey, Object... args) {
         builder.applyProperty(InfoProperty.getInstance(), new InfoProperty.TranslationData(translationKey, args));
         return builder;
     }

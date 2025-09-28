@@ -24,6 +24,8 @@ public class LoadingPlugin implements ILoadingPlugin, IEarlyMixinLoader {
     static {
         // TODO: fix early config
         API.add("itemoverlayevent"/* , SusConfig.API.itemOverlayEvent */);
+
+        COMPAT.add("realtimeshadercheck"/* , SusConfig.COMPAT.realTimeShaderCheck, SusMods.OptiFine */);
     }
 
     @Override

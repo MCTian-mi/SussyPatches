@@ -207,7 +207,7 @@ public class VBOWorldSceneRenderer extends ImmediateWorldSceneRenderer {
     }
 
     protected void setupArrayPointers() {
-        if (SusMods.OFShader.isLoaded()) {
+        if (SusMods.ShadersMod.isLoaded()) {
             // OptiFine I hate you
             ShadersRender.setupArrayPointersVbo();
         } else {
