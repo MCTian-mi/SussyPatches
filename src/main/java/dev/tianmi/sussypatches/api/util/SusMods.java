@@ -40,7 +40,7 @@ public enum SusMods implements BoolSupplier {
     DevEnv(self -> FMLLaunchHandler.isDeobfuscatedEnvironment()),
     /// Basically the same as [Mods#Optifine], but with a more accurate name.
     /// Use with this in mind: The value of this is checked only once and never changed afterward.
-    OFShader(self -> Mods.Optifine.isModLoaded()),
+    ShadersMod(self -> Mods.Optifine.isModLoaded()),
     ;
 
     @Nullable

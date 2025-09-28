@@ -167,6 +167,15 @@ public class SusConfig {
         @Config.Name("Fix smart animations")
         @Config.RequiresMcRestart
         public boolean fixSmartAnimation = true;
+
+        @Config.Comment({
+                "Check OptiFine shader load state at real-time.",
+                "Fixes bloom effects not coming back after you disabled shaders in-game.",
+                "Backported from GregTechCEu#2871"
+        })
+        @Config.Name("Check OptiFine Shader at real time")
+        @Config.RequiresMcRestart
+        public boolean realTimeShaderCheck = true;
     }
 
     public static final class Bugfix {
