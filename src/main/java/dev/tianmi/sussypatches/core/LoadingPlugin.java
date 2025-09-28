@@ -12,8 +12,6 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.core.ILoadingPlugin;
 import dev.tianmi.sussypatches.api.util.BoolSupplier;
-import dev.tianmi.sussypatches.api.util.SusMods;
-import dev.tianmi.sussypatches.common.SusConfig;
 import zone.rong.mixinbooter.IEarlyMixinLoader;
 
 @Name("SussyPatchesPlugin")
@@ -27,7 +25,7 @@ public class LoadingPlugin implements ILoadingPlugin, IEarlyMixinLoader {
         // TODO: fix early config
         API.add("itemoverlayevent"/* , SusConfig.API.itemOverlayEvent */);
 
-        COMPAT.add("realtimeshadercheck", SusConfig.COMPAT.realTimeShaderCheck, SusMods.OptiFine);
+        COMPAT.add("realtimeshadercheck"/* , SusConfig.COMPAT.realTimeShaderCheck, SusMods.OptiFine */);
     }
 
     @Override

@@ -175,6 +175,7 @@ public class SusConfig {
         })
         @Config.Name("Check OptiFine Shader at real time")
         @Config.RequiresMcRestart
+        @Config.Ignore // TODO: fix early config
         public boolean realTimeShaderCheck = true;
     }
 
