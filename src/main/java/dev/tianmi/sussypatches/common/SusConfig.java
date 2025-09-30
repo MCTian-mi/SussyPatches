@@ -82,12 +82,13 @@ public class SusConfig {
                 "Adds the retain exact mode to fluid regulators and robot arms.",
                 "It keeps specified amount of item/fluids in the source container.",
                 "Backported from GregTechCEu#2684",
+                "Note: due to issues from a lower version of MixinExtras, this won't run on Java8 instances.",
                 "CAUTION: You will HAVE to change this into other transfer modes in your covers " +
                         "before disabling this option or removing this mod. Otherwise your machines may got evaporated.",
         })
-        @Config.Name("Reach deeper in your pocket when maintaining multis")
+        @Config.Name("Add retain exact mode to covers")
         @Config.RequiresMcRestart
-        public boolean coverRetainExact = true;
+        public boolean coverRetainExact = false;
     }
 
     public static final class Compat {
