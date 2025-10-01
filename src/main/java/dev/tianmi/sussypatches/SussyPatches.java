@@ -25,6 +25,7 @@ import gregtech.api.util.Mods;
 public class SussyPatches {
 
     private static final String AFTER = ";after:";
+
     static final String DEP_STRING = GTInternalTags.DEP_VERSION_STRING +
             AFTER + Mods.Names.CONNECTED_TEXTURES_MOD +
             AFTER + SusMods.Names.CONFIGANYTIME;
