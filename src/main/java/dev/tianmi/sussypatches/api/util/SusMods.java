@@ -5,6 +5,7 @@ import java.util.function.Function;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -33,7 +34,7 @@ public enum SusMods implements BoolSupplier {
     NomiLibs(Names.NOMI_LIBS),
     RFTools(Names.RFTOOLS),
     /// Unlike [Mods#Optifine], this doesn't care about whether you use shaders or not.
-    OptiFine(self -> FMLClientHandler.instance().hasOptifine()),
+    OptiFine(self -> FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().hasOptifine()),
 
     // Well true these aren't mods, technically...
     OpenGL3(self -> GLContext.getCapabilities().OpenGL30),
