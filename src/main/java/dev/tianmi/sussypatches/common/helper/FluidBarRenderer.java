@@ -26,7 +26,7 @@ public class FluidBarRenderer {
             var mte = GTUtility.getMetaTileEntity(stack);
             int capacity;
 
-            // We actually do not need accessor here to read capacity, but well.
+            // Actually we do not need accessors here to read capacity, but well.
             if (mte instanceof DrumAccessor drum) capacity = drum.getTankSize();
             else if (mte instanceof MetaTileEntityCreativeTank) capacity = 1000;
             else if (mte instanceof QuantumTankAccessor tank) capacity = tank.getMaxFluidCapacity();

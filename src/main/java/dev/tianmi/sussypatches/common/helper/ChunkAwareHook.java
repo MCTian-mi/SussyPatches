@@ -39,7 +39,7 @@ public class ChunkAwareHook {
             case WEST -> pos.getX() - minX == 16;
             case NORTH -> pos.getZ() - minZ == -1;
             case SOUTH -> pos.getZ() - minZ == 16;
-            default -> false; // Should never reach here;
+            default -> throw new AssertionError(); // Should never reach here;
         };
     }
 }

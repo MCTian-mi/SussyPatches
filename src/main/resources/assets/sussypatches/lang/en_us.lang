@@ -2,7 +2,7 @@ sussypatches.muffler.recovery_removed.tooltip=§6Recovery mechanic disabled
 sussypatches.muffler.recovery_removed.tooltip.1=§6No more ashes from the void
 sussypatches.gui.muffler.recovery_removed=Muffler recovery mechanic has been removed by SussyPatches
 
-sussypatches.cover.robotic_arm.transfer_mode.retain_exact=Retain Exact
+sussypatches.cover.transfer_mode.retain_exact=Retain Exact
 
 sussypatches.jei.remove_recipe.tooltip=Copies a %s Snippet to Remove this Recipe
 sussypatches.jei.ct_recipe.tooltip=CraftTweaker Recipe
