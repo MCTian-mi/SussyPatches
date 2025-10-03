@@ -337,6 +337,14 @@ public class SusConfig {
         @Config.Name("Fix quad/nonuple pipes rendering")
         @Config.RequiresMcRestart
         public boolean thickPipeRender = true;
+
+        @Config.Comment({
+                "Fixes surface populators only generate in one of the chunk quadrants.",
+                "Backported from GregTechCEu#2875"
+        })
+        @Config.Name("Make surface populators populate the whole chunk")
+        @Config.RequiresMcRestart
+        public boolean fullChunkPopulator = true;
     }
 
     public static final class Tweaks {
