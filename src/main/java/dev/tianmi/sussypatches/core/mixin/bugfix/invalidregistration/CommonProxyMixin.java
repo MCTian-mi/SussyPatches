@@ -26,7 +26,7 @@ public abstract class CommonProxyMixin {
                        }) // spotless:on
     private static boolean registerPipeBlocksOnlyWhenNeeded(IForgeRegistry<?> registry, IForgeRegistryEntry<?> entry) {
         if (entry instanceof MaterialPipeExtension matPipe) {
-            return !matPipe.sus$getEnabledMaterials().isEmpty();
+            return !matPipe.getEnabledMaterials().isEmpty();
         }
         throw new AssertionError("CommonProxyMixin mixed-in to a wrong target: \"" + entry.getClass() + "\"!");
     }
@@ -40,7 +40,7 @@ public abstract class CommonProxyMixin {
     private static boolean registerPipeItemsWhenNeeded(IForgeRegistry<?> registry, IForgeRegistryEntry<?> entry) {
         if (entry instanceof ItemBlockMaterialPipe<?, ?>pipeItem) {
             var pipeBlock = (BlockMaterialPipe<?, ?, ?>) pipeItem.getBlock();
-            return !MaterialPipeExtension.cast(pipeBlock).sus$getEnabledMaterials().isEmpty();
+            return !MaterialPipeExtension.cast(pipeBlock).getEnabledMaterials().isEmpty();
         }
         throw new AssertionError("CommonProxyMixin mixed-in to a wrong target: \"" + entry.getClass() + "\"!");
     }

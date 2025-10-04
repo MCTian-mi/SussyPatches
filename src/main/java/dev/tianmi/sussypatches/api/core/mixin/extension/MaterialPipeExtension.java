@@ -21,5 +21,5 @@ public interface MaterialPipeExtension {
         return (MaterialPipeExtension) pipe;
     }
 
-    Collection<Material> sus$getEnabledMaterials();
+    Collection<Material> getEnabledMaterials();
 }
