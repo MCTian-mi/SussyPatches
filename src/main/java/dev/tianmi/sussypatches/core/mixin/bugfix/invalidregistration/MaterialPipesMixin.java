@@ -17,7 +17,7 @@ import gregtech.common.pipelike.itempipe.BlockItemPipe;
         BlockFluidPipe.class,
         BlockItemPipe.class,
 }, remap = false)
-@Implements(@Interface(iface = MaterialPipeExtension.class, prefix = "sus$", unique = true))
+@Implements(@Interface(iface = MaterialPipeExtension.class, prefix = "sus$"))
 public abstract class MaterialPipesMixin {
 
     @Intrinsic
