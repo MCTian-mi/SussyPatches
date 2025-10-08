@@ -4,7 +4,8 @@ import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.objectweb.asm.tree.ClassNode;
+import org.jetbrains.annotations.ApiStatus;
+import org.objectweb.asm.tree.*;
 
 public interface IExplicitTransformer extends Consumer<ClassNode> {
 
@@ -18,10 +19,12 @@ public interface IExplicitTransformer extends Consumer<ClassNode> {
         transform(targetClass);
     }
 
+    @ApiStatus.Internal
     default void success() {
         LOGGER.debug("Class {} successfully patched by {}!", this.targetClassName(), this.getClass().getSimpleName());
     }
 
+    @ApiStatus.Internal
     default void failure() {
         throw new AssertionError(String.format("%s failed to apply!", this.getClass().getSimpleName()));
     }

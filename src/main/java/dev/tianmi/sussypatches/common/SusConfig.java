@@ -442,6 +442,14 @@ public class SusConfig {
         @Config.Name("Allow mob spawning on GT stones")
         @Config.RequiresMcRestart
         public boolean mobSpawnOnStones = true;
+
+        @Config.Comment({
+                "Makes multiblocks place hatches much less eagerly.",
+                "Also makes it replace replaceable blocks properly."
+        })
+        @Config.Name("Improve Multiblock auto-building")
+        @Config.RequiresMcRestart
+        public boolean betterAutoBuilding = true;
     }
 
     public static final class Api {
