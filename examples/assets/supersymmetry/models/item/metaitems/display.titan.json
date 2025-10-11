@@ -1,0 +1,11 @@
+{
+  "parent": "supersymmetry:item/metaitems/dimension_display",
+  "textures": {
+    "front": "supersymmetry:items/metaitems/dimension_display/titan/front",
+    "back": "supersymmetry:items/metaitems/dimension_display/titan/back",
+    "left": "supersymmetry:items/metaitems/dimension_display/titan/left",
+    "right": "supersymmetry:items/metaitems/dimension_display/titan/right",
+    "top": "supersymmetry:items/metaitems/dimension_display/titan/top",
+    "bottom": "supersymmetry:items/metaitems/dimension_display/titan/bottom"
+  }
+}
