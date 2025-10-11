@@ -450,6 +450,15 @@ public class SusConfig {
         @Config.Name("Improve Multiblock auto-building")
         @Config.RequiresMcRestart
         public boolean betterAutoBuilding = true;
+
+        @Config.Comment({
+                "Cleans-up the CEu ore vein info page.",
+                "Adds an api to add display items for dimensions the vein could spawn in.",
+                "Note: has an issue with AdvancedRocketory due to its dimensions being registered too late."
+        })
+        @Config.Name("Improve ore vein info page in JEI")
+        @Config.RequiresMcRestart
+        public boolean betterOreInfo = true;
     }
 
     public static final class Api {

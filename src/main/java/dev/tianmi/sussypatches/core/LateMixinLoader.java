@@ -73,6 +73,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("customsoundtype", SusConfig.TWEAK.customMTESounds);
         TWEAK.add("mobspawnonstones", SusConfig.TWEAK.mobSpawnOnStones);
         TWEAK.add("betterautobuild", SusConfig.TWEAK.betterAutoBuilding);
+        TWEAK.add("betteroreinfo", SusConfig.TWEAK.betterOreInfo, SusMods.of(JustEnoughItems));
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
         API.add("pipeicontypes", SusConfig.API.pipeIconTypes);
