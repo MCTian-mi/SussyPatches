@@ -1,0 +1,11 @@
+{
+  "parent": "supersymmetry:item/metaitems/dimension_display",
+  "textures": {
+    "front": "supersymmetry:items/metaitems/dimension_display/end_main_island/front",
+    "back": "supersymmetry:items/metaitems/dimension_display/end_main_island/back",
+    "left": "supersymmetry:items/metaitems/dimension_display/end_main_island/left",
+    "right": "supersymmetry:items/metaitems/dimension_display/end_main_island/right",
+    "top": "supersymmetry:items/metaitems/dimension_display/end_main_island/top",
+    "bottom": "supersymmetry:items/metaitems/dimension_display/end_main_island/bottom"
+  }
+}
