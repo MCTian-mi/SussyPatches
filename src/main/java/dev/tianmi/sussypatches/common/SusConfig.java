@@ -458,7 +458,7 @@ public class SusConfig {
         })
         @Config.Name("Improve ore vein info page in JEI")
         @Config.RequiresMcRestart
-        public boolean betterOreInfo = true;
+        public boolean betterOreInfo = false;
     }
 
     public static final class Api {
