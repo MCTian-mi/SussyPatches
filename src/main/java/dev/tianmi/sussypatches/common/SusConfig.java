@@ -464,9 +464,8 @@ public class SusConfig {
     public static final class Api {
 
         @Config.Comment({
-                "Supports using ModularUI2 for GT MTEs.",
-                "Note: there's no default impl for existing MTEs, currently.",
-                "Backported from GregTechCEu#2281"
+                "Supports using ModularUI2 for GT MTEs, metaitems, and covers.",
+                "Backported from GregTechCEu#2264 & #2281"
         })
         @Config.Name("Enable ModularUI2 support")
         @Config.RequiresMcRestart
