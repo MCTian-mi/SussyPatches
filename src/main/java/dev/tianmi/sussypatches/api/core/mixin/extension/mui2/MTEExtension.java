@@ -1,4 +1,6 @@
-package dev.tianmi.sussypatches.api.core.mixin.extension;
+package dev.tianmi.sussypatches.api.core.mixin.extension.mui2;
+
+import org.jetbrains.annotations.ApiStatus;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
@@ -12,11 +14,12 @@ import gregtech.api.metatileentity.MetaTileEntity;
 /// A default impl of [IGuiHolder] for the base MTE class
 /// DO NOT implement this for your mte directly!
 /// Use [IMui2Holder] instead!
+@ApiStatus.Internal
 @MixinExtension(MetaTileEntity.class)
-public interface Mui2Extension extends IGuiHolder<PosGuiData> {
+public interface MTEExtension extends IGuiHolder<PosGuiData> {
 
-    static Mui2Extension cast(MetaTileEntity mte) {
-        return (Mui2Extension) mte;
+    static MTEExtension cast(MetaTileEntity mte) {
+        return (MTEExtension) mte;
     }
 
     @Override

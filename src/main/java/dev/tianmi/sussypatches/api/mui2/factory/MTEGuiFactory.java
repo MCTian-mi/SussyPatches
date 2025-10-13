@@ -1,9 +1,8 @@
-package dev.tianmi.sussypatches.api.metatileentity.mui2;
+package dev.tianmi.sussypatches.api.mui2.factory;
 
 import java.util.Objects;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -40,7 +39,7 @@ public class MTEGuiFactory extends AbstractUIFactory<PosGuiData> {
         }
         BlockPos pos = mte.getPos();
         PosGuiData data = new PosGuiData(player, pos.getX(), pos.getY(), pos.getZ());
-        GuiManager.open(INSTANCE, data, (EntityPlayerMP) player);
+        GuiManager.open(INSTANCE, data, verifyServerSide(player));
     }
 
     @NotNull
