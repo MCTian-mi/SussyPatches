@@ -25,6 +25,11 @@ public interface IExplicitTransformer extends Consumer<ClassNode> {
     }
 
     @ApiStatus.Internal
+    default void error() {
+        LOGGER.error("{} failed to apply! Hopefully nothing would go wrong...", this.getClass().getSimpleName());
+    }
+
+    @ApiStatus.Internal
     default void failure() {
         throw new AssertionError(String.format("%s failed to apply!", this.getClass().getSimpleName()));
     }

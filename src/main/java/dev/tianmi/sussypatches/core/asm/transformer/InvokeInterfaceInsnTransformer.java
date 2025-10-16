@@ -37,7 +37,7 @@ public abstract class InvokeInterfaceInsnTransformer implements IExplicitTransfo
                                 methodInsnNode.desc.equals(handlerMethodDesc())
                         ) { // spotless:on
                             methodInsnNode.setOpcode(Opcodes.INVOKESPECIAL);
-                            success();
+                            error(); // Assume the bug is fixed w/ current mixin provider
                             return;
                         }
                     }

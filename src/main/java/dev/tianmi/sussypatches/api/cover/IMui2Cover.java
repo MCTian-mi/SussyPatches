@@ -16,5 +16,7 @@ public interface IMui2Cover extends CoverExtension {
     ModularPanel buildUI(SidedPosGuiData guiData, PanelSyncManager syncManager, UISettings settings);
 
     @Override
-    boolean useMui2();
+    default boolean useMui2() {
+        return true;
+    }
 }
