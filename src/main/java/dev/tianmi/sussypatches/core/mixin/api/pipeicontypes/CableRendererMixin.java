@@ -10,12 +10,9 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.llamalad7.mixinextras.expression.Definition;
-import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import dev.tianmi.sussypatches.api.util.SusUtil;
@@ -49,16 +46,14 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
         return SusUtil.getBlockSprite(wire, material);
     }
 
-    /// I should have used a hard injector like [Redirect] here,
-    /// since this is a hard rewrite and any conflict should result in a hard crash.
-    /// But it doesn't seem to support [Expression], sadly...
-    /// Let's hope this won't cause silent mixin failures.
-    @Definition(id = "insulationTextures",
-                field = "Lgregtech/client/renderer/pipe/CableRenderer;insulationTextures:[Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;")
-    @Expression("this.insulationTextures[?]")
-    @WrapOperation(method = "buildRenderer", at = @At("MIXINEXTRAS:EXPRESSION"), require = 3)
+    // This is a hard rewrite, any conflict should result in a hard crash
+    @Redirect(method = "buildRenderer",
+              at = @At(value = "FIELD",
+                       target = "Lgregtech/client/renderer/pipe/CableRenderer;insulationTextures:[Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;",
+                       opcode = Opcodes.GETFIELD,
+                       args = "array=get"),
+              require = 3)
     private TextureAtlasSprite getInsulationTextures(TextureAtlasSprite[] ignored, int insulationLevel,
-                                                     Operation<TextureAtlasSprite> insn_ignored,
                                                      @Local(argsOnly = true) Material material) {
         var values = Insulation.values();
         return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
@@ -72,13 +67,13 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
         return SusUtil.getBlockSprite(wire, material);
     }
 
-    /// same as [#getInsulationTextures]
-    @Definition(id = "insulationTextures",
-                field = "Lgregtech/client/renderer/pipe/CableRenderer;insulationTextures:[Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;")
-    @Expression("this.insulationTextures[?]")
-    @WrapOperation(method = "buildRenderer", at = @At("MIXINEXTRAS:EXPRESSION"), require = 3)
+    // This is a hard rewrite, any conflict should result in a hard crash
+    @Redirect(method = "getParticleTexture(Lgregtech/api/pipenet/tile/IPipeTile;)Lorg/apache/commons/lang3/tuple/Pair;",
+              at = @At(value = "FIELD",
+                       target = "Lgregtech/client/renderer/pipe/CableRenderer;insulationTextures:[Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;",
+                       opcode = Opcodes.GETFIELD,
+                       args = "array=get"))
     public TextureAtlasSprite getInsulationSprite(TextureAtlasSprite[] ignored, int insulationLevel,
-                                                  Operation<TextureAtlasSprite> insn_ignored,
                                                   @Local(name = "material") Material material) {
         var values = Insulation.values();
         return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
