@@ -41,8 +41,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
                            at = @At(value = "FIELD",
                                     target = "Lgregtech/client/renderer/pipe/CableRenderer;wireTexture:Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;",
                                     opcode = Opcodes.GETFIELD))
-    private TextureAtlasSprite getIconFromType(TextureAtlasSprite ignored,
-                                               @Local(argsOnly = true) Material material) {
+    private TextureAtlasSprite getIconFromType(TextureAtlasSprite ignored, @Local(argsOnly = true) Material material) {
         return SusUtil.getBlockSprite(wire, material);
     }
 
