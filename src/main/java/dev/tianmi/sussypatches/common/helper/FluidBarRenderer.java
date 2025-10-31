@@ -1,6 +1,8 @@
 package dev.tianmi.sussypatches.common.helper;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -9,16 +11,30 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import dev.tianmi.sussypatches.api.event.RenderItemOverlayEvent;
+import dev.tianmi.sussypatches.common.SusConfig;
 import gregtech.api.util.GTUtility;
 import gregtech.client.utils.RenderUtil;
 import gregtech.client.utils.ToolChargeBarRenderer;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 public class FluidBarRenderer {
+
+    private static final Set<String> BLACKLIST;
+
+    static {
+        BLACKLIST = new ObjectOpenHashSet<>();
+        Collections.addAll(BLACKLIST, SusConfig.FEAT.fluidBarBlacklist);
+    }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onRenderItemOverlayEvent(RenderItemOverlayEvent event) {
         event.enqueue((stack, x, y, text) -> {
+            // Check blacklist
+            var rl = stack.getItem().getRegistryName();
+            if (rl == null || BLACKLIST.contains(rl.toString()))
+                return;
+
             // Getting handler usually doesn't work if itemstack has stack size > 1
             ItemStack newStack = stack.copy();
             if (newStack.getCount() > 1) {
