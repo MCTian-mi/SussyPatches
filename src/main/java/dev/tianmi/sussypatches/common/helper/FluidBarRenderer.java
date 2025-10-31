@@ -2,18 +2,16 @@ package dev.tianmi.sussypatches.common.helper;
 
 import java.awt.*;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import dev.tianmi.sussypatches.api.event.RenderItemOverlayEvent;
-import dev.tianmi.sussypatches.core.mixin.feature.fluidcontainerbar.DrumAccessor;
-import dev.tianmi.sussypatches.core.mixin.feature.fluidcontainerbar.QuantumTankAccessor;
 import gregtech.api.util.GTUtility;
 import gregtech.client.utils.RenderUtil;
 import gregtech.client.utils.ToolChargeBarRenderer;
-import gregtech.common.metatileentities.storage.MetaTileEntityCreativeTank;
 
 public class FluidBarRenderer {
 
@@ -21,19 +19,22 @@ public class FluidBarRenderer {
     @SideOnly(Side.CLIENT)
     public static void onRenderItemOverlayEvent(RenderItemOverlayEvent event) {
         event.enqueue((stack, x, y, text) -> {
-            if (stack.getCount() > 1) return; // Don't draw if it's not a single item
+            // Getting handler usually doesn't work if itemstack has stack size > 1
+            ItemStack newStack = stack.copy();
+            if (newStack.getCount() > 1) {
+                newStack.setCount(1);
+            }
 
-            var mte = GTUtility.getMetaTileEntity(stack);
-            int capacity;
+            var handler = FluidUtil.getFluidHandler(newStack);
+            if (handler == null) return;
 
-            // Actually we do not need accessors here to read capacity, but well.
-            if (mte instanceof DrumAccessor drum) capacity = drum.getTankSize();
-            else if (mte instanceof MetaTileEntityCreativeTank) capacity = 1000;
-            else if (mte instanceof QuantumTankAccessor tank) capacity = tank.getMaxFluidCapacity();
-            else return; // Don't render
+            var props = handler.getTankProperties();
+            if (props.length != 1) return; // Don't handle this; only handle single-tank containers
 
-            var fluid = FluidUtil.getFluidContained(stack);
-            if (fluid == null || fluid.amount <= 0) return;
+            var fluid = props[0].getContents();
+            if (fluid == null) return;
+
+            int capacity = props[0].getCapacity();
 
             double level = fluid.amount / (double) capacity;
             var color = new Color(GTUtility.convertRGBtoOpaqueRGBA_MC(RenderUtil.getFluidColor(fluid)));

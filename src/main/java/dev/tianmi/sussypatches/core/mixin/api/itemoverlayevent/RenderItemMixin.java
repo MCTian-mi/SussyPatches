@@ -16,10 +16,7 @@ import dev.tianmi.sussypatches.api.event.RenderItemOverlayEvent;
 @Mixin(RenderItem.class)
 public class RenderItemMixin {
 
-    @Inject(method = "renderItemOverlayIntoGUI",
-            at = @At(value = "INVOKE",
-                     target = "Lnet/minecraft/client/Minecraft;getMinecraft()Lnet/minecraft/client/Minecraft;",
-                     ordinal = 0))
+    @Inject(method = "renderItemOverlayIntoGUI", at = @At("HEAD"))
     private void postRenderItemOverlayEvent(FontRenderer fr, ItemStack stack,
                                             int x, int y, @Nullable String text,
                                             CallbackInfo ci) {
