@@ -62,7 +62,7 @@ public class SusConfig {
 
         @Config.Comment({
                 "A blacklist for which items to not render a fluid bar for.",
-                "Format: <registryName>; e.g. 'minecraft:water_bucket', 'minecraft:lava_bucket' and 'forge:bucketfilled'."
+                "Format: <registryName>@<meta>; e.g. 'minecraft:water_bucket@0', 'minecraft:lava_bucket@0', forge:bucketfilled@0', and 'gregtech:meta_item_1@80'."
         })
         @Config.Name("Blacklist for fluid bars")
         @Config.RequiresMcRestart
