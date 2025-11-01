@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.Set;
 
-import gregtech.common.metatileentities.storage.MetaTileEntityCreativeTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidUtil;
@@ -17,6 +16,7 @@ import dev.tianmi.sussypatches.common.SusConfig;
 import gregtech.api.util.GTUtility;
 import gregtech.client.utils.RenderUtil;
 import gregtech.client.utils.ToolChargeBarRenderer;
+import gregtech.common.metatileentities.storage.MetaTileEntityCreativeTank;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 public class FluidBarRenderer {
