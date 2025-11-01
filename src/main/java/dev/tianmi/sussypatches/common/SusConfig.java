@@ -88,6 +88,13 @@ public class SusConfig {
         @Config.Name("Add retain exact mode to covers")
         @Config.RequiresMcRestart
         public boolean coverRetainExact = true;
+
+        @Config.Comment({
+                "Make fluid cells show the amount of fluid they hold through their textures."
+        })
+        @Config.Name("Dynamic fluid cell texture")
+        @Config.RequiresMcRestart
+        public boolean visibleFluidCell = true;
     }
 
     public static final class Compat {

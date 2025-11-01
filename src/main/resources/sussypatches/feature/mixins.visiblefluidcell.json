@@ -1,0 +1,15 @@
+{
+  "package": "dev.tianmi.sussypatches.core.mixin.feature.visiblefluidcell",
+  "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
+  "refmap": "mixins.sussypatches.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "MetaItemMixin",
+    "MetaItemMixin$MetaValueItemMixin"
+  ]
+}

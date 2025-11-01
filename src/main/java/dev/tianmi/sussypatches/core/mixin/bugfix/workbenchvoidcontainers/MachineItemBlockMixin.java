@@ -20,7 +20,7 @@ public abstract class MachineItemBlockMixin {
                              target = "Lnet/minecraft/item/ItemStack;getCapability(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/util/EnumFacing;)Ljava/lang/Object;"))
     private ItemStack useSingleStack(ItemStack itemStack, Capability<IFluidHandlerItem> capability, EnumFacing _null) {
         var singleStack = itemStack.copy();
-        singleStack.setCount(1);
+        if (singleStack.getCount() > 1) singleStack.setCount(1);
         return singleStack;
     }
 }
