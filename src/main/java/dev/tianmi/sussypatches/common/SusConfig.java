@@ -53,14 +53,20 @@ public class SusConfig {
         public boolean interactiveStorage = true;
 
         @Config.Comment({
-                "Render a durability bar for drums and quantum tanks, with the same color as the fluid within.",
-                "Note: this won't work when you stack them.",
-                "Stacking non-empty containers is buggy, would not suggest you to do that.",
+                "Render a durability bar for items containing fluid, with the same color as the fluid within.",
                 "Requires to turn on 'Enable RenderItemOverlayEvent' in the API option."
         })
         @Config.Name("Draw fluid bars for fluid container blocks")
         @Config.RequiresMcRestart
         public boolean fluidContainerBar = true;
+
+        @Config.Comment({
+                "A blacklist for which items to not render a fluid bar for.",
+                "Format: <registryName>@<meta>; e.g. 'minecraft:water_bucket@0', 'minecraft:lava_bucket@0', forge:bucketfilled@0', and 'gregtech:meta_item_1@80'."
+        })
+        @Config.Name("Blacklist for fluid bars")
+        @Config.RequiresMcRestart
+        public String[] fluidBarBlacklist = new String[0];
 
         @Config.Comment({
                 "Simply makes quantum tanks render containing fluids in their item form."
