@@ -4,7 +4,9 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.Set;
 
+import gregtech.common.metatileentities.storage.MetaTileEntityCreativeTank;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -51,8 +53,20 @@ public class FluidBarRenderer {
             if (fluid == null) return;
 
             int capacity = props[0].getCapacity();
+            if (capacity <= 0) {
+                // Two cases:
+                // If creative tank: set capacity to fluid amount
+                // Otherwise: invalid properties, return
+                var mte = GTUtility.getMetaTileEntity(stack);
+                if (mte instanceof MetaTileEntityCreativeTank) {
+                    capacity = fluid.amount;
+                } else {
+                    return;
+                }
+            }
 
-            double level = fluid.amount / (double) capacity;
+            // Safeguard against overflowing bars
+            double level = MathHelper.clamp(fluid.amount / (double) capacity, 0.0, 1.0);
             var color = new Color(GTUtility.convertRGBtoOpaqueRGBA_MC(RenderUtil.getFluidColor(fluid)));
             ToolChargeBarRenderer.render(level, x, y, 0, true,
                     color.darker(), color.brighter(), false);
