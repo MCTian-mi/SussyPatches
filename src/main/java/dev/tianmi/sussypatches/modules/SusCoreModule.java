@@ -12,6 +12,7 @@ import dev.tianmi.sussypatches.common.SusConfig;
 import dev.tianmi.sussypatches.common.helper.ChunkAwareHook;
 import dev.tianmi.sussypatches.common.helper.FluidBarRenderer;
 import dev.tianmi.sussypatches.common.helper.QChestInteractions;
+import dev.tianmi.sussypatches.common.helper.VisibleFluidCell;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.modules.IGregTechModule;
 
@@ -35,6 +36,7 @@ public class SusCoreModule implements IGregTechModule {
         if (SusConfig.BUGFIX.chunkAware) list.add(ChunkAwareHook.class);
         if (SusConfig.FEAT.interactiveStorage) list.add(QChestInteractions.class);
         if (SusConfig.FEAT.fluidContainerBar && SusConfig.API.itemOverlayEvent) list.add(FluidBarRenderer.class);
+        if (SusConfig.FEAT.visibleFluidCell) list.add(VisibleFluidCell.class);
         return list;
     }
 }
