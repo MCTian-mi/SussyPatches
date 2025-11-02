@@ -6,8 +6,6 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
-import com.github.bsideup.jabel.Desugar;
-
 import gregtech.api.recipes.recipeproperties.RecipeProperty;
 import gregtech.api.util.LocalizationUtils;
 import lombok.Getter;
@@ -39,6 +37,5 @@ public final class InfoProperty extends RecipeProperty<InfoProperty.TranslationD
             tooltip.addAll(Arrays.asList(LocalizationUtils.formatLines(data.translationKey(), data.args())));
     }
 
-    @Desugar
     public record TranslationData(String translationKey, Object[] args) {}
 }
