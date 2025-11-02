@@ -1,3 +1,5 @@
+import kotlin.jvm.functions.Function1
+
 // enable JLine Terminal since idea_rt.jar is no longer added to the classpath
 minecraft.extraRunJvmArguments.add('-Dterminal.jline=true')
 
@@ -23,6 +25,8 @@ dependencies {
 
 // downgrade code runClient/runServer/build
 shadeDowngradedApi {
+    // TODO)) yeet the cast to kt function in the next jvmdg update
+    shadePath = { _ -> "${project.modGroup.replace('.', '/')}/shadow/".toString() } as Function1
     archiveClassifier = "dev" // debug session will use the "-dev" jar
 }
 
