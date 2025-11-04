@@ -55,7 +55,6 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("pipeframedesync", SusConfig.BUGFIX.pipeFrameDesync);
         BUGFIX.add("mtenpeonserver", SusConfig.BUGFIX.mteServerNPE);
         BUGFIX.add("relativedirection", SusConfig.BUGFIX.relativeDir);
-        BUGFIX.add("chunkaware", SusConfig.BUGFIX.chunkAware);
         BUGFIX.add("cleanroomstructure", SusConfig.BUGFIX.cleanroomStruct, SusMods.NomiLibs.negate());
         BUGFIX.add("previewmissingblocks", SusConfig.BUGFIX.previewMissingBlocks);
         BUGFIX.add("workbenchvoidcontainers", SusConfig.BUGFIX.workbenchVoidContainers);

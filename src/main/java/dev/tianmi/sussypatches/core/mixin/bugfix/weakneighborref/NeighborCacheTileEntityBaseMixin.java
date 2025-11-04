@@ -1,5 +1,7 @@
 package dev.tianmi.sussypatches.core.mixin.bugfix.weakneighborref;
 
+import static dev.tianmi.sussypatches.api.core.mixin.extension.NeighborCacheExtension.isAdjacentChunkUnloaded;
+
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
@@ -101,6 +103,9 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
         WeakReference<TileEntity> ref = sus$getRef(facing);
         if (ref == INVALID) return true;
         TileEntity te = ref.get();
+        if (te == null && isAdjacentChunkUnloaded(world, pos, facing)) {
+            return true;
+        }
         return te != null && te.isInvalid();
     }
 }

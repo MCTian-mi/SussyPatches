@@ -256,7 +256,9 @@ public class SusConfig {
         @Config.Comment({
                 "Uses WeakReference for NeighborCacheTileEntityBase.",
                 "May solve unintended JVM garbage collection hindering.",
-                "Fixed in CEu master branch."
+                "Fixed in CEu master branch.",
+                "This also makes GT TileEntities aware of nearby chunk loading/unloadings.",
+                "Fixes issues like fluid pipes disconnecting at chunk border after chunk unload."
         })
         @Config.Name("Use WeakReference for neighbor cache")
         @Config.RequiresMcRestart
@@ -311,14 +313,6 @@ public class SusConfig {
         @Config.Name("Fix RelativeDirection providing wrong facings")
         @Config.RequiresMcRestart
         public boolean relativeDir = true;
-
-        @Config.Comment({
-                "Make GT TileEntities aware of nearby chunk loading/unloadings.",
-                "Fixes issues like fluid pipes disconnecting at chunk border after chunk unload."
-        })
-        @Config.Name("Fix GT tiles not chunk-aware")
-        @Config.RequiresMcRestart
-        public boolean chunkAware = true;
 
         @Config.Comment({
                 "Fixes an edge case for cleanroom structure check.",
