@@ -103,9 +103,9 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
         WeakReference<TileEntity> ref = sus$getRef(facing);
         if (ref == INVALID) return true;
         TileEntity te = ref.get();
-        if (te == null && isAdjacentChunkUnloaded(world, pos, facing)) {
-            return true;
+        if (te == null) {
+            return isAdjacentChunkUnloaded(world, pos, facing);
         }
-        return te != null && te.isInvalid();
+        return te.isInvalid();
     }
 }
