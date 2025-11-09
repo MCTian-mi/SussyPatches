@@ -31,7 +31,6 @@ public enum SusMods implements BoolSupplier {
     FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     Celeritas(Names.CELERITAS),
     ModularUI(Names.MODULARUI),
-    NomiLibs(Names.NOMI_LIBS),
     RFTools(Names.RFTOOLS),
     /// Unlike [Mods#Optifine], this doesn't care about whether you use shaders or not.
     OptiFine(self -> FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().hasOptifine()),
@@ -104,7 +103,6 @@ public enum SusMods implements BoolSupplier {
         public static final String CELERITAS = "celeritas";
         public static final String MODULARUI = "modularui";
         public static final String CLEANROOM = "cleanroom";
-        public static final String NOMI_LIBS = "nomilabs";
         public static final String RFTOOLS = "rftools";
     }
 }
