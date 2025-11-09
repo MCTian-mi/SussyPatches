@@ -1,11 +1,17 @@
 package dev.tianmi.sussypatches.common;
 
+import java.util.function.Predicate;
+
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Config;
 
 import com.cleanroommc.configanytime.ConfigAnytime;
+import com.google.common.base.Predicates;
 
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.api.util.FilterMode;
+import dev.tianmi.sussypatches.api.util.ItemAndMeta;
 import dev.tianmi.sussypatches.api.util.SusMods;
 
 @Config(modid = Tags.MODID)
@@ -36,6 +42,10 @@ public class SusConfig {
 
     public static final class Feature {
 
+        @Config.Comment("Config options for drawing durability bars for fluid containers")
+        @Config.Name("Fluid bar renderer")
+        public final FluidBarRenderer fluidBarRenderer = new FluidBarRenderer();
+
         @Config.Comment({
                 "Make ConnectedTexturesMod (CTM) work on GregTech multiblocks.",
                 "Needs CTM to be loaded."
@@ -51,22 +61,6 @@ public class SusConfig {
         @Config.Name("Make Quantum Chest interactable")
         @Config.RequiresMcRestart
         public boolean interactiveStorage = true;
-
-        @Config.Comment({
-                "Render a durability bar for items containing fluid, with the same color as the fluid within.",
-                "Requires to turn on 'Enable RenderItemOverlayEvent' in the API option."
-        })
-        @Config.Name("Draw fluid bars for fluid container blocks")
-        @Config.RequiresMcRestart
-        public boolean fluidContainerBar = true;
-
-        @Config.Comment({
-                "A blacklist for which items to not render a fluid bar for.",
-                "Format: <registryName>@<meta>; e.g. 'minecraft:water_bucket@0', 'minecraft:lava_bucket@0', forge:bucketfilled@0', and 'gregtech:meta_item_1@80'."
-        })
-        @Config.Name("Blacklist for fluid bars")
-        @Config.RequiresMcRestart
-        public String[] fluidBarBlacklist = new String[0];
 
         @Config.Comment({
                 "Simply makes quantum tanks render containing fluids in their item form."
@@ -101,6 +95,67 @@ public class SusConfig {
         @Config.Name("Dynamic fluid cell texture")
         @Config.RequiresMcRestart
         public boolean visibleFluidCell = true;
+
+        public static final class FluidBarRenderer {
+
+            @Config.Comment({
+                    "Whether to render a durability bar for containers with the same color as the fluid within.",
+                    "Requires to turn on 'Enable RenderItemOverlayEvent' in the API option."
+            })
+            @Config.Name("Enabled")
+            @Config.RequiresMcRestart
+            public boolean enabled = true;
+
+            @Config.Comment({
+                    "The filter mode for the filter list to filter the target containers."
+            })
+            @Config.Name("Filter mode")
+            @Config.RequiresMcRestart
+            public FilterMode filterMode = FilterMode.WHITELIST;
+
+            @Config.Comment({
+                    "A filter for which items to or not to render a fluid bar for.",
+                    "Syntax: <modid>:<name>@<meta>",
+                    "'modid' can be ignored for vanilla items; 'meta' is optional and defaults to 0; use '*' for wildcard meta.",
+                    "Example: 'minecraft:water_bucket', 'lava_bucket@0', forge:bucketfilled@*', and 'gregtech:meta_item_1@80'",
+                    "Illegal entries will be ignored and logged as errors."
+            })
+            @Config.Name("Filter list")
+            @Config.RequiresMcRestart
+            public String[] filterList = new String[] {
+                    // Drums
+                    "gregtech:machine@1611", // Bronze
+                    "gregtech:machine@1612", // Steel
+                    "gregtech:machine@1613", // Aluminium
+                    "gregtech:machine@1614", // Stainless Steel
+                    "gregtech:machine@1615", // Titanium
+                    "gregtech:machine@1616", // Tungstensteel
+                    "gregtech:machine@1617", // Gold
+
+                    // Super/Quantum Tanks
+                    "gregtech:machine@1575", // Super Tank I (LV)
+                    "gregtech:machine@1576", // Super Tank II (MV)
+                    "gregtech:machine@1577", // Super Tank III (HV)
+                    "gregtech:machine@1578", // Super Tank IV (EV)
+                    "gregtech:machine@1579", // Super Tank V (IV)
+
+                    "gregtech:machine@1585", // Quantum Tank I (IV)
+                    "gregtech:machine@1586", // Quantum Tank II (LuV)
+                    "gregtech:machine@1587", // Quantum Tank III (ZPM)
+                    "gregtech:machine@1588", // Quantum Tank IV (UV)
+                    "gregtech:machine@1589", // Quantum Tank V (UHV)
+
+                    // Creative Tank
+                    "gregtech:machine@1669",
+            };
+
+            public Predicate<ItemStack> filter() {
+                return filterMode.mapToFilter(filterList, s -> ItemAndMeta.fromString(s).mapOrElse(e -> {
+                    SussyPatches.LOGGER.error("Failed to parse ItemAndMeta from string '{}'", s, e);
+                    return Predicates.alwaysFalse();
+                }, i -> i));
+            }
+        }
     }
 
     public static final class Compat {

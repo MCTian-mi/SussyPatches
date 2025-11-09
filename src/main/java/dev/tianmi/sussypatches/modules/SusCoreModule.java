@@ -33,7 +33,7 @@ public class SusCoreModule implements IGregTechModule {
     public List<Class<?>> getEventBusSubscribers() {
         List<Class<?>> list = new ArrayList<>();
         if (SusConfig.FEAT.interactiveStorage) list.add(QChestInteractions.class);
-        if (SusConfig.FEAT.fluidContainerBar && SusConfig.API.itemOverlayEvent) list.add(FluidBarRenderer.class);
+        if (SusConfig.FEAT.fluidBarRenderer.enabled && SusConfig.API.itemOverlayEvent) list.add(FluidBarRenderer.class);
         if (SusConfig.FEAT.visibleFluidCell) list.add(VisibleFluidCell.class);
         return list;
     }

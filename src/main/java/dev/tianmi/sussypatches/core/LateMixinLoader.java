@@ -22,7 +22,7 @@ public class LateMixinLoader implements ILateMixinLoader {
     static {
         FEATURE.add("connectedtextures", SusConfig.FEAT.multiCTM, SusMods.of(CTM));
         FEATURE.add("interactivestorage", SusConfig.FEAT.interactiveStorage);
-        FEATURE.add("fluidcontainerbar", SusConfig.FEAT.fluidContainerBar, SusConfig.API.itemOverlayEvent);
+        FEATURE.add("fluidcontainerbar", SusConfig.FEAT.fluidBarRenderer.enabled, SusConfig.API.itemOverlayEvent);
         FEATURE.add("visiblestorage", SusConfig.FEAT.visibleStorage);
         FEATURE.add("deepmaintenance", SusConfig.FEAT.deepMaintenance);
         FEATURE.add("coverretainexact", SusConfig.FEAT.coverRetainExact);
@@ -33,8 +33,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
         COMPAT.add("lampbakedmodel", SusConfig.COMPAT.fixLampModel, SusMods.VintageFix, SusMods.of(CTM));
         COMPAT.add("inworldpreviewcrash", SusConfig.COMPAT.fixInworldPreview, SusMods.FluidloggedAPI_2);
-        COMPAT.add("variousgrsissue", SusConfig.COMPAT.fixGrS, SusMods.of(GroovyScript),
-                SusMods.NomiLibs.negate());
+        COMPAT.add("variousgrsissue", SusConfig.COMPAT.fixGrS, SusMods.of(GroovyScript));
         COMPAT.add("grsinlineicon", SusConfig.COMPAT.inlineIcon, SusMods.of(GroovyScript));
         COMPAT.add("tweakerinfo", SusConfig.COMPAT.tweakerInfo, SusMods.of(GroovyScript)
                 .or(SusMods.of(CraftTweaker)), SusMods.of(JustEnoughItems));
