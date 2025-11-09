@@ -13,7 +13,7 @@ import lombok.Getter;
 public final class InfoProperty extends RecipeProperty<InfoProperty.TranslationData> {
 
     @Getter(lazy = true)
-    private final static InfoProperty Instance = new InfoProperty();
+    private final static InfoProperty instance = new InfoProperty();
     public static final String KEY = "info";
 
     private int currentY = 0;
