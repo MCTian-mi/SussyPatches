@@ -57,7 +57,7 @@ public class LoadingPlugin implements ILoadingPlugin, IEarlyMixinLoader {
         }
 
         public void add(String name, Object... conditions) {
-            MIXIN_CONFIGS.put(ROOT + this + MIXINS + name + JSON, BoolSupplier.compact(conditions));
+            MIXIN_CONFIGS.put(ROOT + this + MIXINS + name + JSON, BoolSupplier.concat(conditions));
         }
     }
 }

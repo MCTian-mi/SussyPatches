@@ -68,7 +68,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("thickercovers", SusConfig.TWEAK.thickerCovers);
         TWEAK.add("activemteitems", SusConfig.TWEAK.activeMTEItems);
         TWEAK.add("toolsubitems", SusConfig.TWEAK.showAllToolItems);
-        TWEAK.add("cstorageinf", !SusConfig.TWEAK.cStorageInf.isEmpty());
+        TWEAK.add("cstorageinf", !SusConfig.TWEAK.cStorageInf.isBlank());
         TWEAK.add("customsoundtype", SusConfig.TWEAK.customMTESounds);
         TWEAK.add("mobspawnonstones", SusConfig.TWEAK.mobSpawnOnStones);
         TWEAK.add("betterautobuild", SusConfig.TWEAK.betterAutoBuilding);
@@ -107,7 +107,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         }
 
         public void add(String name, Object... conditions) {
-            MIXIN_CONFIGS.put(ROOT + this + MIXINS + name + JSON, BoolSupplier.compact(conditions));
+            MIXIN_CONFIGS.put(ROOT + this + MIXINS + name + JSON, BoolSupplier.concat(conditions));
         }
     }
 }

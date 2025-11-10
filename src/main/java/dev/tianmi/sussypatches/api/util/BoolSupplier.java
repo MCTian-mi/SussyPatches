@@ -39,19 +39,16 @@ public interface BoolSupplier extends BooleanSupplier {
         return () -> !this.get();
     }
 
-    static BoolSupplier compact(Object... conditions) {
-        BoolSupplier supplier = BoolSupplier.TRUE;
+    static BoolSupplier concat(Object... conditions) {
+        BoolSupplier concatenated = BoolSupplier.TRUE;
         for (var condition : conditions) {
-            if (condition instanceof BoolSupplier boolSupplier) {
-                supplier = supplier.and(boolSupplier);
-            } else if (condition instanceof Boolean bool) {
-                supplier = supplier.and(BoolSupplier.of(bool));
-            } else if (condition instanceof BooleanSupplier booleanSupplier) {
-                supplier = supplier.and(BoolSupplier.of(booleanSupplier));
-            } else {
-                throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
+            switch (condition) {
+                case BoolSupplier boolSupplier -> concatenated = concatenated.and(boolSupplier);
+                case Boolean bool -> concatenated = concatenated.and(BoolSupplier.of(bool));
+                case BooleanSupplier booleanSupplier -> concatenated = concatenated.and(BoolSupplier.of(booleanSupplier));
+                default -> throw new IllegalArgumentException("Invalid condition type: " + condition.getClass());
             }
         }
-        return supplier;
+        return concatenated;
     }
 }
