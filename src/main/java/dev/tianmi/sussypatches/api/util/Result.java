@@ -191,10 +191,12 @@ public sealed interface Result<T, E> extends Iterable<T> permits Err, Ok {
 
             private boolean hasNext = true;
 
+            @Override
             public boolean hasNext() {
                 return hasNext;
             }
 
+            @Override
             public V next() {
                 if (hasNext) {
                     hasNext = false;
@@ -203,6 +205,7 @@ public sealed interface Result<T, E> extends Iterable<T> permits Err, Ok {
                 throw new NoSuchElementException();
             }
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
