@@ -21,7 +21,7 @@ public class VisibleFluidCell {
 
     public static void changeModelAmount(MetaValueItem fluidCell, int pixel) {
         SpecialModelExtension.cast(fluidCell.setModelAmount((pixel - 1) * 2 /* Liquid + gas */ + 1 /* Full */))
-                .setModelDispatcher(itemStack -> {
+                .setItemModelDispatcher((itemStack, _) -> {
                     var singleStack = itemStack.copy();
                     if (singleStack.getCount() > 1) singleStack.setCount(1);
 
