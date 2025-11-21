@@ -33,14 +33,14 @@ public enum SusMods implements BoolSupplier {
     ModularUI(Names.MODULARUI),
     RFTools(Names.RFTOOLS),
     /// Unlike [Mods#Optifine], this doesn't care about whether you use shaders or not.
-    OptiFine(self -> FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().hasOptifine()),
+    OptiFine(_ -> FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().hasOptifine()),
 
     // Well true these aren't mods, technically...
-    OpenGL3(self -> GLContext.getCapabilities().OpenGL30),
-    DevEnv(self -> FMLLaunchHandler.isDeobfuscatedEnvironment()),
+    OpenGL3(_ -> GLContext.getCapabilities().OpenGL30),
+    DevEnv(_ -> FMLLaunchHandler.isDeobfuscatedEnvironment()),
     /// Basically the same as [Mods#Optifine], but with a more accurate name.
     /// Use with this in mind: The value of this is checked only once and never changed afterward.
-    ShadersMod(self -> Mods.Optifine.isModLoaded()),
+    ShadersMod(_ -> Mods.Optifine.isModLoaded()),
     ;
 
     @Nullable
