@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.google.common.primitives.UnsignedBytes;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
@@ -91,7 +92,7 @@ public abstract class WidgetProspectingMapMixin implements ProspectingMapExtensi
             String name = OreDictUnifier.get(dict).getDisplayName();
             if (ProspectingTexture.SELECTED_ALL.equals(texture.getSelected()) ||
                     texture.getSelected().equals(dict)) {
-                oreHeight.put(name, oreHeight.getOrDefault(name, 0) + height.intValue());
+                oreHeight.put(name, oreHeight.getOrDefault(name, 0) + UnsignedBytes.toInt(height));
             }
         });
     }
