@@ -33,7 +33,10 @@ import gregtech.api.util.Mods;
 import gregtech.common.terminal.app.prospector.ProspectingTexture;
 import gregtech.common.terminal.app.prospector.widget.WidgetProspectingMap;
 
-@Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2726")
+@Implemented(in = {
+        "https://github.com/GregTechCEu/GregTech/pull/2726",
+        "https://github.com/GregTechCEu/GregTech/pull/2891"
+})
 @Mixin(value = WidgetProspectingMap.class, remap = false)
 public abstract class WidgetProspectingMapMixin implements ProspectingMapExtension {
 

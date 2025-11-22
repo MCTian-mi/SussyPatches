@@ -39,8 +39,8 @@ public class VisibleFluidCell {
                     int amount = fluidStack.amount;
                     int capacity = tankProp.getCapacity();
 
-                    return isGas ? 2 * pixel - 2 - ((pixel - 1) * amount) / capacity :
-                            ((pixel - 1) * amount) / capacity + 1;
+                    int fluidLevel = ((pixel - 1) * amount) / capacity;
+                    return isGas ? 2 * (pixel - 1) - fluidLevel : fluidLevel;
                 });
     }
 
