@@ -9,5 +9,5 @@ import gregtech.common.covers.TransferMode;
 public interface TransferModeExtension {
 
     TransferMode RETAIN_EXACT = TransferModeAccessor.create("RETAIN_EXACT", TransferMode.values().length,
-            "sussypatches.cover.transfer_mode.retain_exact", Integer.MAX_VALUE);
+            "sussypatches.cover.transfer_mode.retain_exact", 1024);
 }
