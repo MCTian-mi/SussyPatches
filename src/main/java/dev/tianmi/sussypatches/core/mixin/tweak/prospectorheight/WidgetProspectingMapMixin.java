@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Optional;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +20,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.google.common.primitives.UnsignedBytes;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
@@ -25,6 +29,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import dev.tianmi.sussypatches.api.core.mixin.extension.ProspectingMapExtension;
 import gregtech.api.unification.OreDictUnifier;
+import gregtech.api.util.Mods;
 import gregtech.common.terminal.app.prospector.ProspectingTexture;
 import gregtech.common.terminal.app.prospector.widget.WidgetProspectingMap;
 
@@ -92,7 +97,7 @@ public abstract class WidgetProspectingMapMixin implements ProspectingMapExtensi
             String name = OreDictUnifier.get(dict).getDisplayName();
             if (ProspectingTexture.SELECTED_ALL.equals(texture.getSelected()) ||
                     texture.getSelected().equals(dict)) {
-                oreHeight.put(name, oreHeight.getOrDefault(name, 0) + UnsignedBytes.toInt(height));
+                oreHeight.put(name, oreHeight.getOrDefault(name, 0) + Byte.toUnsignedInt(height));
             }
         });
     }
@@ -105,14 +110,14 @@ public abstract class WidgetProspectingMapMixin implements ProspectingMapExtensi
         var oreHeight = oreHeightRef.get();
 
         oreHeight.forEach((name, height) -> {
-            sus$hoveredOreHeight += height;
+            this.sus$hoveredOreHeight += height;
             int count = oreInfo.getOrDefault(name, 0);
             int avgHeight = count != 0 ? height / count : 0;
             oreHeight.put(name, avgHeight);
         });
         int totalCount = oreInfo.values().stream().reduce(0, Integer::sum);
         if (totalCount != 0) {
-            sus$hoveredOreHeight /= totalCount;
+            this.sus$hoveredOreHeight /= totalCount;
         }
     }
 
@@ -131,5 +136,31 @@ public abstract class WidgetProspectingMapMixin implements ProspectingMapExtensi
                     TextFormatting.GOLD + height);
             this.hoveredNames.add(name);
         });
+    }
+
+    @WrapOperation(method = "mouseClicked",
+                   at = @At(value = "INVOKE",
+                            target = "Lnet/minecraft/client/multiplayer/WorldClient;getHeight(II)I",
+                            remap = true))
+    private int useAverageY(WorldClient worldClient, int x, int z, Operation<Integer> method) {
+        return this.sus$hoveredOreHeight != 0 ? this.sus$hoveredOreHeight : method.call(worldClient, x, z);
+    }
+
+    @Optional.Method(modid = Mods.Names.VOXEL_MAP)
+    @Redirect(method = "addVoxelMapWaypoint",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/client/multiplayer/WorldClient;getHeight(II)I",
+                       remap = true))
+    private static int redirectVoxelMapHeight(WorldClient _ignored, int _x, int _z, @Local(name = "b") BlockPos b) {
+        return b.getY();
+    }
+
+    @Optional.Method(modid = Mods.Names.XAEROS_MINIMAP)
+    @Redirect(method = "addXaeroMapWaypoint",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/client/multiplayer/WorldClient;getHeight(II)I",
+                       remap = true))
+    private static int redirectXaeroMapHeight(WorldClient _ignored, int _x, int _z, @Local(name = "b") BlockPos b) {
+        return b.getY();
     }
 }
