@@ -296,7 +296,7 @@ public class SusConfig {
                 "Refuses insertion into pipenets w/o specific facing.",
                 "Fixes crashes with mods like RFTools."
         })
-        @Name("Fix data transfer between pipes")
+        @Name("Fix pipenet insertion crash")
         @RequiresMcRestart
         public boolean pipeInvCrash = true;
 
