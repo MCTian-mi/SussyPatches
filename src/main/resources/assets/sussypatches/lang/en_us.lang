@@ -9,3 +9,6 @@ sussypatches.jei.ct_recipe.tooltip=CraftTweaker Recipe
 sussypatches.jei.gs_recipe.tooltip=GroovyScript Recipe
 
 sussypatches.jei.info.upfront=§1Hover for Info
+
+sussypatches.universal.tooltip.fluid_locked=§bFluid Locked: §f%s
+sussypatches.machine.creative.tank.tooltip.fluid_stored=§dFluid Stored: §f%s

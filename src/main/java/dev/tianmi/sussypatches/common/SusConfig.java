@@ -522,6 +522,15 @@ public class SusConfig {
         @Name("Improve ore vein info page in JEI")
         @RequiresMcRestart
         public boolean betterOreInfo = false;
+
+        @Comment({
+                "Makes GT fluid containers no longer clear all nbts when drained empty.",
+                "Backported from GregTechCEu#2894",
+                "Also makes fluid lock & overflow voiding work for quantum tanks."
+        })
+        @Name("Improve fluidHandler impl for gt items")
+        @RequiresMcRestart
+        public boolean betterFHIS = true;
     }
 
     public static final class Api {

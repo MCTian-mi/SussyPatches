@@ -9,3 +9,6 @@ sussypatches.jei.ct_recipe.tooltip=CraftTweaker配方
 sussypatches.jei.gs_recipe.tooltip=GroovyScript配方
 
 sussypatches.jei.info.upfront=§1悬停鼠标以查看信息
+
+sussypatches.universal.tooltip.fluid_locked=§b锁定流体：§f%s
+sussypatches.machine.creative.tank.tooltip.fluid_stored=§d内含流体：§f%s
