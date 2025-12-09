@@ -15,10 +15,10 @@ import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
 
 @GregTechModule(moduleID = SusModules.GrS_ID,
-                containerID = Tags.MODID,
-                modDependencies = Mods.Names.GROOVY_SCRIPT,
-                name = SusModules.GrS_NAME,
-                description = SusModules.GrS_DESC)
+        containerID = Tags.MODID,
+        modDependencies = Mods.Names.GROOVY_SCRIPT,
+        name = SusModules.GrS_NAME,
+        description = SusModules.GrS_DESC)
 public class GrSModule extends IntegrationSubmodule implements GroovyPlugin {
 
     @NotNull
@@ -35,8 +35,8 @@ public class GrSModule extends IntegrationSubmodule implements GroovyPlugin {
 
     @Override
     public void onCompatLoaded(GroovyContainer<?> container) {
-        if (SusConfig.API.recipeInfo) {
-            ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "info");
-        }
+        ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "info");
+        ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "lossy");
+        ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "nonStoichiometric");
     }
 }

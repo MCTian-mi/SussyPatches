@@ -41,6 +41,12 @@ public class SusConfig {
     @Name("Apis")
     public static final Api API = new Api();
 
+    @Comment({
+            "Debug configuration. Everything here is disabled by default.",
+    })
+    @Name("Debug")
+    public static final Debug DEBUG = new Debug();
+
     public static final class Feature {
 
         @Comment("Config options for drawing durability bars for fluid containers")
@@ -156,8 +162,37 @@ public class SusConfig {
                     return Predicates.alwaysFalse();
                 }, i -> i));
             }
+
         }
     }
+
+    public static final class Debug {
+
+        @Comment({
+                "Enables the experimental stoichiometry verifier for scripted recipes.",
+                "Requires GroovyScript to be loaded and additional configuration below."
+        })
+        @Name("Enable stoichiometry verifier")
+        @RequiresMcRestart
+        public boolean enableStoichiometryVerifier = false;
+
+        @Comment({
+                "List of recipe maps (unlocalized names) that should be checked when the verifier is enabled.",
+                "Example: ['batch_reactor', 'fluidized_bed_reactor']"
+        })
+        @Name("Stoichiometry recipe maps")
+        @RequiresMcRestart
+        public String[] stoichiometryRecipeMaps = new String[0];
+
+        @Comment({
+                "If true, the stoichiometry verifier will throw an exception, preventing game loading.",
+                "If false, violations are only logged at error level."
+        })
+        @Name("Stoichiometry violations throw")
+        @RequiresMcRestart
+        public boolean stoichiometryThrowOnViolation = false;
+    }
+
 
     public static final class Compat {
 
