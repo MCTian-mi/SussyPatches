@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.common.helper;
+package dev.tianmi.sussypatches.common.stoichiometry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,7 +20,6 @@ import gregtech.api.recipes.ingredients.GTRecipeItemInput;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.registry.IMaterialRegistryManager;
-import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.ItemMaterialInfo;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.core.unification.material.internal.MaterialRegistryManager;
@@ -31,16 +30,15 @@ import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static dev.tianmi.sussypatches.common.helper.StoichiometryUtil.getItemsPerMole;
 import static gregtech.api.unification.OreDictUnifier.getMaterial;
 import static gregtech.api.unification.OreDictUnifier.getMaterialInfo;
-import static gregtech.api.unification.OreDictUnifier.getPrefix;
 
 /**
  * Debug-only stoichiometry verifier to ensure scripted recipes conserve elements.
  */
 public final class StoichiometryVerifier {
     public static final int CHANCE_DENOMINATOR = 10000;
+    public static final StoichiometryState stoichiometryState = new StoichiometryState(new HashSet<>());
     private StoichiometryVerifier() {}
 
     private static final Map<Material, Map<Element, Bounds>> INFERRED_BOUNDS = new HashMap<>();
@@ -426,6 +424,8 @@ public final class StoichiometryVerifier {
             Set<Material> materials = new HashSet<>(inputs.unknowns().keySet());
             materials.addAll(outputs.unknowns().keySet());
             if (materials.size() != 1) {
+                // We need the StoichiometryState!
+
                 return;
             }
             Material material = materials.iterator().next();

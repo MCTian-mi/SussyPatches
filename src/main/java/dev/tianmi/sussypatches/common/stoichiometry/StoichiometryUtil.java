@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.common.helper;
+package dev.tianmi.sussypatches.common.stoichiometry;
 
 import java.util.HashMap;
 import java.util.HashSet;

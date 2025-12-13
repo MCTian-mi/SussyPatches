@@ -62,6 +62,8 @@ dependencies {
     compileOnlyApi 'com.cleanroommc:configanytime:3.0'
     compileOnlyApi 'com.cleanroommc:modularui:3.0.2' transitive false
 
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+
     // # Optional dependencies. Uncomment the ones you need
 //    runtimeOnlyNonPublishable 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31' transitive false
 //    runtimeOnlyNonPublishable rfg.deobf('curse.maven:supercritical-1185871:6793777')
