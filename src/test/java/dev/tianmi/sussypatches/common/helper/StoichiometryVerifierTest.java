@@ -1,23 +1,46 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import static gregtech.api.unification.material.Materials.*;
+import static gregtech.api.unification.ore.OrePrefix.dust;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
+import dev.tianmi.sussypatches.api.unification.material.properties.MolarProperty;
 import gregtech.api.GTValues;
+import gregtech.api.fluids.GTFluidRegistration;
+import gregtech.api.items.materialitem.MetaPrefixItem;
+import gregtech.api.items.metaitem.MetaItem;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.material.info.MaterialFlag;
+import gregtech.api.unification.material.registry.MarkerMaterialRegistry;
+import gregtech.common.CommonProxy;
+import gregtech.common.items.MetaItems;
+import gregtech.core.unification.material.internal.MaterialRegistryManager;
 import gregtech.modules.ModuleManager;
-import net.minecraftforge.fml.common.DummyModContainer;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.Locale;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.IThreadListener;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.CompoundDataFixer;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
+import net.minecraftforge.fml.relauncher.CoreModManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.ObjectHolderRegistry;
+import net.minecraftforge.registries.RegistryManager;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,49 +58,100 @@ import gregtech.api.recipes.ingredients.GTRecipeInput;
 import gregtech.api.recipes.ingredients.GTRecipeItemInput;
 import gregtech.api.recipes.recipeproperties.RecipePropertyStorage;
 import gregtech.api.unification.Element;
-import gregtech.api.unification.Elements;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.Material;
-import gregtech.api.unification.material.registry.IMaterialRegistryManager;
-import gregtech.api.unification.material.registry.MaterialRegistry;
 import gregtech.api.unification.stack.ItemMaterialInfo;
 import gregtech.api.unification.stack.MaterialStack;
+import gregtech.api.recipes.ingredients.GTRecipeFluidInput;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 
 public class StoichiometryVerifierTest {
-    private static final TestMaterialRegistryManager MATERIAL_MANAGER = new TestMaterialRegistryManager();
+
+    private static MaterialRegistryManager managerInternal;
 
     static {
-        GregTechAPI.materialManager = MATERIAL_MANAGER;
+        try {
+            Field deobfuscatedEnvironment = CoreModManager.class.getDeclaredField("deobfuscatedEnvironment");
+            deobfuscatedEnvironment.setAccessible(true);
+            deobfuscatedEnvironment.setBoolean(null, true);
+
+            Method setLocale = I18n.class.getDeclaredMethod("setLocale", Locale.class); // No need to care about
+            // obfuscation
+            setLocale.setAccessible(true);
+            setLocale.invoke(null, new Locale());
+
+            // set FMLCommonHandler#sidedDelegate, since MaterialIconType and LocalizationUtils uses it
+            Field sidedDelegate = FMLCommonHandler.class.getDeclaredField("sidedDelegate");
+            sidedDelegate.setAccessible(true);
+            sidedDelegate.set(FMLCommonHandler.instance(), new TestSidedHandler());
+        } catch (NoSuchFieldException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException("Unexpected exception on test bootstrap", e);
+        }
+        managerInternal = MaterialRegistryManager.getInstance();
+        GregTechAPI.materialManager = managerInternal;
+        GregTechAPI.markerMaterialRegistry = MarkerMaterialRegistry.getInstance();
+
         net.minecraft.init.Bootstrap.register();
         ModMetadata meta = new ModMetadata();
         meta.modId = GTValues.MODID;
         Loader.instance().setupTestHarness(new DummyModContainer(meta));
         GregTechAPI.moduleManager = ModuleManager.getInstance();
+        managerInternal.unfreezeRegistries();
+        Materials.register();
     }
 
     private static final String TEST_MOD = "sussypatches_test";
     private static final String TEST_MAP_NAME = "test_map";
 
 
-    private static final Material HYDROGEN = createElementMaterial(1, "hydrogen", Elements.H);
-    private static final Material OXYGEN = createElementMaterial(2, "oxygen", Elements.O);
-    private static final Material WATER = createCompositeMaterial(3, "water", HYDROGEN, 2, OXYGEN, 1);
-    private static final Material WASTEWATER = createFlaggedMaterial(4, "wastewater", SusMaterialFlags.NON_STOICHIOMETRIC);
-
-    private static final ItemStack HYDROGEN_INPUT = registerMaterialItem("hydrogen_input", HYDROGEN, 2);
-    private static final ItemStack OXYGEN_INPUT = registerMaterialItem("oxygen_input", OXYGEN, 1);
-    private static final ItemStack WATER_OUTPUT = registerMaterialItem("water_output", WATER, 1);
-    private static final ItemStack HYDROGEN_OUTPUT = registerMaterialItem("hydrogen_output", HYDROGEN, 2);
-    private static final ItemStack WASTEWATER_OUTPUT = registerMaterialItem("wastewater_output", WASTEWATER, 1);
+    private static final Material Wastewater;
+    private static final Material Brubium;
+    private static final Material Zalgonium;
+    private static final Material DilutedBrubium;
 
     private static final RecipeMap<TestRecipeBuilder> TEST_MAP =
             new RecipeMap<>(TEST_MAP_NAME, 4, 4, 4, 4, new TestRecipeBuilder(), false);
-    private static final gregtech.api.recipes.category.GTRecipeCategory TEST_CATEGORY =
-            gregtech.api.recipes.category.GTRecipeCategory.create(TEST_MOD, "test_category",
-                    TEST_MOD + ".test_category", TEST_MAP);
+
+    static {
+        Wastewater = new Material.Builder(20000, new ResourceLocation(GTValues.MODID, "wastewater"))
+                .fluid()
+                .flags(SusMaterialFlags.NON_STOICHIOMETRIC)
+                .build();
+        Brubium = new Material.Builder(20001, new ResourceLocation(GTValues.MODID, "brubium"))
+                .dust()
+                .build();
+        Zalgonium = new Material.Builder(20002, new ResourceLocation(GTValues.MODID, "zalgonium"))
+                .dust()
+                .fluid()
+                .build();
+        DilutedBrubium = new Material.Builder(20003, new ResourceLocation(GTValues.MODID, "diluted_brubium"))
+                .fluid()
+                .build();
+
+        Ice.setProperty(MolarProperty.MOLAR, MolarProperty.fromFluidConversion(1000, 144));
+        BandedIron.addFlags(SusMaterialFlags.SINGLE_ITEM_MOLE);
+
+        managerInternal.closeRegistries();
+        managerInternal.freezeRegistries();
+        GTFluidRegistration.INSTANCE.register();
+        OreDictUnifier.init();
+
+        MetaItems.init();
+        for (MetaItem<?> item : MetaItems.ITEMS) {
+            if (item instanceof MetaPrefixItem) {
+                item.registerSubItems();
+                for (MetaItem.MetaValueItem i : item.getAllItems()) {
+                    // The unlocalized name is specifically the ore prefix here
+                    OreDictUnifier.onItemRegistration(new OreDictionary.OreRegisterEvent(
+                            i.unlocalizedName, i.getStackForm()));
+                }
+            }
+        }
+
+    }
 
     @BeforeAll
     static void configureEnvironment() {
@@ -86,102 +160,203 @@ public class StoichiometryVerifierTest {
 
     @BeforeEach
     void resetConfig() {
-        SusConfig.DEBUG.stoichiometryRecipeMaps = new String[] { TEST_MAP_NAME };
-        SusConfig.DEBUG.stoichiometryThrowOnViolation = false;
+        SusConfig.DEBUG.stoichiometryRecipeMaps = new String[]{TEST_MAP_NAME};
+        SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
     }
 
     @Test
     void balancedRecipePassesVerification() {
-        Recipe recipe = createRecipe(Arrays.asList(
-                new GTRecipeItemInput(HYDROGEN_INPUT.copy()),
-                new GTRecipeItemInput(OXYGEN_INPUT.copy())),
-                Collections.singletonList(WATER_OUTPUT.copy()),
-                null);
+        TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .fluidOutputs(Water.getFluid(1000));
 
-        markGroovy(recipe);
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
+    }
 
-        assertDoesNotThrow(() -> StoichiometryVerifier.verify(recipe, TEST_MAP));
+    @Test
+    void melting() {
+        {
+            TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                    .input(dust, Zalgonium)
+                    .fluidOutputs(Zalgonium.getFluid(GTValues.L));
+
+            assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
+        }
+        {
+            TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                    .input(dust, Zalgonium)
+                    .fluidInputs(Water.getFluid(1000))
+                    .fluidOutputs(Zalgonium.getFluid(GTValues.L))
+                    .fluidOutputs(Ice.getFluid(1000));
+
+            assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
+        }
     }
 
     @Test
     void violationThrowsWhenConfigured() {
-        Recipe recipe = createRecipe(Arrays.asList(
-                new GTRecipeItemInput(HYDROGEN_INPUT.copy()),
-                new GTRecipeItemInput(OXYGEN_INPUT.copy())),
-                Collections.singletonList(HYDROGEN_OUTPUT.copy()),
-                null);
+        TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .fluidOutputs(Hydrogen.getFluid(1000));
 
-        markGroovy(recipe);
-        SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
-
-        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(recipe, TEST_MAP));
+        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
     @Test
     void lossyRecipesAllowMassLoss() {
-        Recipe recipe = createRecipe(Arrays.asList(
-                new GTRecipeItemInput(HYDROGEN_INPUT.copy()),
-                new GTRecipeItemInput(OXYGEN_INPUT.copy())),
-                Collections.singletonList(HYDROGEN_OUTPUT.copy()),
-                StoichiometryProperty.lossy());
+        TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .fluidOutputs(Hydrogen.getFluid(1000));
 
-        markGroovy(recipe);
+        rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.lossy());
+
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
-        assertDoesNotThrow(() -> StoichiometryVerifier.verify(recipe, TEST_MAP));
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
     @Test
     void verificationDisabledViaProperty() {
-        Recipe recipe = createRecipe(Arrays.asList(
-                new GTRecipeItemInput(HYDROGEN_INPUT.copy()),
-                new GTRecipeItemInput(OXYGEN_INPUT.copy())),
-                Collections.singletonList(HYDROGEN_OUTPUT.copy()),
-                StoichiometryProperty.disableVerifier());
+        TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .fluidOutputs(Hydrogen.getFluid(1000));
+        rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.disableVerifier());
 
-        markGroovy(recipe);
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
-        assertDoesNotThrow(() -> StoichiometryVerifier.verify(recipe, TEST_MAP));
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
     @Test
     void nonStoichiometricMaterialsAreIgnored() {
-        Recipe recipe = createRecipe(Arrays.asList(
-                new GTRecipeItemInput(HYDROGEN_INPUT.copy()),
-                new GTRecipeItemInput(OXYGEN_INPUT.copy())),
-                Collections.singletonList(WASTEWATER_OUTPUT.copy()),
-                null);
+        TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .fluidOutputs(Wastewater.getFluid(1000));
 
-        markGroovy(recipe);
+
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
-        assertDoesNotThrow(() -> StoichiometryVerifier.verify(recipe, TEST_MAP));
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
-    private static Recipe createRecipe(List<GTRecipeInput> itemInputs, List<ItemStack> outputs,
-                                       StoichiometryProperty.Settings settings) {
-        RecipePropertyStorage storage = null;
-        if (settings != null) {
-            storage = new RecipePropertyStorage();
-            storage.store(StoichiometryProperty.getInstance(), settings);
+    @Test
+    void nonStoichiometricMaterialsDontPreventOtherErrors() {
+        TestRecipeBuilder rb = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .fluidOutputs(Wastewater.getFluid(1000))
+                .fluidOutputs(Water.getFluid(2000));
+
+        SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
+
+        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
+    }
+
+    @Test
+    void unknownMaterialsAreProcessed() {
+        TestRecipeBuilder rb1 = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .output(dust, Brubium, 1);
+
+        TestRecipeBuilder rb2 = TEST_MAP.recipeBuilder()
+                .input(dust, Brubium, 1)
+                .fluidOutputs(Hydrogen.getFluid(2000))
+                .fluidOutputs(Oxygen.getFluid(1000));
+
+        SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
+
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
+    }
+
+    @Test
+    void unknownMaterialsMayCauseErrors() {
+        TestRecipeBuilder rb1 = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .output(dust, Brubium, 1);
+
+        TestRecipeBuilder rb2 = TEST_MAP.recipeBuilder()
+                .input(dust, Brubium, 1)
+                .fluidOutputs(Hydrogen.getFluid(3000))
+                .fluidOutputs(Oxygen.getFluid(1000));
+
+        SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
+
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
+        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
+    }
+
+    @Test
+    void dupingRecipesCauseErrors() {
+        TestRecipeBuilder rb1 = TEST_MAP.recipeBuilder()
+                .fluidInputs(Hydrogen.getFluid(2000))
+                .fluidInputs(Oxygen.getFluid(1000))
+                .output(dust, Brubium, 1);
+
+        TestRecipeBuilder rb2 = TEST_MAP.recipeBuilder()
+                .input(dust, Brubium, 1)
+                .fluidOutputs(Hydrogen.getFluid(2000))
+                .fluidOutputs(Oxygen.getFluid(1000));
+
+        TestRecipeBuilder rb3 = TEST_MAP.recipeBuilder()
+                .input(dust, Brubium, 1)
+                .output(dust, Brubium, 2);
+
+        SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
+
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
+        assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
+        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb3), TEST_MAP));
+    }
+
+    @Test
+    void mixedItemAndFluidRecipes() {
+        {
+            // Test a balanced recipe with both items and fluids
+            TestRecipeBuilder builder = new TestRecipeBuilder()
+                    .input(dust, Carbon, 1)
+                    .fluidInputs(Hydrogen.getFluid(4500))
+                    .fluidOutputs(Methane.getFluid(1000))
+                    .chancedFluidOutput(Hydrogen.getFluid(1000), 5000, 0);
+
+
+            assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(builder), TEST_MAP));
         }
+        // Test an unbalanced version that should fail
+        TestRecipeBuilder builder = new TestRecipeBuilder()
+                .input(dust, Carbon, 1)
+                .fluidInputs(Hydrogen.getFluid(4500))
+                .fluidOutputs(Methane.getFluid(1000))
+                .chancedFluidOutput(Hydrogen.getFluid(1000), 500, 0);
 
-        return new Recipe(itemInputs,
-                outputs,
-                new ChancedOutputList<>(ChancedOutputLogic.NONE, Collections.emptyList()),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                new ChancedOutputList<>(ChancedOutputLogic.NONE, Collections.emptyList()),
-                1,
-                1,
-                false,
-                false,
-                storage,
-                TEST_CATEGORY);
+        assertThrows(
+                UnsupportedClassVersionError.class, // Same as other tests due to test harness
+                () -> StoichiometryVerifier.verify(groovy(builder), TEST_MAP)
+        );
     }
 
-    private static void markGroovy(Recipe recipe) {
+    @Test
+    void checkMoleDecomposition() {
+        // H2WO4
+        Assertions.assertEquals(7, StoichiometryUtil.getItemsPerMole(TungsticAcid).getNumerator());
+        // H2O
+        Assertions.assertEquals(3, StoichiometryUtil.getItemsPerMole(Water).getNumerator());
+
+        // Single item moles
+        Assertions.assertEquals(1, StoichiometryUtil.getItemsPerMole(BandedIron).getNumerator());
+        // Mg(CaCO3)7
+        Assertions.assertEquals(36, StoichiometryUtil.getItemsPerMole(Marble).getNumerator());
+    }
+
+    private static Recipe groovy(TestRecipeBuilder rb) {
+        Recipe recipe = rb.build().getResult();
         try {
             Field field = Recipe.class.getDeclaredField("groovyRecipe");
             field.setAccessible(true);
@@ -189,137 +364,145 @@ public class StoichiometryVerifierTest {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static Material createElementMaterial(int id, String path, Element element) {
-        Material.Builder builder = new Material.Builder(id, new ResourceLocation(TEST_MOD, path));
-        builder.element(element);
-        return builder.build();
-    }
-
-    private static Material createCompositeMaterial(int id, String path, Object... components) {
-        Material.Builder builder = new Material.Builder(id, new ResourceLocation(TEST_MOD, path));
-        builder.components(components);
-        return builder.build();
-    }
-
-    private static Material createFlaggedMaterial(int id, String path, MaterialFlag flag) {
-        Material.Builder builder = new Material.Builder(id, new ResourceLocation(TEST_MOD, path));
-        builder.flags(flag);
-        return builder.build();
-    }
-
-    private static ItemStack registerMaterialItem(String name, Material material, long amount) {
-        TestItem item = new TestItem(new ResourceLocation(TEST_MOD, name));
-        ItemStack stack = new ItemStack(item);
-        OreDictUnifier.registerOre(stack.copy(), new ItemMaterialInfo(new MaterialStack(material, amount)));
-        return stack;
+        return recipe;
     }
 
     private static class TestRecipeBuilder extends RecipeBuilder<TestRecipeBuilder> {
         protected TestRecipeBuilder() {
             super();
+            this.EUt(1).duration(1);
+        }
+
+        public TestRecipeBuilder copy() {
+            return new TestRecipeBuilder();
         }
     }
 
-    private static class TestItem extends Item {
-        TestItem(ResourceLocation id) {
-            setRegistryName(id);
-        }
-    }
-
-    private static class TestMaterialRegistryManager implements IMaterialRegistryManager {
-
-        private final Map<String, TestMaterialRegistry> registries = new HashMap<>();
-        private Phase phase = Phase.OPEN;
+    private static final class TestSidedHandler implements IFMLSidedHandler {
 
         @Override
-        public MaterialRegistry createRegistry(String modid) {
-            TestMaterialRegistry registry = new TestMaterialRegistry(modid);
-            registries.put(modid, registry);
-            return registry;
+        public List<String> getAdditionalBrandingInformation() {
+            return Collections.emptyList();
         }
 
         @Override
-        public MaterialRegistry getRegistry(String modid) {
-            return registries.computeIfAbsent(modid, TestMaterialRegistry::new);
+        public Side getSide() {
+            return Side.SERVER;
         }
 
         @Override
-        public MaterialRegistry getRegistry(int networkId) {
-            return getRegistry(TEST_MOD);
+        public void haltGame(String message, Throwable exception) {
+            throw new RuntimeException(message, exception);
         }
 
         @Override
-        public Collection<MaterialRegistry> getRegistries() {
-            return new ArrayList<>(registries.values());
+        public void showGuiScreen(Object clientGuiElement) {
         }
 
         @Override
-        public Collection<Material> getRegisteredMaterials() {
-            List<Material> materials = new ArrayList<>();
-            registries.values().forEach(registry -> materials.addAll(registry.getAllMaterials()));
-            return materials;
+        public void queryUser(StartupQuery query) {
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public Material getMaterial(String name) {
-            for (MaterialRegistry registry : registries.values()) {
-                Material material = registry.getObject(name);
-                if (material != null) {
-                    return material;
-                }
-            }
+        public void beginServerLoading(MinecraftServer server) {
+        }
+
+        @Override
+        public void finishServerLoading() {
+        }
+
+        @Override
+        public File getSavesDirectory() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public MinecraftServer getServer() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isDisplayCloseRequested() {
+            return false;
+        }
+
+        @Override
+        public boolean shouldServerShouldBeKilledQuietly() {
+            return false;
+        }
+
+        @Override
+        public void addModAsResource(ModContainer container) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String getCurrentLanguage() {
+            return "en_US";
+        }
+
+        @Override
+        public void serverStopped() {
+        }
+
+        @Override
+        public NetworkManager getClientToServerNetworkManager() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public INetHandler getClientPlayHandler() {
             return null;
         }
 
         @Override
-        public Phase getPhase() {
-            return phase;
+        public void fireNetRegistrationEvent(EventBus bus, NetworkManager manager, Set<String> channelSet,
+                                             String channel, Side side) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean shouldAllowPlayerLogins() {
+            return false;
+        }
+
+        @Override
+        public void allowLogins() {
+        }
+
+        @Override
+        public IThreadListener getWorldThread(INetHandler net) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void processWindowMessages() {
+        }
+
+        @Override
+        public String stripSpecialChars(String message) {
+            return message;
+        }
+
+        @Override
+        public void reloadRenderers() {
+        }
+
+        @Override
+        public void fireSidedRegistryEvents() {
+        }
+
+        @Override
+        public CompoundDataFixer getDataFixer() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isDisplayVSyncForced() {
+            return false;
         }
     }
 
-    private static class TestMaterialRegistry extends MaterialRegistry {
 
-        private final String modid;
-        private final Map<String, Material> entries = new HashMap<>();
-        private Material fallback;
-
-        TestMaterialRegistry(String modid) {
-            this.modid = modid;
-        }
-
-        @Override
-        public void register(Material material) {
-            entries.put(material.getName(), material);
-            if (fallback == null) {
-                fallback = material;
-            }
-        }
-
-        @Override
-        public Collection<Material> getAllMaterials() {
-            return entries.values();
-        }
-
-        @Override
-        public void setFallbackMaterial(Material material) {
-            this.fallback = material;
-        }
-
-        @Override
-        public Material getFallbackMaterial() {
-            return fallback;
-        }
-
-        @Override
-        public int getNetworkId() {
-            return 0;
-        }
-
-        @Override
-        public String getModid() {
-            return modid;
-        }
-    }
 }

@@ -6,14 +6,20 @@ import java.util.Map;
 import java.util.Set;
 
 import dev.tianmi.sussypatches.api.unification.SusMaterialFlags;
+import dev.tianmi.sussypatches.api.unification.material.properties.MolarProperty;
+import gregtech.api.GTValues;
 import gregtech.api.unification.FluidUnifier;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.Materials;
+import gregtech.api.unification.material.properties.PropertyKey;
 import gregtech.api.unification.stack.MaterialStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -21,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class StoichiometryUtil {
 
-    private static final Map<Fluid, Material> FLUID_CACHE = new HashMap<>();
     private static final Map<Material, Map<Material, Long>> DECOMPOSITION_CACHE = new HashMap<>();
 
     private StoichiometryUtil() {}
@@ -37,15 +42,16 @@ public final class StoichiometryUtil {
         if (fluid == null) {
             return null;
         }
-        Material material = FLUID_CACHE.get(fluid);
-        if (material != null) {
-            return material;
-        }
+        Material material = FluidUnifier.getMaterialFromFluid(fluid);
 
-        material = FluidUnifier.getMaterialFromFluid(fluid);
-
-        if (material != null) {
-            FLUID_CACHE.put(fluid, material);
+        if (material == null) {
+            // You do have to check FluidRegistry separately.
+            // The wonders of experimental API!
+            if (fluid == FluidRegistry.WATER) {
+                return Materials.Water;
+            } else if (fluid == FluidRegistry.LAVA) {
+                return Materials.Lava;
+            }
         }
         return material;
     }
@@ -100,4 +106,52 @@ public final class StoichiometryUtil {
         }
         visiting.remove(material);
     }
+
+    public static Fraction getItemsPerMole(Material material) {
+        if (material.isElement() || material.hasFlag(SusMaterialFlags.SINGLE_ITEM_MOLE) || material.getMaterialComponents().isEmpty()) {
+            return Fraction.getFraction(1);
+        }
+        if (material.hasProperty(MolarProperty.MOLAR)) {
+            return material.getProperty(MolarProperty.MOLAR).itemToMole;
+        }
+        return Fraction.getFraction(getItemsPerMoleRecurse(material));
+    }
+
+    private static int getItemsPerMoleRecurse(Material material) {
+        if (material.isElement() || material.getMaterialComponents().isEmpty()) {
+            return 1; // Elemental items: 1 item = 1 mole
+        }
+
+        // For materials with components, count the total number of atoms
+        int atomCount = 0;
+        for (MaterialStack component : material.getMaterialComponents()) {
+            if (component.material.isElement()) {
+                atomCount += component.amount;
+            } else {
+                // Recursively count atoms in non-elemental components
+                atomCount += component.amount * getItemsPerMoleRecurse(component.material);
+            }
+        }
+
+        return Math.max(1, atomCount); // At least 1 item per mole
+    }
+
+    public static Fraction getFluidPerMole(Material material) {
+        if (material.hasProperty(MolarProperty.MOLAR)) {
+            return material.getProperty(MolarProperty.MOLAR).fluidToMole;
+        }
+        if (material.hasProperty(PropertyKey.DUST)) {
+            return getItemsPerMole(material).multiplyBy(Fraction.getFraction(GTValues.L));
+        }
+        return Fraction.getFraction(1000);
+    }
+
+    public static Fraction getMolesFromFluid(int amount, Material mat) {
+        return Fraction.getFraction(amount).divideBy(getFluidPerMole(mat));
+    }
+
+    public static Fraction getMolesFromItem(int amount, Material mat) {
+        return Fraction.getFraction(amount).divideBy(getItemsPerMole(mat));
+    }
+
 }

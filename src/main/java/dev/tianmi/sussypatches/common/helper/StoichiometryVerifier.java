@@ -12,6 +12,8 @@ import dev.tianmi.sussypatches.common.SusConfig;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.recipes.RecipeMap;
+import gregtech.api.recipes.chance.output.impl.ChancedFluidOutput;
+import gregtech.api.recipes.chance.output.impl.ChancedItemOutput;
 import gregtech.api.recipes.ingredients.GTRecipeFluidInput;
 import gregtech.api.recipes.ingredients.GTRecipeInput;
 import gregtech.api.recipes.ingredients.GTRecipeItemInput;
@@ -23,10 +25,13 @@ import gregtech.api.unification.stack.ItemMaterialInfo;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.core.unification.material.internal.MaterialRegistryManager;
 import gregtech.integration.groovy.GroovyScriptModule;
-import groovyjarjarantlr4.v4.runtime.misc.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.math.Fraction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import static dev.tianmi.sussypatches.common.helper.StoichiometryUtil.getItemsPerMole;
 import static gregtech.api.unification.OreDictUnifier.getMaterial;
 import static gregtech.api.unification.OreDictUnifier.getMaterialInfo;
 import static gregtech.api.unification.OreDictUnifier.getPrefix;
@@ -35,8 +40,10 @@ import static gregtech.api.unification.OreDictUnifier.getPrefix;
  * Debug-only stoichiometry verifier to ensure scripted recipes conserve elements.
  */
 public final class StoichiometryVerifier {
-
+    public static final int CHANCE_DENOMINATOR = 10000;
     private StoichiometryVerifier() {}
+
+    private static final Map<Material, Map<Element, Bounds>> INFERRED_BOUNDS = new HashMap<>();
 
     public static void verifyOnBuild(RecipeBuilder<?> builder, RecipeMap<?> recipeMap) {
         Recipe recipe = builder.copy().build().getResult();
@@ -68,6 +75,23 @@ public final class StoichiometryVerifier {
                 totals.merge(element, bounds, Bounds::combine));
     }
 
+    private static void mergeUnknowns(Map<Material, Fraction> totals, Map<Material, Fraction> addition) {
+        addition.forEach((material, amount) -> totals.merge(material, amount, Fraction::add));
+    }
+
+    private static Fraction reciprocal(Fraction value) {
+        if (value.equals(Fraction.ZERO)) {
+            throw new IllegalArgumentException("Cannot take reciprocal of zero");
+        }
+        return Fraction.getFraction(value.getDenominator(), value.getNumerator());
+    }
+
+    private static Fraction materialAmount(MaterialStack stack) {
+        return Fraction.getFraction((int) stack.amount, 1);
+    }
+
+
+
     private static final class StoichiometryCheck {
 
         private final RecipeMap<?> map;
@@ -83,8 +107,10 @@ public final class StoichiometryVerifier {
         }
 
         void run() {
-            Map<Element, Bounds> input = aggregateInputBounds(recipe.getInputs(), recipe.getFluidInputs());
-            Map<Element, Bounds> output = aggregateOutputBounds(recipe.getOutputs(), recipe.getFluidOutputs());
+            Aggregation input = aggregateInputBounds(recipe.getInputs(), recipe.getFluidInputs());
+            Aggregation output = aggregateOutputBounds(recipe.getOutputs(), recipe.getFluidOutputs());
+
+            processUnknowns(input, output);
 
             List<ElementViolation> violations = diff(input, output);
             if (violations.isEmpty()) return;
@@ -96,149 +122,494 @@ public final class StoichiometryVerifier {
             }
         }
 
-        private Map<Element, Bounds> aggregateInputBounds(List<GTRecipeInput> itemInputs,
-                                                          List<GTRecipeInput> fluidInputs) {
+        private Aggregation aggregateInputBounds(List<GTRecipeInput> itemInputs,
+                                                 List<GTRecipeInput> fluidInputs) {
             Map<Element, Bounds> totals = new HashMap<>();
+            Map<Material, Fraction> unknowns = new HashMap<>();
+            boolean hasStoichiometric = false;
+            boolean hasAnyStacks = false;
             for (GTRecipeInput input : itemInputs) {
-                mergeBounds(totals, decomposeItemInput(input));
+                Result result = decomposeItemInput(input);
+                if (!result.bounds.isEmpty()) {
+                    hasStoichiometric = true;
+                }
+                if (result.hasStacks) {
+                    hasAnyStacks = true;
+                }
+                mergeBounds(totals, result.bounds);
+                mergeUnknowns(unknowns, result.unknowns);
             }
             for (GTRecipeInput input : fluidInputs) {
-                mergeBounds(totals, decomposeFluidInput(input));
+                Result result = decomposeFluidInput(input);
+                if (!result.bounds.isEmpty()) {
+                    hasStoichiometric = true;
+                }
+                if (result.hasStacks) {
+                    hasAnyStacks = true;
+                }
+                mergeBounds(totals, result.bounds);
+                mergeUnknowns(unknowns, result.unknowns);
             }
-            return totals;
+            return new Aggregation(totals, unknowns, hasStoichiometric, hasAnyStacks);
         }
 
-        private Map<Element, Bounds> aggregateOutputBounds(List<ItemStack> itemOutputs,
-                                                           List<FluidStack> fluidOutputs) {
+        private Aggregation aggregateOutputBounds(List<ItemStack> itemOutputs,
+                                                  List<FluidStack> fluidOutputs) {
             Map<Element, Bounds> totals = new HashMap<>();
+            Map<Material, Fraction> unknowns = new HashMap<>();
+            boolean hasStoichiometric = false;
+            boolean hasAnyStacks = false;
+            
+            // Process regular item outputs
             for (ItemStack stack : itemOutputs) {
-                mergeBounds(totals, decomposeItemStack(stack));
+                if (stack.isEmpty()) {
+                    continue;
+                }
+                hasAnyStacks = true;
+                Result contribution = decomposeItemStack(stack);
+                if (!contribution.bounds.isEmpty()) {
+                    hasStoichiometric = true;
+                }
+                mergeBounds(totals, contribution.bounds);
+                mergeUnknowns(unknowns, contribution.unknowns);
             }
+            
+            // Process chanced item outputs
+            for (ChancedItemOutput chancedOutput : recipe.getChancedOutputs().getChancedEntries()) {
+                ItemStack stack = chancedOutput.getIngredient();
+                if (stack.isEmpty()) {
+                    continue;
+                }
+                hasAnyStacks = true;
+                Result contribution = decomposeItemStack(stack);
+                if (!contribution.bounds.isEmpty()) {
+                    hasStoichiometric = true;
+                }
+                // Scale the bounds by the chance (chance is out of 10000)
+                Fraction chance = Fraction.getFraction(chancedOutput.getChance(), CHANCE_DENOMINATOR);
+                Map<Element, Bounds> scaledBounds = new HashMap<>();
+                for (Map.Entry<Element, Bounds> entry : contribution.bounds.entrySet()) {
+                    scaledBounds.put(entry.getKey(), entry.getValue().scale(chance));
+                }
+                mergeBounds(totals, scaledBounds);
+                // Scale the unknown materials by the chance
+                if (!contribution.unknowns.isEmpty()) {
+                    Map<Material, Fraction> scaledUnknowns = new HashMap<>();
+                    for (Map.Entry<Material, Fraction> entry : contribution.unknowns.entrySet()) {
+                        scaledUnknowns.put(entry.getKey(), entry.getValue().multiplyBy(chance));
+                    }
+                    mergeUnknowns(unknowns, scaledUnknowns);
+                } else {
+                    mergeUnknowns(unknowns, contribution.unknowns);
+                }
+                if (chancedOutput.getChanceBoost() > 0) {
+                    SussyPatches.LOGGER.warn("A chanced boost was detected in a stoichiometric recipe!");
+                }
+                mergeUnknowns(unknowns, contribution.unknowns);
+            }
+            
+            // Process regular fluid outputs
             for (FluidStack stack : fluidOutputs) {
                 if (stack != null && stack.amount > 0) {
-                    mergeBounds(totals, decomposeFluidStack(stack));
+                    hasAnyStacks = true;
+                    Result contribution = decomposeFluidStack(stack);
+                    if (!contribution.bounds.isEmpty()) {
+                        hasStoichiometric = true;
+                    }
+                    mergeBounds(totals, contribution.bounds);
+                    mergeUnknowns(unknowns, contribution.unknowns);
                 }
             }
-            return totals;
+            
+            // Process chanced fluid outputs
+            for (ChancedFluidOutput chancedOutput : recipe.getChancedFluidOutputs().getChancedEntries()) {
+                FluidStack stack = chancedOutput.getIngredient();
+                if (stack != null && stack.amount > 0) {
+                    hasAnyStacks = true;
+                    Result contribution = decomposeFluidStack(stack);
+                    if (!contribution.bounds.isEmpty()) {
+                        hasStoichiometric = true;
+                        // Scale the bounds by the chance (chance is out of 10000)
+                        Fraction chance = Fraction.getFraction(chancedOutput.getChance(), CHANCE_DENOMINATOR);
+                        Map<Element, Bounds> scaledBounds = new HashMap<>();
+                        for (Map.Entry<Element, Bounds> entry : contribution.bounds.entrySet()) {
+                            scaledBounds.put(entry.getKey(), entry.getValue().scale(chance));
+                        }
+                        mergeBounds(totals, scaledBounds);
+                    }
+                    // Scale the unknown materials by the chance
+                    if (!contribution.unknowns.isEmpty()) {
+                        Fraction chance = Fraction.getFraction(chancedOutput.getChance(), CHANCE_DENOMINATOR);
+                        Map<Material, Fraction> scaledUnknowns = new HashMap<>();
+                        for (Map.Entry<Material, Fraction> entry : contribution.unknowns.entrySet()) {
+                            scaledUnknowns.put(entry.getKey(), entry.getValue().multiplyBy(chance));
+                        }
+                        mergeUnknowns(unknowns, scaledUnknowns);
+                    } else {
+                        mergeUnknowns(unknowns, contribution.unknowns);
+                    }
+                }
+            }
+            
+            return new Aggregation(totals, unknowns, hasStoichiometric, hasAnyStacks);
         }
 
-        private Map<Element, Bounds> decomposeItemInput(GTRecipeInput input) {
+        private Result decomposeItemInput(GTRecipeInput input) {
             if (input.isNonConsumable() || !(input instanceof GTRecipeItemInput itemInput)) {
-                return Map.of();
+                return Result.empty();
             }
             ItemStack[] alternatives = itemInput.getInputStacks();
             if (alternatives.length == 0) {
-                return Map.of();
+                return Result.empty();
             }
-            List<Map<Element, Bounds>> altBounds = new ArrayList<>(alternatives.length);
+            List<Result> altResults = new ArrayList<>(alternatives.length);
             for (ItemStack stack : alternatives) {
                 if (!stack.isEmpty()) {
-                    altBounds.add(decomposeItemStack(stack));
+                    altResults.add(decomposeItemStack(stack));
                 }
             }
-            return combineAlternatives(altBounds);
+            return combineAlternatives(altResults);
         }
 
-        private Map<Element, Bounds> decomposeFluidInput(GTRecipeInput input) {
+        private Result decomposeFluidInput(GTRecipeInput input) {
             if (input.isNonConsumable() || !(input instanceof GTRecipeFluidInput fluidInput)) {
-                return Map.of();
+                return Result.empty();
             }
             FluidStack stack = fluidInput.getInputFluidStack();
             if (stack == null || stack.amount <= 0) {
-                return Map.of();
+                return Result.empty();
             }
             return decomposeFluidStack(stack);
         }
 
-        private Map<Element, Bounds> decomposeItemStack(ItemStack stack) {
+        private Result decomposeItemStack(ItemStack stack) {
             if (stack.isEmpty()) {
-                return Map.of();
+                return Result.empty();
             }
-            Map<Element, Bounds> result = new HashMap<>();
-            MaterialStack materialStack = getMaterial(stack);
-            if (materialStack != null) {
-                mergeBounds(result, decomposeMaterial(materialStack.material, materialStack.amount));
-                return result;
+            Map<Element, Bounds> bounds = new HashMap<>();
+            Map<Material, Fraction> unknowns = new HashMap<>();
+            MaterialStack unmultipliedMaterialStack = getMaterial(stack);
+            if (unmultipliedMaterialStack != null) {
+                MaterialStack materialStack =
+                        new MaterialStack(unmultipliedMaterialStack.material, unmultipliedMaterialStack.amount * stack.getCount());
+                return decomposeOrePrefixItem(materialStack, bounds, unknowns);
             }
             ItemMaterialInfo info = getMaterialInfo(stack);
             if (info != null) {
-                for (MaterialStack component : info.getMaterials()) {
-                    mergeBounds(result, decomposeMaterial(component.material, component.amount));
+                return decomposeItemMaterialInfo(info, unknowns, bounds);
+            }
+            return Result.of(bounds, unknowns, true);
+        }
+
+        private @NotNull Result decomposeItemMaterialInfo(ItemMaterialInfo info, Map<Material, Fraction> unknowns, Map<Element, Bounds> bounds) {
+            for (MaterialStack component : info.getMaterials()) {
+                Material material = component.material;
+                if (material.hasFlag(SusMaterialFlags.NON_STOICHIOMETRIC)) {
+                    continue;
                 }
+                Map<Element, Bounds> decomposition = decomposeMaterial(material,
+                        materialAmount(component));
+                if (decomposition.isEmpty()) {
+                    unknowns.merge(material, materialAmount(component), Fraction::add);
+                    continue;
+                }
+                mergeBounds(bounds, decomposition);
+            }
+            return Result.of(bounds, unknowns, true);
+        }
+
+        private @NotNull Result decomposeOrePrefixItem(MaterialStack materialStack, Map<Element, Bounds> bounds, Map<Material, Fraction> unknowns) {
+            Material material = materialStack.material;
+
+            if (material.hasFlag(SusMaterialFlags.NON_STOICHIOMETRIC)) {
+                return Result.of(bounds, unknowns, true);
+            }
+
+            Map<Element, Bounds> decomposition = decomposeMaterial(material,
+                    StoichiometryUtil.getMolesFromItem((int) materialStack.amount, material));
+            if (decomposition.isEmpty()) {
+                unknowns.put(material, Fraction.getFraction((int) materialStack.amount, 1));
+                return Result.of(bounds, unknowns, true);
+            }
+            mergeBounds(bounds, decomposition);
+            return Result.of(bounds, unknowns, true);
+        }
+
+        private Result decomposeFluidStack(FluidStack stack) {
+            Material material = StoichiometryUtil.getMaterialFromFluid(stack);
+            if (material == null || material.hasFlag(SusMaterialFlags.NON_STOICHIOMETRIC)) {
+                Result result = Result.empty();
+                result.markHasStacks();
                 return result;
             }
-            OrePrefix prefix = getPrefix(stack);
-            if (prefix != null) {
-                Material material = prefix.materialType;
-                if (material != null) {
-                    long amount = prefix.getMaterialAmount(material) * stack.getCount();
-                    mergeBounds(result, decomposeMaterial(material, amount));
-                }
-            }
-            return result;
+            Map<Element, Bounds> bounds = decomposeMaterial(material, StoichiometryUtil.getMolesFromFluid(stack.amount, material));
+            return Result.of(bounds, Map.of(), true);
         }
 
-        private Map<Element, Bounds> decomposeFluidStack(FluidStack stack) {
-            Material material = StoichiometryUtil.getMaterialFromFluid(stack);
-            if (material == null) {
-                return Map.of();
-            }
-            return decomposeMaterial(material, stack.amount);
-        }
-
-        private Map<Element, Bounds> decomposeMaterial(Material material, long amount) {
+        private Map<Element, Bounds> decomposeMaterial(Material material, Fraction amount) {
             if (material.hasFlag(SusMaterialFlags.NON_STOICHIOMETRIC)) {
                 return Map.of();
             }
-            return graph.resolve(material, amount);
+            Map<Element, Bounds> resolved = graph.resolve(material, amount);
+            if (!resolved.isEmpty()) {
+                return resolved;
+            }
+            Map<Element, Bounds> inferred = INFERRED_BOUNDS.get(material);
+            if (inferred != null) {
+                Map<Element, Bounds> scaled = new HashMap<>();
+                inferred.forEach((element, bounds) -> scaled.put(element, bounds.scale(amount)));
+                return scaled;
+            }
+            return Map.of();
         }
 
-        private Map<Element, Bounds> combineAlternatives(List<Map<Element, Bounds>> alternatives) {
+        private Result combineAlternatives(List<Result> alternatives) {
             if (alternatives.isEmpty()) {
-                return Map.of();
+                return Result.empty();
             }
             Set<Element> elements = new HashSet<>();
-            for (Map<Element, Bounds> bounds : alternatives) {
-                elements.addAll(bounds.keySet());
+            boolean hasStacks = false;
+            Map<Material, Fraction> unknowns = new HashMap<>();
+            for (Result result : alternatives) {
+                elements.addAll(result.bounds.keySet());
+                mergeUnknowns(unknowns, result.unknowns);
+                hasStacks |= result.hasStacks;
             }
             Map<Element, Bounds> combined = new HashMap<>();
             for (Element element : elements) {
-                long min = Long.MAX_VALUE;
-                long max = Long.MIN_VALUE;
-                for (Map<Element, Bounds> bounds : alternatives) {
-                    Bounds current = bounds.getOrDefault(element, Bounds.zero());
-                    min = Math.min(min, current.min);
-                    max = Math.max(max, current.max);
+                Fraction min = null;
+                Fraction max = null;
+                for (Result result : alternatives) {
+                    Bounds current = result.bounds.getOrDefault(element, Bounds.zero());
+                    if (min == null || current.min.compareTo(min) < 0) {
+                        min = current.min;
+                    }
+                    if (max == null || current.max.compareTo(max) > 0) {
+                        max = current.max;
+                    }
                 }
-                if (min == Long.MAX_VALUE) {
-                    min = 0;
+                if (min == null) {
+                    min = Fraction.ZERO;
                 }
-                if (max == Long.MIN_VALUE) {
-                    max = 0;
+                if (max == null) {
+                    max = Fraction.ZERO;
                 }
                 combined.put(element, new Bounds(min, max));
             }
-            return combined;
+            return Result.of(combined, unknowns, hasStacks);
         }
 
 
 
-        private List<ElementViolation> diff(Map<Element, Bounds> inputs, Map<Element, Bounds> outputs) {
-            Set<Element> elements = new HashSet<>(inputs.keySet());
-            elements.addAll(outputs.keySet());
+        private List<ElementViolation> diff(Aggregation inputs, Aggregation outputs) {
+            Map<Element, Bounds> inputBounds = inputs.bounds();
+            Map<Element, Bounds> outputBounds = outputs.bounds();
+            Set<Element> elements = new HashSet<>(inputBounds.keySet());
+            elements.addAll(outputBounds.keySet());
             List<ElementViolation> violations = new ArrayList<>();
             for (Element element : elements) {
-                Bounds in = inputs.getOrDefault(element, Bounds.zero());
-                Bounds out = outputs.getOrDefault(element, Bounds.zero());
-                if (out.max < in.min) {
-                    if (!lossy) {
+                Bounds in = inputBounds.getOrDefault(element, Bounds.zero());
+                Bounds out = outputBounds.getOrDefault(element, Bounds.zero());
+                if (out.max.compareTo(in.min) < 0) {
+                    boolean allowSink = !outputs.hasStoichiometric() && outputs.hasAnyStacks();
+                    if (!lossy && !allowSink) {
                         violations.add(new ElementViolation(element, in, out));
                     }
-                } else if (out.min > in.max) {
+                } else if (out.min.compareTo(in.max) > 0) {
                     violations.add(new ElementViolation(element, in, out));
                 }
             }
             return violations;
+        }
+
+        private void processUnknowns(Aggregation inputs, Aggregation outputs) {
+            Set<Material> materials = new HashSet<>(inputs.unknowns().keySet());
+            materials.addAll(outputs.unknowns().keySet());
+            if (materials.size() != 1) {
+                return;
+            }
+            Material material = materials.iterator().next();
+            Fraction inAmount = inputs.unknowns().getOrDefault(material, Fraction.ZERO);
+            Fraction outAmount = outputs.unknowns().getOrDefault(material, Fraction.ZERO);
+            Fraction net = outAmount.subtract(inAmount);
+            if (net.equals(Fraction.ZERO)) {
+                return;
+            }
+            if (lossy) {
+                return;
+            }
+
+            boolean resolved = false;
+            Map<Element, Bounds> perUnit;
+            if (net.compareTo(Fraction.ZERO) > 0 && inAmount.equals(Fraction.ZERO)) {
+                perUnit = inferPerUnit(inputs.bounds(), outputs.bounds(), net, material);
+                applyInference(material, perUnit, net, outputs);
+                outputs.unknowns().remove(material);
+                resolved = true;
+            } else if (net.compareTo(Fraction.ZERO) < 0 && outAmount.equals(Fraction.ZERO)) {
+                Fraction consumed = net.negate();
+                perUnit = inferPerUnit(outputs.bounds(), inputs.bounds(), consumed, material);
+                applyInference(material, perUnit, consumed, inputs);
+                inputs.unknowns().remove(material);
+                resolved = true;
+            }
+
+            if (!resolved) {
+                throw new StoichiometryViolationException("Cannot resolve stoichiometry for material " + material.getLocalizedName());
+            }
+        }
+
+        private Map<Element, Bounds> inferPerUnit(Map<Element, Bounds> primary, Map<Element, Bounds> secondary,
+                                                  Fraction amount, Material material) {
+            if (amount.equals(Fraction.ZERO)) {
+                return Map.of();
+            }
+            Map<Element, Bounds> perUnit = new HashMap<>();
+            Fraction reciprocal = reciprocal(amount);
+            Set<Element> elements = new HashSet<>(primary.keySet());
+            elements.addAll(secondary.keySet());
+            Map<Element, Bounds> existing = INFERRED_BOUNDS.get(material);
+            if (existing != null) {
+                elements.addAll(existing.keySet());
+            }
+            for (Element element : elements) {
+                Bounds primaryBounds = primary.getOrDefault(element, Bounds.zero());
+                Bounds secondaryBounds = secondary.getOrDefault(element, Bounds.zero());
+                Bounds rawDelta = Bounds.subtract(primaryBounds, secondaryBounds);
+                if (rawDelta.max.compareTo(Fraction.ZERO) < 0) {
+                    throw new StoichiometryViolationException("Unknown material inference resulted in negative contribution for " + element.getSymbol());
+                }
+                Fraction min = rawDelta.min.compareTo(Fraction.ZERO) < 0 ? Fraction.ZERO : rawDelta.min;
+                Bounds delta = new Bounds(min, rawDelta.max);
+                Bounds perUnitBounds = delta.scale(reciprocal);
+                Bounds stored = existing != null ? existing.get(element) : null;
+                if (stored != null) {
+                    Bounds intersection = stored.intersect(perUnitBounds);
+                    if (intersection == null) {
+                        throw new StoichiometryViolationException("Inconsistent stoichiometry for material " + material.getLocalizedName());
+                    }
+                    perUnitBounds = intersection;
+                }
+                perUnit.put(element, perUnitBounds);
+            }
+            return perUnit;
+        }
+
+        private void applyInference(Material material, Map<Element, Bounds> perUnit, Fraction amount,
+                                    Aggregation target) {
+            if (perUnit.isEmpty()) {
+                return;
+            }
+            storeInferred(material, perUnit);
+            Map<Element, Bounds> scaled = new HashMap<>();
+            perUnit.forEach((element, bounds) -> scaled.put(element, bounds.scale(amount)));
+            mergeBounds(target.bounds(), scaled);
+            target.setStoichiometric();
+        }
+
+        private void storeInferred(Material material, Map<Element, Bounds> perUnit) {
+            Map<Element, Bounds> stored = INFERRED_BOUNDS.computeIfAbsent(material, m -> new HashMap<>());
+            perUnit.forEach((element, bounds) -> {
+                Bounds current = stored.get(element);
+                if (current == null) {
+                    stored.put(element, bounds);
+                } else {
+                    Bounds intersection = current.intersect(bounds);
+                    if (intersection == null) {
+                        throw new StoichiometryViolationException("Inconsistent stoichiometry for material " + material.getLocalizedName());
+                    }
+                    stored.put(element, intersection);
+                }
+            });
+        }
+
+        private static final class Aggregation {
+
+            private final Map<Element, Bounds> bounds;
+            private final Map<Material, Fraction> unknowns;
+            private boolean hasStoichiometric;
+            private boolean hasAnyStacks;
+
+            private Aggregation(Map<Element, Bounds> bounds, Map<Material, Fraction> unknowns,
+                                boolean hasStoichiometric, boolean hasAnyStacks) {
+                this.bounds = bounds;
+                this.unknowns = unknowns;
+                this.hasStoichiometric = hasStoichiometric;
+                this.hasAnyStacks = hasAnyStacks;
+            }
+
+            Map<Element, Bounds> bounds() {
+                return bounds;
+            }
+
+            Map<Material, Fraction> unknowns() {
+                return unknowns;
+            }
+
+            boolean hasStoichiometric() {
+                return hasStoichiometric;
+            }
+
+            void setStoichiometric() {
+                this.hasStoichiometric = true;
+            }
+
+            boolean hasAnyStacks() {
+                return hasAnyStacks;
+            }
+
+            void markHasStacks() {
+                this.hasAnyStacks = true;
+            }
+        }
+
+        private static final class Result {
+
+            private final Map<Element, Bounds> bounds;
+            private final Map<Material, Fraction> unknowns;
+            private boolean hasStacks;
+
+            private Result(Map<Element, Bounds> bounds, Map<Material, Fraction> unknowns, boolean hasStacks) {
+                this.bounds = bounds;
+                this.unknowns = unknowns;
+                this.hasStacks = hasStacks;
+            }
+
+            static Result empty() {
+                return new Result(new HashMap<>(), new HashMap<>(), false);
+            }
+
+            static Result of(Map<Element, Bounds> bounds, Map<Material, Fraction> unknowns, boolean hasStacks) {
+                return new Result(new HashMap<>(bounds), new HashMap<>(unknowns), hasStacks);
+            }
+
+            Map<Element, Bounds> bounds() {
+                return bounds;
+            }
+
+            Map<Material, Fraction> unknowns() {
+                return unknowns;
+            }
+
+            boolean hasBounds() {
+                return !bounds.isEmpty();
+            }
+
+            boolean hasStacks() {
+                return hasStacks;
+            }
+
+            void markHasStacks() {
+                this.hasStacks = true;
+            }
+
+            void merge(Result other) {
+                mergeBounds(this.bounds, other.bounds);
+                mergeUnknowns(this.unknowns, other.unknowns);
+                if (other.hasStacks) {
+                    this.hasStacks = true;
+                }
+            }
         }
 
         private String format(List<ElementViolation> violations) {
@@ -254,21 +625,55 @@ public final class StoichiometryVerifier {
 
     private record ElementViolation(Element element, Bounds input, Bounds output) {}
 
-    private record Bounds(long min, long max) {
+    private record Bounds(Fraction min, Fraction max) {
 
         static Bounds zero() {
-            return new Bounds(0, 0);
+            return new Bounds(Fraction.ZERO, Fraction.ZERO);
+        }
+
+        static Bounds exact(long value) {
+            Fraction fraction = Fraction.getFraction((int) value, 1);
+            return new Bounds(fraction, fraction);
+        }
+
+        static Bounds exact(Fraction value) {
+            return new Bounds(value, value);
         }
 
         static Bounds combine(Bounds a, Bounds b) {
-            return new Bounds(a.min + b.min, a.max + b.max);
+            return new Bounds(a.min.add(b.min), a.max.add(b.max));
+        }
+
+        static Bounds subtract(Bounds left, Bounds right) {
+            return new Bounds(left.min.subtract(right.max), left.max.subtract(right.min));
         }
 
         Bounds scale(long factor) {
-            if (factor == 1) {
+            return scale(Fraction.getFraction((int) factor, 1));
+        }
+
+        Bounds scale(Fraction factor) {
+            if (factor.equals(Fraction.ONE)) {
                 return this;
             }
-            return new Bounds(min * factor, max * factor);
+            return new Bounds(min.multiplyBy(factor), max.multiplyBy(factor));
+        }
+
+        Bounds intersect(Bounds other) {
+            Fraction newMin = greaterOf(this.min, other.min);
+            Fraction newMax = lesserOf(this.max, other.max);
+            if (newMin.compareTo(newMax) > 0) {
+                return null;
+            }
+            return new Bounds(newMin, newMax);
+        }
+
+        private static Fraction greaterOf(Fraction a, Fraction b) {
+            return a.compareTo(b) >= 0 ? a : b;
+        }
+
+        private static Fraction lesserOf(Fraction a, Fraction b) {
+            return a.compareTo(b) <= 0 ? a : b;
         }
     }
 
@@ -289,8 +694,8 @@ public final class StoichiometryVerifier {
             return new MaterialGraph(nodes);
         }
 
-        Map<Element, Bounds> resolve(Material material, long amount) {
-            if (amount <= 0) {
+        Map<Element, Bounds> resolve(Material material, Fraction amount) {
+            if (amount.compareTo(Fraction.ZERO) <= 0) {
                 return Map.of();
             }
             Map<Element, Bounds> perUnit = resolvePerUnit(material, new HashSet<>());
@@ -328,8 +733,9 @@ public final class StoichiometryVerifier {
                     continue;
                 }
                 Map<Element, Bounds> scaled = new HashMap<>();
+                Fraction multiplier = materialAmount(component);
                 childBounds.forEach((element, bounds) ->
-                        scaled.put(element, bounds.scale(component.amount)));
+                        scaled.put(element, bounds.scale(multiplier)));
                 mergeBounds(totals, scaled);
             }
 
@@ -364,18 +770,9 @@ public final class StoichiometryVerifier {
             if (components.isEmpty()) {
                 Element element = material.getElement();
                 if (element == null) return Map.of();
-                return Map.of(element, new Bounds(1, 1));
+                return Map.of(element, Bounds.exact(1));
             }
-            Map<Element, Bounds> bounds = new HashMap<>();
-            for (MaterialStack stack : components) {
-                Material component = stack.material;
-                long amount = stack.amount;
-                Element element = component.getElement();
-                if (element != null) {
-                    bounds.merge(element, new Bounds(amount, amount), Bounds::combine);
-                }
-            }
-            return bounds;
+            return new HashMap<>();
         }
     }
 
@@ -384,7 +781,7 @@ public final class StoichiometryVerifier {
         return manager.getRegisteredMaterials();
     }
 
-    private static class StoichiometryViolationException extends RuntimeException {
+    public static class StoichiometryViolationException extends RuntimeException {
         StoichiometryViolationException(String message) {
             super(message);
         }
