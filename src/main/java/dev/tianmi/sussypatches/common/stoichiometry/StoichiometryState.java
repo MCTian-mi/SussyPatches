@@ -8,175 +8,380 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import java.util.*;
 
+import gregtech.api.unification.Element;
+
 public class StoichiometryState {
 
-    private final Set<Material> unknownMaterials;
-    private final Map<CompositionVariable, ConstraintComponent> variableToComponent;
-    private final List<ConstraintComponent> components;
+    /**
+     * Represents a general constraint template that applies to all elements.
+     * When specialized to a specific element, creates unknown_element variables.
+     */
+    private static class GeneralConstraint {
+        final Map<Material, Fraction> coefficients;  // Only for unknowns
+        final Map<Element, Fraction> elementOverrides;  // Constant term per element
+        final Relationship relationship;
+        final Reaction sourceReaction;
 
-    public StoichiometryState(Set<Material> unknownMaterials) {
-        this.unknownMaterials = new HashSet<>(unknownMaterials);
-        this.variableToComponent = new HashMap<>();
-        this.components = new ArrayList<>();
+        GeneralConstraint(Relationship relationship, Reaction sourceReaction) {
+            this.coefficients = new HashMap<>();
+            this.elementOverrides = new HashMap<>();
+            this.relationship = relationship;
+            this.sourceReaction = sourceReaction;
+        }
     }
 
     /**
-     * Adds a reaction to the verification system. This is the specific line that should
-     * be highlighted when verification fails.
+     * A group of unknowns that share general constraints.
+     * When elements are initialized for the group, all general constraints
+     * are specialized to those elements.
+     */
+    private static class UnknownGroup {
+        final Set<Material> unknowns;
+        final List<GeneralConstraint> generalConstraints;
+        final Set<Element> initializedElements;
+        final List<Reaction> reactions;
+
+        UnknownGroup() {
+            this.unknowns = new HashSet<>();
+            this.generalConstraints = new ArrayList<>();
+            this.initializedElements = new HashSet<>();
+            this.reactions = new ArrayList<>();
+        }
+
+        void addUnknown(Material unknown) {
+            unknowns.add(unknown);
+        }
+
+        void mergeFrom(UnknownGroup other) {
+            unknowns.addAll(other.unknowns);
+            generalConstraints.addAll(other.generalConstraints);
+            initializedElements.addAll(other.initializedElements);
+            reactions.addAll(other.reactions);
+        }
+    }
+
+    /**
+     * Manages constraints for a single element across all unknowns.
+     */
+    private static class PerElementSolver {
+        final Element element;
+        final List<ConstraintComponent> components;
+        final Map<Material, ConstraintComponent> unknownToComponent;
+
+        PerElementSolver(Element element) {
+            this.element = element;
+            this.components = new ArrayList<>();
+            this.unknownToComponent = new HashMap<>();
+        }
+
+        /**
+         * Represents an independent component within this element's constraint system.
+         */
+        static class ConstraintComponent {
+            final Set<Material> unknowns;
+            final Map<Material, Integer> localIndices;
+            final List<LinearConstraint> constraints;
+            int localVariableCount;
+
+            ConstraintComponent() {
+                this.unknowns = new HashSet<>();
+                this.localIndices = new HashMap<>();
+                this.constraints = new ArrayList<>();
+                this.localVariableCount = 0;
+            }
+
+            void addUnknown(Material unknown) {
+                if (!unknowns.contains(unknown)) {
+                    unknowns.add(unknown);
+                    localIndices.put(unknown, localVariableCount++);
+                }
+            }
+        }
+    }
+
+    private final Set<Material> unknownMaterials;
+    private final Map<Element, PerElementSolver> elementSolvers;
+    private final List<UnknownGroup> unknownGroups;
+    private final Map<Material, UnknownGroup> unknownToGroup;
+
+    public StoichiometryState(Set<Material> unknownMaterials) {
+        this.unknownMaterials = new HashSet<>(unknownMaterials);
+        this.elementSolvers = new HashMap<>();
+        this.unknownGroups = new ArrayList<>();
+        this.unknownToGroup = new HashMap<>();
+    }
+
+    /**
+     * Adds a reaction to the verification system.
      *
      * @param reaction The reaction to add
      * @return true if the reaction is feasible, false if it causes infeasibility
      */
     public boolean addReaction(Reaction reaction) {
-        // Step 1: Identify variables needed for this reaction
-        Set<CompositionVariable> reactionVariables = getVariablesForReaction(reaction);
+        // Step 1: Identify unknowns and elements in reaction
+        Set<Material> unknownsInReaction = new HashSet<>();
+        Set<Element> elementsInReaction = new HashSet<>();
 
-        if (reactionVariables.isEmpty()) {
+        for (Material m : reaction.getInputs().keySet()) {
+            if (unknownMaterials.contains(m)) {
+                unknownsInReaction.add(m);
+            } else if (m.getElement() != null) {
+                elementsInReaction.add(m.getElement());
+            }
+        }
+
+        for (Material m : reaction.getOutputs().keySet()) {
+            if (unknownMaterials.contains(m)) {
+                unknownsInReaction.add(m);
+            } else if (m.getElement() != null) {
+                elementsInReaction.add(m.getElement());
+            }
+        }
+
+        if (unknownsInReaction.isEmpty()) {
             return true; // No unknowns involved
         }
 
-        // Step 2: Find which existing components share ANY materials with this reaction
-        // This is critical for detecting cycles through known materials
-        Set<Material> reactionUnknowns = new HashSet<>();
-        reactionUnknowns.addAll(reaction.getInputs().keySet());
-        reactionUnknowns.addAll(reaction.getOutputs().keySet());
-        reactionUnknowns.retainAll(unknownMaterials);
-
-        Set<ConstraintComponent> affectedComponents = new HashSet<>();
-        for (CompositionVariable var : reactionVariables) {
-            ConstraintComponent component = variableToComponent.get(var);
-            if (component != null) {
-                affectedComponents.add(component);
+        // Step 2: Handle unknown grouping
+        Set<UnknownGroup> affectedGroups = new HashSet<>();
+        for (Material unknown : unknownsInReaction) {
+            UnknownGroup group = unknownToGroup.get(unknown);
+            if (group != null) {
+                affectedGroups.add(group);
             }
         }
 
-        // Also check if any existing components share unknowns (not just variables)
-        // This catches cycles like B -> X, X -> Z, Z -> 2B
-        // TODO: merge with last check
-        for (ConstraintComponent comp : new ArrayList<>(components)) {
-            Set<Material> intersection = new HashSet<>(comp.unknowns);
-            intersection.retainAll(reactionUnknowns);
-            if (!intersection.isEmpty()) {
-                affectedComponents.add(comp);
-            }
-        }
-
-        // Step 3: Create or merge components as needed
-        ConstraintComponent targetComponent;
-
-        if (affectedComponents.isEmpty()) {
-            // Create new component
-            targetComponent = new ConstraintComponent(reactionVariables);
-            components.add(targetComponent);
-
-            // Map variables to this component
-            for (CompositionVariable var : reactionVariables) {
-                variableToComponent.put(var, targetComponent);
-            }
-        } else if (affectedComponents.size() == 1) {
-            // Add to existing component
-            targetComponent = affectedComponents.iterator().next();
-
-            // Add any new variables
-            for (CompositionVariable var : reactionVariables) {
-                targetComponent.addVariable(var);
-                variableToComponent.put(var, targetComponent);
-            }
+        UnknownGroup targetGroup;
+        if (affectedGroups.isEmpty()) {
+            targetGroup = new UnknownGroup();
+            unknownGroups.add(targetGroup);
+        } else if (affectedGroups.size() == 1) {
+            targetGroup = affectedGroups.iterator().next();
         } else {
-            // Merge multiple components
-            targetComponent = mergeComponents(affectedComponents, reactionVariables);
+            targetGroup = mergeGroups(affectedGroups);
         }
 
-        // Step 4: Generate constraints for this reaction
-        List<LinearConstraint> newConstraints =
-                createConstraintsForReaction(reaction, targetComponent.variables);
+        // Add unknowns to group
+        for (Material unknown : unknownsInReaction) {
+            targetGroup.addUnknown(unknown);
+            unknownToGroup.put(unknown, targetGroup);
+        }
 
-        targetComponent.constraints.addAll(newConstraints);
-        targetComponent.reactions.add(reaction);
+        targetGroup.reactions.add(reaction);
 
-        // Step 5: Check feasibility of this component
-        if (!isFeasible(targetComponent)) {
-            return false;
+        // Step 3: Create general constraint and element overrides
+        GeneralConstraint generalConstraint = createGeneralConstraint(reaction, unknownsInReaction);
+        targetGroup.generalConstraints.add(generalConstraint);
+
+        // Initialize elements that haven't been initialized yet
+        for (Element element : elementsInReaction) {
+            if (!targetGroup.initializedElements.contains(element)) {
+                initializeElementForGroup(element, targetGroup);
+            }
+        }
+
+        // Apply this constraint to all relevant elements
+        Set<Element> elementsToCheck = new HashSet<>(elementsInReaction);
+        elementsToCheck.addAll(targetGroup.initializedElements);
+
+        for (Element element : elementsToCheck) {
+            if (targetGroup.initializedElements.contains(element)) {
+                if (!addSpecializedConstraint(generalConstraint, element, targetGroup)) {
+                    return false;
+                }
+            }
         }
 
         return true;
     }
 
     /**
-     * Identifies all variables needed for a reaction.
-     * This includes variables connecting unknowns to ALL other materials (including knowns)
-     * to ensure cycles are detected even when they pass through known materials.
+     * Creates a general constraint from a reaction.
      */
-    private Set<CompositionVariable> getVariablesForReaction(Reaction reaction) {
-        Set<CompositionVariable> variables = new HashSet<>();
+    private GeneralConstraint createGeneralConstraint(Reaction reaction, Set<Material> unknownsInReaction) {
+        GeneralConstraint gc = new GeneralConstraint(
+                reaction.isLossy() ? Relationship.LEQ : Relationship.EQ,
+                reaction
+        );
 
+        // Process all materials in the reaction
         Set<Material> allMaterials = new HashSet<>();
         allMaterials.addAll(reaction.getInputs().keySet());
         allMaterials.addAll(reaction.getOutputs().keySet());
 
-        Set<Material> unknownsInReaction = new HashSet<>();
-        for (Material m : allMaterials) {
-            if (unknownMaterials.contains(m)) {
-                unknownsInReaction.add(m);
+        for (Material material : allMaterials) {
+            Fraction outputQty = reaction.getOutputs().getOrDefault(material, Fraction.ZERO);
+            Fraction inputQty = reaction.getInputs().getOrDefault(material, Fraction.ZERO);
+            Fraction netChange = outputQty.subtract(inputQty);
+
+            if (unknownMaterials.contains(material)) {
+                // Unknown: add to coefficients
+                gc.coefficients.put(material, netChange);
+            } else if (material.getElement() != null) {
+                // Known element: add override (negative of net change)
+                gc.elementOverrides.put(material.getElement(), netChange.negate());
             }
         }
 
-        // For each unknown, create variables for ALL other materials in the reaction
-        // This includes known materials, which ensures cycles are detected
-        // For example: B -> X, X -> Z, Z -> 2B forms a cycle through known material B
-        for (Material unknown : unknownsInReaction) {
-            for (Material other : allMaterials) {
-                if (!other.equals(unknown)) {
-                    variables.add(new CompositionVariable(unknown, other));
+        return gc;
+    }
+
+    /**
+     * Initializes an element for a group by creating variables and specializing all constraints.
+     */
+    private void initializeElementForGroup(Element element, UnknownGroup group) {
+        group.initializedElements.add(element);
+
+        // Get or create solver for this element
+        PerElementSolver solver = elementSolvers.get(element);
+        if (solver == null) {
+            solver = new PerElementSolver(element);
+            elementSolvers.put(element, solver);
+        }
+
+        // Create variables for all unknowns in the group
+        for (Material unknown : group.unknowns) {
+            if (!solver.unknownToComponent.containsKey(unknown)) {
+                // Will be added to a component when first constraint is added
+            }
+        }
+
+        // Specialize all existing general constraints to this element
+        for (GeneralConstraint gc : group.generalConstraints) {
+            addSpecializedConstraint(gc, element, group);
+        }
+    }
+
+    /**
+     * Specializes a general constraint to a specific element and adds it to the solver.
+     * Returns false if the constraint causes infeasibility.
+     */
+    private boolean addSpecializedConstraint(GeneralConstraint gc, Element element, UnknownGroup group) {
+        PerElementSolver solver = elementSolvers.get(element);
+        if (solver == null) {
+            return true;
+        }
+
+        // Determine which unknowns are involved
+        Set<Material> involvedUnknowns = new HashSet<>(gc.coefficients.keySet());
+        involvedUnknowns.retainAll(group.unknowns);
+
+        if (involvedUnknowns.isEmpty()) {
+            return true;
+        }
+
+        // Find affected components
+        Set<PerElementSolver.ConstraintComponent> affectedComponents = new HashSet<>();
+        for (Material unknown : involvedUnknowns) {
+            PerElementSolver.ConstraintComponent comp = solver.unknownToComponent.get(unknown);
+            if (comp != null) {
+                affectedComponents.add(comp);
+            }
+        }
+
+        // Get or create target component
+        PerElementSolver.ConstraintComponent targetComponent;
+        if (affectedComponents.isEmpty()) {
+            targetComponent = new PerElementSolver.ConstraintComponent();
+            solver.components.add(targetComponent);
+        } else if (affectedComponents.size() == 1) {
+            targetComponent = affectedComponents.iterator().next();
+        } else {
+            targetComponent = mergeComponents(affectedComponents, solver);
+        }
+
+        // Add unknowns to component
+        for (Material unknown : involvedUnknowns) {
+            targetComponent.addUnknown(unknown);
+            solver.unknownToComponent.put(unknown, targetComponent);
+        }
+
+        // Build the specialized constraint
+        double[] coefficients = new double[targetComponent.localVariableCount];
+        for (Map.Entry<Material, Fraction> entry : gc.coefficients.entrySet()) {
+            Material unknown = entry.getKey();
+            if (involvedUnknowns.contains(unknown)) {
+                Integer index = targetComponent.localIndices.get(unknown);
+                if (index != null) {
+                    coefficients[index] = entry.getValue().doubleValue();
                 }
             }
         }
 
-        return variables;
+        // Get constant term from override (or 0 if no override)
+        Fraction constantTerm = gc.elementOverrides.getOrDefault(element, Fraction.ZERO);
+
+        // Add constraint
+        LinearConstraint constraint = new LinearConstraint(
+                coefficients,
+                gc.relationship,
+                constantTerm.doubleValue()  // Already negated and moved to RHS
+        );
+        targetComponent.constraints.add(constraint);
+
+        // Check feasibility
+        return isComponentFeasible(targetComponent);
     }
 
     /**
-     * Merges multiple components that share variables.
-     * This requires remapping all constraints to a new unified variable indexing.
+     * Merges unknown groups.
      */
-    private ConstraintComponent mergeComponents(
-            Set<ConstraintComponent> componentsToMerge,
-            Set<CompositionVariable> newVariables) {
+    private UnknownGroup mergeGroups(Set<UnknownGroup> groupsToMerge) {
+        UnknownGroup merged = new UnknownGroup();
 
-        ConstraintComponent merged = new ConstraintComponent();
+        for (UnknownGroup group : groupsToMerge) {
+            merged.mergeFrom(group);
 
-        // Step 1: Collect all variables and assign new local indices
-        Set<CompositionVariable> allVars = new HashSet<>(newVariables);
-        for (ConstraintComponent comp : componentsToMerge) {
-            allVars.addAll(comp.variables);
+            // Update mappings
+            for (Material unknown : group.unknowns) {
+                unknownToGroup.put(unknown, merged);
+            }
         }
 
-        for (CompositionVariable var : allVars) {
-            merged.addVariable(var);
+        // Remove old groups and add merged one
+        unknownGroups.removeAll(groupsToMerge);
+        unknownGroups.add(merged);
+
+        return merged;
+    }
+
+    /**
+     * Merges components within an element solver.
+     */
+    private PerElementSolver.ConstraintComponent mergeComponents(
+            Set<PerElementSolver.ConstraintComponent> componentsToMerge,
+            PerElementSolver solver) {
+
+        PerElementSolver.ConstraintComponent merged = new PerElementSolver.ConstraintComponent();
+
+        // Collect all unknowns and assign new indices
+        for (PerElementSolver.ConstraintComponent comp : componentsToMerge) {
+            for (Material unknown : comp.unknowns) {
+                merged.addUnknown(unknown);
+            }
         }
 
-        // Step 2: Remap constraints from each component to the new indexing
-        for (ConstraintComponent comp : componentsToMerge) {
+        // Remap and add constraints
+        for (PerElementSolver.ConstraintComponent comp : componentsToMerge) {
             for (LinearConstraint constraint : comp.constraints) {
                 LinearConstraint remapped = remapConstraint(
                         constraint,
-                        comp.localVariableIndices,
-                        merged.localVariableIndices,
+                        comp.localIndices,
+                        merged.localIndices,
                         merged.localVariableCount
                 );
                 merged.constraints.add(remapped);
             }
-            merged.reactions.addAll(comp.reactions);
         }
 
-        // Update component mappings
-        for (CompositionVariable var : merged.variables) {
-            variableToComponent.put(var, merged);
+        // Update mappings
+        for (Material unknown : merged.unknowns) {
+            solver.unknownToComponent.put(unknown, merged);
         }
 
         // Remove old components and add merged one
-        components.removeAll(componentsToMerge);
-        components.add(merged);
+        solver.components.removeAll(componentsToMerge);
+        solver.components.add(merged);
 
         return merged;
     }
@@ -186,25 +391,25 @@ public class StoichiometryState {
      */
     private LinearConstraint remapConstraint(
             LinearConstraint constraint,
-            Map<CompositionVariable, Integer> oldIndices,
-            Map<CompositionVariable, Integer> newIndices,
+            Map<Material, Integer> oldIndices,
+            Map<Material, Integer> newIndices,
             int newVariableCount) {
 
         double[] oldCoeffs = constraint.getCoefficients().toArray();
         double[] newCoeffs = new double[newVariableCount];
 
-        // Create reverse mapping from old indices to variables
-        Map<Integer, CompositionVariable> oldIndexToVar = new HashMap<>();
-        for (Map.Entry<CompositionVariable, Integer> entry : oldIndices.entrySet()) {
-            oldIndexToVar.put(entry.getValue(), entry.getKey());
+        // Create reverse mapping
+        Map<Integer, Material> oldIndexToMaterial = new HashMap<>();
+        for (Map.Entry<Material, Integer> entry : oldIndices.entrySet()) {
+            oldIndexToMaterial.put(entry.getValue(), entry.getKey());
         }
 
-        // Remap each coefficient
+        // Remap coefficients
         for (int oldIdx = 0; oldIdx < oldCoeffs.length; oldIdx++) {
             if (Math.abs(oldCoeffs[oldIdx]) > 1e-10) {
-                CompositionVariable var = oldIndexToVar.get(oldIdx);
-                if (var != null) {
-                    Integer newIdx = newIndices.get(var);
+                Material material = oldIndexToMaterial.get(oldIdx);
+                if (material != null) {
+                    Integer newIdx = newIndices.get(material);
                     if (newIdx != null) {
                         newCoeffs[newIdx] = oldCoeffs[oldIdx];
                     }
@@ -220,152 +425,32 @@ public class StoichiometryState {
     }
 
     /**
-     * Creates constraints for a single reaction using the component's local variable indexing.
+     * Checks if a component is feasible.
      */
-    private List<LinearConstraint> createConstraintsForReaction(
-            Reaction reaction,
-            Set<CompositionVariable> componentVariables) {
-
-        List<LinearConstraint> constraints = new ArrayList<>();
-
-        // Get the component to access its local indexing
-        ConstraintComponent component = null;
-        for (CompositionVariable var : componentVariables) {
-            component = variableToComponent.get(var);
-            if (component != null) break;
-        }
-
-        if (component == null) {
-            return constraints;
-        }
-
-        int localVarCount = component.localVariableCount;
-        Map<CompositionVariable, Integer> localIndices = component.localVariableIndices;
-
-        // Collect all materials in the reaction
-        Set<Material> allMaterials = new HashSet<>();
-        allMaterials.addAll(reaction.getInputs().keySet());
-        allMaterials.addAll(reaction.getOutputs().keySet());
-
-        Set<Material> unknownsInReaction = new HashSet<>();
-        for (Material m : allMaterials) {
-            if (unknownMaterials.contains(m)) {
-                unknownsInReaction.add(m);
-            }
-        }
-
-        // Get unknowns in the input and output
-        Set<Material> unknownsInInput = new HashSet<>();
-        Set<Material> unknownsInOutput = new HashSet<>();
-        for (Material m : reaction.getInputs().keySet()) {
-            if (unknownMaterials.contains(m)) {
-                unknownsInInput.add(m);
-            }
-        }
-        for (Material m : reaction.getOutputs().keySet()) {
-            if (unknownMaterials.contains(m)) {
-                unknownsInOutput.add(m);
-            }
-        }
-
-        // For each material that appears in the reaction
-        for (Material material : allMaterials) {
-            if ((unknownsInInput.contains(material) && unknownsInOutput.isEmpty()) ||
-                    (unknownsInOutput.contains(material) && unknownsInInput.isEmpty())) {
-                continue; // Unknowns won't be produced from anything if they're only on one side
-            }
-
-            // Calculate net change: outputs - inputs
-            Fraction outputQty = reaction.getOutputs().getOrDefault(material, Fraction.ZERO);
-            Fraction inputQty = reaction.getInputs().getOrDefault(material, Fraction.ZERO);
-
-            // Build constraint for this material using local variable indexing
-            double[] coefficients = new double[localVarCount];
-            double constantTerm = 0;
-
-            // Add contributions from unknowns
-            for (Material unknown : unknownsInReaction) {
-                if (unknown.equals(material)) {
-                    continue; // Skip self-reference
-                }
-                if (unknownsInInput.contains(material) && unknownsInInput.contains(unknown)) {
-                    continue;
-                }
-                if (unknownsInOutput.contains(material) && unknownsInOutput.contains(unknown)) {
-                    continue;
-                }
-
-                CompositionVariable var = new CompositionVariable(unknown, material);
-                Integer varIndex = localIndices.get(var);
-
-                if (varIndex != null) {
-                    Fraction unknownQtyIn = reaction.getInputs().getOrDefault(unknown, Fraction.ZERO);
-                    Fraction unknownQtyOut = reaction.getOutputs().getOrDefault(unknown, Fraction.ZERO);
-
-                    // Net coefficient: output usage - input usage
-                    coefficients[varIndex] = unknownQtyOut.subtract(unknownQtyIn).doubleValue();
-                }
-            }
-
-            // Constant term from known quantities
-            constantTerm = outputQty.subtract(inputQty).doubleValue();
-
-            // Check if this constraint is non-trivial
-            boolean hasNonZeroCoeff = false;
-            for (double coeff : coefficients) {
-                if (Math.abs(coeff) > 1e-10) {
-                    hasNonZeroCoeff = true;
-                    break;
-                }
-            }
-
-            if (!hasNonZeroCoeff && Math.abs(constantTerm) < 1e-10) {
-                continue; // Trivial constraint
-            }
-
-            // Create the constraint based on reaction type
-            Relationship relationship = reaction.isLossy() ?
-                    Relationship.LEQ : Relationship.EQ;
-
-            constraints.add(new LinearConstraint(coefficients, relationship, -constantTerm));
-        }
-
-        return constraints;
-    }
-    /**
-     * Checks if a component's constraint set is feasible.
-     */
-    private boolean isFeasible(ConstraintComponent component) {
+    private boolean isComponentFeasible(PerElementSolver.ConstraintComponent component) {
         if (component.constraints.isEmpty()) {
             return true;
         }
 
-        int localVarCount = component.localVariableCount;
-
-        // Add non-negativity constraints for all variables in this component
+        // Add non-negativity constraints
         List<LinearConstraint> allConstraints = new ArrayList<>(component.constraints);
-        for (CompositionVariable var : component.variables) {
-            Integer index = component.localVariableIndices.get(var);
+        for (Material unknown : component.unknowns) {
+            Integer index = component.localIndices.get(unknown);
             if (index != null) {
-                double[] coeffs = new double[localVarCount];
+                double[] coeffs = new double[component.localVariableCount];
                 coeffs[index] = 1.0;
                 allConstraints.add(new LinearConstraint(coeffs, Relationship.GEQ, 0));
             }
         }
 
         try {
-            // Use a dummy objective function (minimize sum of component variables)
-            double[] objectiveCoeffs = new double[localVarCount];
-            for (CompositionVariable var : component.variables) {
-                Integer index = component.localVariableIndices.get(var);
-                if (index != null) {
-                    objectiveCoeffs[index] = 1.0;
-                }
-            }
+            // Dummy objective: minimize sum of variables
+            double[] objectiveCoeffs = new double[component.localVariableCount];
+            Arrays.fill(objectiveCoeffs, 1.0);
 
             LinearObjectiveFunction objective = new LinearObjectiveFunction(objectiveCoeffs, 0);
-
             SimplexSolver solver = new SimplexSolver();
+
             PointValuePair solution = solver.optimize(
                     objective,
                     new LinearConstraintSet(allConstraints),
@@ -377,65 +462,66 @@ public class StoichiometryState {
         } catch (NoFeasibleSolutionException e) {
             return false;
         } catch (Exception e) {
-            // Other exceptions may indicate infeasibility or unboundedness
             return false;
         }
     }
 
     /**
-     * Returns the current state for debugging.
+     * Returns verification state for debugging.
      */
     public VerificationState getState() {
+        int totalComponents = 0;
         int totalVariables = 0;
-        for (ConstraintComponent comp : components) {
-            totalVariables += comp.localVariableCount;
+        int totalConstraints = 0;
+
+        for (PerElementSolver solver : elementSolvers.values()) {
+            totalComponents += solver.components.size();
+            for (PerElementSolver.ConstraintComponent comp : solver.components) {
+                totalVariables += comp.localVariableCount;
+                totalConstraints += comp.constraints.size();
+            }
         }
 
         return new VerificationState(
-                components.size(),
+                unknownGroups.size(),
+                elementSolvers.size(),
+                totalComponents,
                 totalVariables,
-                getTotalConstraintCount()
+                totalConstraints
         );
     }
 
-    private int getTotalConstraintCount() {
-        int count = 0;
-        for (ConstraintComponent comp : components) {
-            count += comp.constraints.size();
-        }
-        return count;
-    }
-
     /**
-     * State information for debugging.
+     * Debugging state information.
      */
     public static class VerificationState {
+        private final int groupCount;
+        private final int elementCount;
         private final int componentCount;
         private final int variableCount;
         private final int constraintCount;
 
-        public VerificationState(int componentCount, int variableCount, int constraintCount) {
+        public VerificationState(int groupCount, int elementCount, int componentCount,
+                                 int variableCount, int constraintCount) {
+            this.groupCount = groupCount;
+            this.elementCount = elementCount;
             this.componentCount = componentCount;
             this.variableCount = variableCount;
             this.constraintCount = constraintCount;
         }
 
-        public int getComponentCount() {
-            return componentCount;
-        }
-
-        public int getVariableCount() {
-            return variableCount;
-        }
-
-        public int getConstraintCount() {
-            return constraintCount;
-        }
+        public int getGroupCount() { return groupCount; }
+        public int getElementCount() { return elementCount; }
+        public int getComponentCount() { return componentCount; }
+        public int getVariableCount() { return variableCount; }
+        public int getConstraintCount() { return constraintCount; }
 
         @Override
         public String toString() {
-            return String.format("Components: %d, Variables: %d, Constraints: %d",
-                    componentCount, variableCount, constraintCount);
+            return String.format(
+                    "Groups: %d, Elements: %d, Components: %d, Variables: %d, Constraints: %d",
+                    groupCount, elementCount, componentCount, variableCount, constraintCount
+            );
         }
     }
 }

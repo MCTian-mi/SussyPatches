@@ -60,29 +60,31 @@ public class StoichiometryStateTest {
 
         Reaction reaction = new Reaction(inputs, outputs, true, "Example Reaction");
 
-        Set<Material> unknowns = new HashSet<>(Arrays.asList(Materials.Creosote, Materials.BacterialSludge));
+        Set<Material> unknowns = new HashSet<>(Arrays.asList(Materials.Creosote, Materials.BacterialSludge, Materials.DarkAsh));
         StoichiometryState verifier = new StoichiometryState(unknowns);
 
         Assertions.assertTrue(verifier.addReaction(reaction));
 
         // Reaction using different materials
         Map<Material, Fraction> inputs2 = new HashMap<>();
-        inputs2.put(Materials.BacterialSludge, new Fraction(1));
-
         Map<Material, Fraction> outputs2 = new HashMap<>();
-        outputs2.put(Materials.Aluminium, new Fraction(2));
-        outputs2.put(Materials.Dysprosium, new Fraction(1));
+
+        outputs2.put(Materials.DarkAsh, new Fraction(1));
+
+        inputs2.put(Materials.Fluorine, new Fraction(2));
+        inputs2.put(Materials.Hydrogen, new Fraction(1));
 
         Reaction reaction2 = new Reaction(inputs2, outputs2, true, "Example Reaction");
 
         Assertions.assertTrue(verifier.addReaction(reaction2));
 
-        Assertions.assertEquals(2, verifier.getState().getComponentCount());
+        Assertions.assertEquals(2, verifier.getState().getGroupCount());
+        Assertions.assertEquals(6, verifier.getState().getVariableCount());
 
         // Reaction connecting it all together
         Map<Material, Fraction> inputs3 = new HashMap<>();
-        inputs3.put(Materials.Aluminium, new Fraction(2));
-        inputs3.put(Materials.BacterialSludge, new Fraction(4));
+        inputs3.put(Materials.Fluorine, new Fraction(2));
+        inputs3.put(Materials.DarkAsh, new Fraction(4));
 
         Map<Material, Fraction> outputs3 = new HashMap<>();
         outputs3.put(Materials.Creosote, new Fraction(2));
@@ -90,7 +92,8 @@ public class StoichiometryStateTest {
         Reaction reaction3 = new Reaction(inputs3, outputs3, true, "Example Reaction");
 
         Assertions.assertTrue(verifier.addReaction(reaction3));
-        Assertions.assertEquals(1, verifier.getState().getComponentCount());
+        Assertions.assertEquals(1, verifier.getState().getGroupCount());
+        //Assertions.assertEquals(12, verifier.getState().getVariableCount());
     }
 
     @Test

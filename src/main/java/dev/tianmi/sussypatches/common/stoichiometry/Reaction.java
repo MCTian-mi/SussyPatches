@@ -14,7 +14,7 @@ public class Reaction {
     private final Map<Material, Fraction> inputs;
     private final Map<Material, Fraction> outputs;
     private final boolean isLossy;
-    private final String name; // For debugging
+    private final String name;
 
     public Reaction(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs,
                     boolean isLossy, String name) {
