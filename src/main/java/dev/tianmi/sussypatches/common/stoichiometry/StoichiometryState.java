@@ -1,14 +1,14 @@
 package dev.tianmi.sussypatches.common.stoichiometry;
 
+import dev.tianmi.sussypatches.common.stoichiometry.Reaction;
 import gregtech.api.unification.material.Material;
+import gregtech.api.unification.Element;
 import org.apache.commons.math3.fraction.Fraction;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.*;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import java.util.*;
-
-import gregtech.api.unification.Element;
 
 public class StoichiometryState {
 
@@ -173,21 +173,33 @@ public class StoichiometryState {
         GeneralConstraint generalConstraint = createGeneralConstraint(reaction, unknownsInReaction);
         targetGroup.generalConstraints.add(generalConstraint);
 
-        // Initialize elements that haven't been initialized yet
+        // Initialize elements that haven't been initialized yet for this group
+        Set<Element> newlyInitializedElements = new HashSet<>();
         for (Element element : elementsInReaction) {
             if (!targetGroup.initializedElements.contains(element)) {
                 initializeElementForGroup(element, targetGroup);
+                newlyInitializedElements.add(element);
             }
         }
 
-        // Apply this constraint to all relevant elements
-        Set<Element> elementsToCheck = new HashSet<>(elementsInReaction);
-        elementsToCheck.addAll(targetGroup.initializedElements);
-
-        for (Element element : elementsToCheck) {
-            if (targetGroup.initializedElements.contains(element)) {
+        // Apply this new constraint only to initialized elements
+        // (Newly initialized elements already got all constraints via initializeElementForGroup)
+        for (Element element : targetGroup.initializedElements) {
+            if (!newlyInitializedElements.contains(element)) {
                 if (!addSpecializedConstraint(generalConstraint, element, targetGroup)) {
                     return false;
+                }
+            }
+        }
+
+        // For newly initialized elements, check feasibility
+        for (Element element : newlyInitializedElements) {
+            PerElementSolver solver = elementSolvers.get(element);
+            if (solver != null) {
+                for (PerElementSolver.ConstraintComponent comp : solver.components) {
+                    if (!isComponentFeasible(comp)) {
+                        return false;
+                    }
                 }
             }
         }
@@ -324,17 +336,41 @@ public class StoichiometryState {
     }
 
     /**
-     * Merges unknown groups.
+     * Merges unknown groups and cross-specializes constraints.
      */
     private UnknownGroup mergeGroups(Set<UnknownGroup> groupsToMerge) {
         UnknownGroup merged = new UnknownGroup();
 
-        for (UnknownGroup group : groupsToMerge) {
+        // Collect all groups' data
+        List<UnknownGroup> groupList = new ArrayList<>(groupsToMerge);
+        for (UnknownGroup group : groupList) {
             merged.mergeFrom(group);
 
             // Update mappings
             for (Material unknown : group.unknowns) {
                 unknownToGroup.put(unknown, merged);
+            }
+        }
+
+        // Cross-specialize: apply each group's general constraints to other groups' elements
+        for (int i = 0; i < groupList.size(); i++) {
+            UnknownGroup groupI = groupList.get(i);
+
+            for (int j = 0; j < groupList.size(); j++) {
+                if (i == j) continue;
+
+                UnknownGroup groupJ = groupList.get(j);
+
+                // For each element initialized in group J but not in group I
+                Set<Element> elementsToSpecialize = new HashSet<>(groupJ.initializedElements);
+                elementsToSpecialize.removeAll(groupI.initializedElements);
+
+                // Specialize group I's constraints to these elements
+                for (Element element : elementsToSpecialize) {
+                    for (GeneralConstraint gc : groupI.generalConstraints) {
+                        addSpecializedConstraint(gc, element, merged);
+                    }
+                }
             }
         }
 
