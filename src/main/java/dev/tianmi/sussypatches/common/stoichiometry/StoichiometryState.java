@@ -1,6 +1,5 @@
 package dev.tianmi.sussypatches.common.stoichiometry;
 
-import dev.tianmi.sussypatches.common.stoichiometry.Reaction;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.Element;
 import org.apache.commons.math3.fraction.Fraction;
@@ -177,8 +176,10 @@ public class StoichiometryState {
         Set<Element> newlyInitializedElements = new HashSet<>();
         for (Element element : elementsInReaction) {
             if (!targetGroup.initializedElements.contains(element)) {
-                initializeElementForGroup(element, targetGroup);
                 newlyInitializedElements.add(element);
+                if (!initializeElementForGroup(element, targetGroup)) {
+                    return false;
+                }
             }
         }
 
@@ -188,18 +189,6 @@ public class StoichiometryState {
             if (!newlyInitializedElements.contains(element)) {
                 if (!addSpecializedConstraint(generalConstraint, element, targetGroup)) {
                     return false;
-                }
-            }
-        }
-
-        // For newly initialized elements, check feasibility
-        for (Element element : newlyInitializedElements) {
-            PerElementSolver solver = elementSolvers.get(element);
-            if (solver != null) {
-                for (PerElementSolver.ConstraintComponent comp : solver.components) {
-                    if (!isComponentFeasible(comp)) {
-                        return false;
-                    }
                 }
             }
         }
@@ -241,7 +230,7 @@ public class StoichiometryState {
     /**
      * Initializes an element for a group by creating variables and specializing all constraints.
      */
-    private void initializeElementForGroup(Element element, UnknownGroup group) {
+    private boolean initializeElementForGroup(Element element, UnknownGroup group) {
         group.initializedElements.add(element);
 
         // Get or create solver for this element
@@ -260,8 +249,11 @@ public class StoichiometryState {
 
         // Specialize all existing general constraints to this element
         for (GeneralConstraint gc : group.generalConstraints) {
-            addSpecializedConstraint(gc, element, group);
+            if (!addSpecializedConstraint(gc, element, group)) {
+                return false;
+            }
         }
+        return true;
     }
 
     /**
