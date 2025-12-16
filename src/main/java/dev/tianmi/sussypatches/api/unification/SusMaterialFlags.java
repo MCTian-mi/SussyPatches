@@ -10,6 +10,4 @@ public final class SusMaterialFlags {
      * Marks materials whose composition cannot exactly be represented by stoichiometry (e.g. wastewater).
      */
     public static final MaterialFlag NON_STOICHIOMETRIC = new MaterialFlag.Builder("non_stoichiometric").build();
-
-    public static final MaterialFlag SINGLE_ITEM_MOLE = new MaterialFlag.Builder("single_item_mole").build();
 }

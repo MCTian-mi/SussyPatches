@@ -2,14 +2,15 @@ package dev.tianmi.sussypatches.common.stoichiometry;
 
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.Element;
+import org.apache.commons.math3.exception.TooManyIterationsException;
 import org.apache.commons.math3.fraction.Fraction;
-import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.*;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import java.util.*;
 
 public class StoichiometryState {
+
 
     /**
      * Represents a general constraint template that applies to all elements.
@@ -19,13 +20,11 @@ public class StoichiometryState {
         final Map<Material, Fraction> coefficients;  // Only for unknowns
         final Map<Element, Fraction> elementOverrides;  // Constant term per element
         final Relationship relationship;
-        final Reaction sourceReaction;
 
-        GeneralConstraint(Relationship relationship, Reaction sourceReaction) {
+        GeneralConstraint(Relationship relationship) {
             this.coefficients = new HashMap<>();
             this.elementOverrides = new HashMap<>();
             this.relationship = relationship;
-            this.sourceReaction = sourceReaction;
         }
     }
 
@@ -38,13 +37,11 @@ public class StoichiometryState {
         final Set<Material> unknowns;
         final List<GeneralConstraint> generalConstraints;
         final Set<Element> initializedElements;
-        final List<Reaction> reactions;
 
         UnknownGroup() {
             this.unknowns = new HashSet<>();
             this.generalConstraints = new ArrayList<>();
             this.initializedElements = new HashSet<>();
-            this.reactions = new ArrayList<>();
         }
 
         void addUnknown(Material unknown) {
@@ -55,7 +52,6 @@ public class StoichiometryState {
             unknowns.addAll(other.unknowns);
             generalConstraints.addAll(other.generalConstraints);
             initializedElements.addAll(other.initializedElements);
-            reactions.addAll(other.reactions);
         }
     }
 
@@ -98,13 +94,11 @@ public class StoichiometryState {
         }
     }
 
-    private final Set<Material> unknownMaterials;
     private final Map<Element, PerElementSolver> elementSolvers;
     private final List<UnknownGroup> unknownGroups;
     private final Map<Material, UnknownGroup> unknownToGroup;
 
-    public StoichiometryState(Set<Material> unknownMaterials) {
-        this.unknownMaterials = new HashSet<>(unknownMaterials);
+    public StoichiometryState() {
         this.elementSolvers = new HashMap<>();
         this.unknownGroups = new ArrayList<>();
         this.unknownToGroup = new HashMap<>();
@@ -113,32 +107,31 @@ public class StoichiometryState {
     /**
      * Adds a reaction to the verification system.
      *
-     * @param reaction The reaction to add
-     * @return true if the reaction is feasible, false if it causes infeasibility
+     * @return false if a reaction has no unknowns, true if it does, and throws an error if it doesn't work.
      */
-    public boolean addReaction(Reaction reaction) {
+    public boolean addReaction(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs, boolean lossy) throws StoichiometryViolationException {
         // Step 1: Identify unknowns and elements in reaction
         Set<Material> unknownsInReaction = new HashSet<>();
         Set<Element> elementsInReaction = new HashSet<>();
 
-        for (Material m : reaction.getInputs().keySet()) {
-            if (unknownMaterials.contains(m)) {
+        for (Material m : inputs.keySet()) {
+            if (!m.isElement()) {
                 unknownsInReaction.add(m);
-            } else if (m.getElement() != null) {
+            } else {
                 elementsInReaction.add(m.getElement());
             }
         }
 
-        for (Material m : reaction.getOutputs().keySet()) {
-            if (unknownMaterials.contains(m)) {
+        for (Material m : outputs.keySet()) {
+            if (!m.isElement()) {
                 unknownsInReaction.add(m);
-            } else if (m.getElement() != null) {
+            } else {
                 elementsInReaction.add(m.getElement());
             }
         }
 
         if (unknownsInReaction.isEmpty()) {
-            return true; // No unknowns involved
+            return false; // No unknowns involved
         }
 
         // Step 2: Handle unknown grouping
@@ -166,10 +159,9 @@ public class StoichiometryState {
             unknownToGroup.put(unknown, targetGroup);
         }
 
-        targetGroup.reactions.add(reaction);
 
         // Step 3: Create general constraint and element overrides
-        GeneralConstraint generalConstraint = createGeneralConstraint(reaction, unknownsInReaction);
+        GeneralConstraint generalConstraint = createGeneralConstraint(inputs, outputs, lossy);
         targetGroup.generalConstraints.add(generalConstraint);
 
         // Initialize elements that haven't been initialized yet for this group
@@ -177,9 +169,7 @@ public class StoichiometryState {
         for (Element element : elementsInReaction) {
             if (!targetGroup.initializedElements.contains(element)) {
                 newlyInitializedElements.add(element);
-                if (!initializeElementForGroup(element, targetGroup)) {
-                    return false;
-                }
+                initializeElementForGroup(element, targetGroup);
             }
         }
 
@@ -187,9 +177,7 @@ public class StoichiometryState {
         // (Newly initialized elements already got all constraints via initializeElementForGroup)
         for (Element element : targetGroup.initializedElements) {
             if (!newlyInitializedElements.contains(element)) {
-                if (!addSpecializedConstraint(generalConstraint, element, targetGroup)) {
-                    return false;
-                }
+                addSpecializedConstraint(generalConstraint, element, targetGroup);
             }
         }
 
@@ -199,23 +187,22 @@ public class StoichiometryState {
     /**
      * Creates a general constraint from a reaction.
      */
-    private GeneralConstraint createGeneralConstraint(Reaction reaction, Set<Material> unknownsInReaction) {
+    private GeneralConstraint createGeneralConstraint(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs, boolean lossy) {
         GeneralConstraint gc = new GeneralConstraint(
-                reaction.isLossy() ? Relationship.LEQ : Relationship.EQ,
-                reaction
+                lossy ? Relationship.LEQ : Relationship.EQ
         );
 
         // Process all materials in the reaction
         Set<Material> allMaterials = new HashSet<>();
-        allMaterials.addAll(reaction.getInputs().keySet());
-        allMaterials.addAll(reaction.getOutputs().keySet());
+        allMaterials.addAll(inputs.keySet());
+        allMaterials.addAll(outputs.keySet());
 
         for (Material material : allMaterials) {
-            Fraction outputQty = reaction.getOutputs().getOrDefault(material, Fraction.ZERO);
-            Fraction inputQty = reaction.getInputs().getOrDefault(material, Fraction.ZERO);
+            Fraction outputQty = outputs.getOrDefault(material, Fraction.ZERO);
+            Fraction inputQty = inputs.getOrDefault(material, Fraction.ZERO);
             Fraction netChange = outputQty.subtract(inputQty);
 
-            if (unknownMaterials.contains(material)) {
+            if (!material.isElement()) {
                 // Unknown: add to coefficients
                 gc.coefficients.put(material, netChange);
             } else if (material.getElement() != null) {
@@ -230,7 +217,7 @@ public class StoichiometryState {
     /**
      * Initializes an element for a group by creating variables and specializing all constraints.
      */
-    private boolean initializeElementForGroup(Element element, UnknownGroup group) {
+    private void initializeElementForGroup(Element element, UnknownGroup group) {
         group.initializedElements.add(element);
 
         // Get or create solver for this element
@@ -240,30 +227,20 @@ public class StoichiometryState {
             elementSolvers.put(element, solver);
         }
 
-        // Create variables for all unknowns in the group
-        for (Material unknown : group.unknowns) {
-            if (!solver.unknownToComponent.containsKey(unknown)) {
-                // Will be added to a component when first constraint is added
-            }
-        }
-
         // Specialize all existing general constraints to this element
         for (GeneralConstraint gc : group.generalConstraints) {
-            if (!addSpecializedConstraint(gc, element, group)) {
-                return false;
-            }
+            addSpecializedConstraint(gc, element, group);
         }
-        return true;
     }
 
     /**
      * Specializes a general constraint to a specific element and adds it to the solver.
-     * Returns false if the constraint causes infeasibility.
+     * Errors if the constraint causes infeasibility.
      */
-    private boolean addSpecializedConstraint(GeneralConstraint gc, Element element, UnknownGroup group) {
+    private void addSpecializedConstraint(GeneralConstraint gc, Element element, UnknownGroup group) {
         PerElementSolver solver = elementSolvers.get(element);
         if (solver == null) {
-            return true;
+            return;
         }
 
         // Determine which unknowns are involved
@@ -271,7 +248,7 @@ public class StoichiometryState {
         involvedUnknowns.retainAll(group.unknowns);
 
         if (involvedUnknowns.isEmpty()) {
-            return true;
+            return;
         }
 
         // Find affected components
@@ -324,7 +301,7 @@ public class StoichiometryState {
         targetComponent.constraints.add(constraint);
 
         // Check feasibility
-        return isComponentFeasible(targetComponent);
+        checkFeasibility(targetComponent, element);
     }
 
     /**
@@ -455,9 +432,9 @@ public class StoichiometryState {
     /**
      * Checks if a component is feasible.
      */
-    private boolean isComponentFeasible(PerElementSolver.ConstraintComponent component) {
+    private void checkFeasibility(PerElementSolver.ConstraintComponent component, Element element) {
         if (component.constraints.isEmpty()) {
-            return true;
+            return;
         }
 
         // Add non-negativity constraints
@@ -479,19 +456,81 @@ public class StoichiometryState {
             LinearObjectiveFunction objective = new LinearObjectiveFunction(objectiveCoeffs, 0);
             SimplexSolver solver = new SimplexSolver();
 
-            PointValuePair solution = solver.optimize(
+            solver.optimize(
                     objective,
                     new LinearConstraintSet(allConstraints),
                     GoalType.MINIMIZE,
                     new NonNegativeConstraint(true)
             );
-
-            return solution != null;
         } catch (NoFeasibleSolutionException e) {
-            return false;
-        } catch (Exception e) {
-            return false;
+            StringBuilder msg = new StringBuilder("No feasible solution found for unknown materials in element " + element.getSymbol());
+            msg.append("\nLocal constraints (all greater than 0):");
+            // Display all linear constraints
+            for (LinearConstraint constraint : allConstraints) {
+                if (constraint.getRelationship() == Relationship.GEQ) {
+                    continue; // Don't use non-negativity constraints
+                }
+                msg.append("\n").append(formatConstraint(constraint, element));
+            }
+            // Display index information in order
+            msg.append("\nCoefficient labels:");
+            // Reverse the index map:
+            Material[] unknowns = new Material[component.localVariableCount];
+            for (Map.Entry<Material, Integer> entry : component.localIndices.entrySet()) {
+                unknowns[entry.getValue()] = entry.getKey();
+            }
+            for (int i = 0; i < component.localVariableCount; i++) {
+                msg.append("\n").append((char) ('a' + i)).append(": ").append(unknowns[i]);
+            }
+            msg.append("\nUse this information to find the other offending lines. The latest constraint will now be removed");
+            allConstraints.remove(allConstraints.size() - 1);
+            throw new StoichiometryViolationException(msg.toString());
+        } catch (TooManyIterationsException e) {
+            throw new StoichiometryViolationException("Too many iterations :(");
         }
+    }
+
+    private String formatConstraint(LinearConstraint constraint, Element element) {
+        StringBuilder left = new StringBuilder();
+        StringBuilder right = new StringBuilder();
+
+        double[] coeffs = constraint.getCoefficients().toArray();
+        for (int i = 0; i < coeffs.length; i++) {
+            double coeff = coeffs[i];
+            if (coeff > 0) {
+                right.append(coeff).append((char) ('a' + i)).append(" + ");
+            } else if (coeff < 0) {
+                left.append(-coeff).append((char) ('a' + i)).append(" + ");
+            }
+        }
+        if (constraint.getValue() < 0) {
+            right.append(-constraint.getValue()).append(element.getSymbol()).append(" + ");
+        } else if (constraint.getValue() > 0) {
+            left.append(constraint.getValue()).append(element.getSymbol()).append(" + ");
+        }
+        // Both now have to have " + " at the end if they're not empty
+        if (!right.isEmpty()) {
+            right.delete(right.length() - 2, right.length());
+        }
+        if (!left.isEmpty()) {
+            left.delete(left.length() - 2, left.length());
+        }
+
+        if (right.isEmpty()) {
+            right.append("nothing ");
+        }
+        if (left.isEmpty()) {
+            left.append("nothing ");
+        }
+        return left.toString() +
+                constraint.getRelationship().oppositeRelationship() + " " + // <= -> >=
+                right.toString();
+    }
+
+    public void clear() {
+        this.elementSolvers.clear();
+        this.unknownGroups.clear();
+        this.unknownToGroup.clear();
     }
 
     /**

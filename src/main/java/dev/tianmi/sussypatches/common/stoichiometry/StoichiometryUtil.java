@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import org.apache.commons.lang3.math.Fraction;
+import org.apache.commons.math3.fraction.Fraction;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -108,13 +108,13 @@ public final class StoichiometryUtil {
     }
 
     public static Fraction getItemsPerMole(Material material) {
-        if (material.isElement() || material.hasFlag(SusMaterialFlags.SINGLE_ITEM_MOLE) || material.getMaterialComponents().isEmpty()) {
-            return Fraction.getFraction(1);
+        if (material.isElement() || material.getMaterialComponents().isEmpty()) {
+            return Fraction.ONE;
         }
         if (material.hasProperty(MolarProperty.MOLAR)) {
             return material.getProperty(MolarProperty.MOLAR).itemToMole;
         }
-        return Fraction.getFraction(getItemsPerMoleRecurse(material));
+        return new Fraction(getItemsPerMoleRecurse(material));
     }
 
     private static int getItemsPerMoleRecurse(Material material) {
@@ -141,17 +141,17 @@ public final class StoichiometryUtil {
             return material.getProperty(MolarProperty.MOLAR).fluidToMole;
         }
         if (material.hasProperty(PropertyKey.DUST)) {
-            return getItemsPerMole(material).multiplyBy(Fraction.getFraction(GTValues.L));
+            return getItemsPerMole(material).multiply(new Fraction(GTValues.L));
         }
-        return Fraction.getFraction(1000);
+        return new Fraction(1000);
     }
 
     public static Fraction getMolesFromFluid(int amount, Material mat) {
-        return Fraction.getFraction(amount).divideBy(getFluidPerMole(mat));
+        return new Fraction(amount).divide(getFluidPerMole(mat));
     }
 
-    public static Fraction getMolesFromItem(int amount, Material mat) {
-        return Fraction.getFraction(amount).divideBy(getItemsPerMole(mat));
+    public static Fraction getMolesFromItem(Fraction amount, Material mat) {
+        return amount.divide(getItemsPerMole(mat));
     }
 
 }

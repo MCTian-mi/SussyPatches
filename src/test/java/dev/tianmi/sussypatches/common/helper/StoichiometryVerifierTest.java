@@ -8,8 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Field;
 
+import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryState;
 import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryUtil;
 import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryVerifier;
+import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryViolationException;
 import gregtech.api.GTValues;
 import net.minecraftforge.fml.common.*;
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +35,7 @@ public class StoichiometryVerifierTest {
     void resetConfig() {
         SusConfig.DEBUG.stoichiometryRecipeMaps = new String[]{TEST_MAP_NAME};
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
+        StoichiometryVerifier.stoichiometryState.clear();
     }
 
     @Test
@@ -72,7 +75,7 @@ public class StoichiometryVerifierTest {
                 .fluidInputs(Oxygen.getFluid(1000))
                 .fluidOutputs(Hydrogen.getFluid(1000));
 
-        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
+        assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
     @Test
@@ -125,7 +128,7 @@ public class StoichiometryVerifierTest {
 
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
-        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
+        assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
     @Test
@@ -161,7 +164,7 @@ public class StoichiometryVerifierTest {
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
-        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
+        assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
     }
 
     @Test
@@ -184,7 +187,7 @@ public class StoichiometryVerifierTest {
 
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
-        assertThrows(RuntimeException.class, () -> StoichiometryVerifier.verify(groovy(rb3), TEST_MAP));
+        assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb3), TEST_MAP));
     }
 
     @Test
@@ -208,7 +211,7 @@ public class StoichiometryVerifierTest {
                 .chancedFluidOutput(Hydrogen.getFluid(1000), 500, 0);
 
         assertThrows(
-                UnsupportedClassVersionError.class, // Same as other tests due to test harness
+                StoichiometryViolationException.class,
                 () -> StoichiometryVerifier.verify(groovy(builder), TEST_MAP)
         );
     }

@@ -4,7 +4,7 @@ import gregtech.api.GTValues;
 import gregtech.api.unification.material.properties.IMaterialProperty;
 import gregtech.api.unification.material.properties.MaterialProperties;
 import gregtech.api.unification.material.properties.PropertyKey;
-import org.apache.commons.lang3.math.Fraction;
+import org.apache.commons.math3.fraction.Fraction;
 
 public class MolarProperty implements IMaterialProperty {
     public static final PropertyKey<MolarProperty> MOLAR = new PropertyKey<>("molar", MolarProperty.class);
@@ -12,7 +12,7 @@ public class MolarProperty implements IMaterialProperty {
     public final Fraction itemToMole;
     public final Fraction fluidToMole;
 
-    public MolarProperty(Fraction itemToMole, Fraction fluidToMole) {
+    private MolarProperty(Fraction itemToMole, Fraction fluidToMole) {
         this.itemToMole = itemToMole;
         this.fluidToMole = fluidToMole;
     }
@@ -22,7 +22,7 @@ public class MolarProperty implements IMaterialProperty {
     }
 
     public static MolarProperty fromItemConversion(int itemToMole, int fluidToItem) {
-        return new MolarProperty(Fraction.getFraction(itemToMole, 1), Fraction.getFraction(itemToMole * fluidToItem, 1));
+        return new MolarProperty(new Fraction(itemToMole, 1), new Fraction(itemToMole * fluidToItem, 1));
     }
 
     public static MolarProperty fromFluidConversion(int fluidToMole) {
@@ -30,7 +30,7 @@ public class MolarProperty implements IMaterialProperty {
     }
 
     public static MolarProperty fromFluidConversion(int fluidToMole, int fluidToItem) {
-        return new MolarProperty(Fraction.getFraction(fluidToMole, fluidToItem), Fraction.getFraction(fluidToMole, 1));
+        return new MolarProperty(new Fraction(fluidToMole, fluidToItem), new Fraction(fluidToMole, 1));
     }
 
 

@@ -90,7 +90,7 @@ public class Bootstrap {
                 .build();
 
         Ice.setProperty(MolarProperty.MOLAR, MolarProperty.fromFluidConversion(1000, 144));
-        BandedIron.addFlags(SusMaterialFlags.SINGLE_ITEM_MOLE);
+        BandedIron.setProperty(MolarProperty.MOLAR, MolarProperty.fromItemConversion(1));
 
         managerInternal.closeRegistries();
         managerInternal.freezeRegistries();
@@ -101,6 +101,12 @@ public class Bootstrap {
         for (MetaItem<?> item : MetaItems.ITEMS) {
             if (item instanceof MetaPrefixItem) {
                 item.registerSubItems();
+            }
+        }
+        MetaItems.registerOreDict();
+
+        for (MetaItem<?> item : MetaItems.ITEMS) {
+            if (item instanceof MetaPrefixItem) {
                 for (MetaItem.MetaValueItem i : item.getAllItems()) {
                     // The unlocalized name is specifically the ore prefix here
                     OreDictUnifier.onItemRegistration(new OreDictionary.OreRegisterEvent(
