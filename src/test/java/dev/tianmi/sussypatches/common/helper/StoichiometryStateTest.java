@@ -1,17 +1,19 @@
 package dev.tianmi.sussypatches.common.helper;
 
-import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryState;
-import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryViolationException;
-import gregtech.api.unification.material.Material;
-import gregtech.api.unification.material.Materials;
+import java.util.*;
+
 import org.apache.commons.math3.fraction.Fraction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryState;
+import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryViolationException;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.Materials;
 
 public class StoichiometryStateTest {
+
     @BeforeAll
     static void configureEnvironment() {
         Bootstrap.init();
@@ -27,7 +29,6 @@ public class StoichiometryStateTest {
         outputs.put(Materials.BacterialSludge, new Fraction(5));
         outputs.put(Materials.Carbon, new Fraction(2));
 
-
         StoichiometryState verifier = new StoichiometryState();
 
         Assertions.assertTrue(verifier.addReaction(inputs, outputs, true));
@@ -38,8 +39,9 @@ public class StoichiometryStateTest {
 
         Map<Material, Fraction> outputs2 = new HashMap<>();
         outputs2.put(Materials.Creosote, new Fraction(2));
-        
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(inputs2, outputs2, true));
+
+        Assertions.assertThrows(StoichiometryViolationException.class,
+                () -> verifier.addReaction(inputs2, outputs2, true));
 
         System.out.println(verifier.getState()); // Debugging info
     }
@@ -67,7 +69,6 @@ public class StoichiometryStateTest {
         inputs2.put(Materials.Fluorine, new Fraction(2));
         inputs2.put(Materials.Hydrogen, new Fraction(1));
 
-
         Assertions.assertTrue(verifier.addReaction(inputs2, outputs2, true));
 
         Assertions.assertEquals(2, verifier.getState().getGroupCount());
@@ -82,7 +83,8 @@ public class StoichiometryStateTest {
         outputs3.put(Materials.Creosote, new Fraction(2));
 
         // Carbon is now made from thin air!
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(inputs3, outputs3, true));
+        Assertions.assertThrows(StoichiometryViolationException.class,
+                () -> verifier.addReaction(inputs3, outputs3, true));
         Assertions.assertEquals(1, verifier.getState().getGroupCount());
         Assertions.assertEquals(12, verifier.getState().getVariableCount());
     }
@@ -112,7 +114,8 @@ public class StoichiometryStateTest {
         inputs3.put(Materials.Glue, new Fraction(1));
         Map<Material, Fraction> outputs3 = new HashMap<>();
         outputs3.put(Materials.Boron, new Fraction(2));
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(inputs3, outputs3, true));
+        Assertions.assertThrows(StoichiometryViolationException.class,
+                () -> verifier.addReaction(inputs3, outputs3, true));
     }
 
     @Test
@@ -169,7 +172,8 @@ public class StoichiometryStateTest {
         Map<Material, Fraction> outputs3 = new HashMap<>();
         outputs3.put(Materials.Boron, new Fraction(4));
         outputs3.put(Materials.Carbon, new Fraction(1));
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(inputs3, outputs3, true));
+        Assertions.assertThrows(StoichiometryViolationException.class,
+                () -> verifier.addReaction(inputs3, outputs3, true));
     }
 
     @Test
@@ -204,7 +208,8 @@ public class StoichiometryStateTest {
         inputs4.put(Materials.Lubricant, new Fraction(1));
         Map<Material, Fraction> outputs4 = new HashMap<>();
         outputs4.put(Materials.Boron, new Fraction(8));
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(inputs4, outputs4, true));
+        Assertions.assertThrows(StoichiometryViolationException.class,
+                () -> verifier.addReaction(inputs4, outputs4, true));
     }
 
     @Test
@@ -224,7 +229,8 @@ public class StoichiometryStateTest {
         inputs2.put(Materials.RocketFuel, new Fraction(1));
         Map<Material, Fraction> outputs2 = new HashMap<>();
         outputs2.put(Materials.Boron, new Fraction(2));
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(inputs2, outputs2, true));
+        Assertions.assertThrows(StoichiometryViolationException.class,
+                () -> verifier.addReaction(inputs2, outputs2, true));
 
         // But RocketFuel -> B should pass
         StoichiometryState verifier2 = new StoichiometryState();
@@ -321,7 +327,7 @@ public class StoichiometryStateTest {
         in9.put(Materials.Glue, new Fraction(1));
         Map<Material, Fraction> out9 = new HashMap<>();
         out9.put(Materials.Hydrogen, new Fraction(10));
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(
+        Assertions.assertThrows(StoichiometryViolationException.class, () -> verifier.addReaction(
                 in9, out9, true));
     }
 
@@ -351,7 +357,7 @@ public class StoichiometryStateTest {
         inputs3.put(Materials.Glue, new Fraction(1));
         Map<Material, Fraction> outputs3 = new HashMap<>();
         outputs3.put(Materials.Boron, new Fraction(1));
-        Assertions.assertThrows(StoichiometryViolationException.class, () ->  verifier.addReaction(
+        Assertions.assertThrows(StoichiometryViolationException.class, () -> verifier.addReaction(
                 inputs3, outputs3, false));
 
         // But Glue -> 2B should pass (exact conservation)

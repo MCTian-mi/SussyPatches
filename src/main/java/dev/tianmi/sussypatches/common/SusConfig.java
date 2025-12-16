@@ -162,7 +162,6 @@ public class SusConfig {
                     return Predicates.alwaysFalse();
                 }, i -> i));
             }
-
         }
     }
 
@@ -192,7 +191,6 @@ public class SusConfig {
         @RequiresMcRestart
         public boolean stoichiometryThrowOnViolation = false;
     }
-
 
     public static final class Compat {
 

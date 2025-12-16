@@ -8,12 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Field;
 
-import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryState;
-import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryUtil;
-import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryVerifier;
-import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryViolationException;
-import gregtech.api.GTValues;
 import net.minecraftforge.fml.common.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +17,10 @@ import org.junit.jupiter.api.Test;
 
 import dev.tianmi.sussypatches.api.recipe.property.StoichiometryProperty;
 import dev.tianmi.sussypatches.common.SusConfig;
+import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryUtil;
+import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryVerifier;
+import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryViolationException;
+import gregtech.api.GTValues;
 import gregtech.api.recipes.Recipe;
 
 public class StoichiometryVerifierTest {
@@ -33,7 +33,7 @@ public class StoichiometryVerifierTest {
 
     @BeforeEach
     void resetConfig() {
-        SusConfig.DEBUG.stoichiometryRecipeMaps = new String[]{TEST_MAP_NAME};
+        SusConfig.DEBUG.stoichiometryRecipeMaps = new String[] { TEST_MAP_NAME };
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
         StoichiometryVerifier.stoichiometryState.clear();
     }
@@ -111,7 +111,6 @@ public class StoichiometryVerifierTest {
                 .fluidInputs(Hydrogen.getFluid(2000))
                 .fluidInputs(Oxygen.getFluid(1000))
                 .fluidOutputs(Wastewater.getFluid(1000));
-
 
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
@@ -200,7 +199,6 @@ public class StoichiometryVerifierTest {
                     .fluidOutputs(Methane.getFluid(1000))
                     .chancedFluidOutput(Hydrogen.getFluid(1000), 5000, 0);
 
-
             assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(builder), TEST_MAP));
         }
         // Test an unbalanced version that should fail
@@ -212,8 +210,7 @@ public class StoichiometryVerifierTest {
 
         assertThrows(
                 StoichiometryViolationException.class,
-                () -> StoichiometryVerifier.verify(groovy(builder), TEST_MAP)
-        );
+                () -> StoichiometryVerifier.verify(groovy(builder), TEST_MAP));
     }
 
     @Test
@@ -240,6 +237,4 @@ public class StoichiometryVerifierTest {
         }
         return recipe;
     }
-
-
 }

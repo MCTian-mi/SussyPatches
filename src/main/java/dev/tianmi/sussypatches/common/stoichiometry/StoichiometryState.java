@@ -1,22 +1,23 @@
 package dev.tianmi.sussypatches.common.stoichiometry;
 
-import gregtech.api.unification.material.Material;
-import gregtech.api.unification.Element;
+import java.util.*;
+
 import org.apache.commons.math3.exception.TooManyIterationsException;
 import org.apache.commons.math3.fraction.Fraction;
 import org.apache.commons.math3.optim.linear.*;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
-import java.util.*;
+import gregtech.api.unification.Element;
+import gregtech.api.unification.material.Material;
 
 public class StoichiometryState {
-
 
     /**
      * Represents a general constraint template that applies to all elements.
      * When specialized to a specific element, creates unknown_element variables.
      */
     private static class GeneralConstraint {
+
         final Map<Material, Fraction> coefficients;  // Only for unknowns
         final Map<Element, Fraction> elementOverrides;  // Constant term per element
         final Relationship relationship;
@@ -34,6 +35,7 @@ public class StoichiometryState {
      * are specialized to those elements.
      */
     private static class UnknownGroup {
+
         final Set<Material> unknowns;
         final List<GeneralConstraint> generalConstraints;
         final Set<Element> initializedElements;
@@ -59,6 +61,7 @@ public class StoichiometryState {
      * Manages constraints for a single element across all unknowns.
      */
     private static class PerElementSolver {
+
         final Element element;
         final List<ConstraintComponent> components;
         final Map<Material, ConstraintComponent> unknownToComponent;
@@ -73,6 +76,7 @@ public class StoichiometryState {
          * Represents an independent component within this element's constraint system.
          */
         static class ConstraintComponent {
+
             final Set<Material> unknowns;
             final Map<Material, Integer> localIndices;
             final List<LinearConstraint> constraints;
@@ -109,7 +113,8 @@ public class StoichiometryState {
      *
      * @return false if a reaction has no unknowns, true if it does, and throws an error if it doesn't work.
      */
-    public boolean addReaction(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs, boolean lossy) throws StoichiometryViolationException {
+    public boolean addReaction(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs,
+                               boolean lossy) throws StoichiometryViolationException {
         // Step 1: Identify unknowns and elements in reaction
         Set<Material> unknownsInReaction = new HashSet<>();
         Set<Element> elementsInReaction = new HashSet<>();
@@ -159,7 +164,6 @@ public class StoichiometryState {
             unknownToGroup.put(unknown, targetGroup);
         }
 
-
         // Step 3: Create general constraint and element overrides
         GeneralConstraint generalConstraint = createGeneralConstraint(inputs, outputs, lossy);
         targetGroup.generalConstraints.add(generalConstraint);
@@ -187,10 +191,10 @@ public class StoichiometryState {
     /**
      * Creates a general constraint from a reaction.
      */
-    private GeneralConstraint createGeneralConstraint(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs, boolean lossy) {
+    private GeneralConstraint createGeneralConstraint(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs,
+                                                      boolean lossy) {
         GeneralConstraint gc = new GeneralConstraint(
-                lossy ? Relationship.LEQ : Relationship.EQ
-        );
+                lossy ? Relationship.LEQ : Relationship.EQ);
 
         // Process all materials in the reaction
         Set<Material> allMaterials = new HashSet<>();
@@ -354,9 +358,8 @@ public class StoichiometryState {
      * Merges components within an element solver.
      */
     private PerElementSolver.ConstraintComponent mergeComponents(
-            Set<PerElementSolver.ConstraintComponent> componentsToMerge,
-            PerElementSolver solver) {
-
+                                                                 Set<PerElementSolver.ConstraintComponent> componentsToMerge,
+                                                                 PerElementSolver solver) {
         PerElementSolver.ConstraintComponent merged = new PerElementSolver.ConstraintComponent();
 
         // Collect all unknowns and assign new indices
@@ -373,8 +376,7 @@ public class StoichiometryState {
                         constraint,
                         comp.localIndices,
                         merged.localIndices,
-                        merged.localVariableCount
-                );
+                        merged.localVariableCount);
                 merged.constraints.add(remapped);
             }
         }
@@ -395,11 +397,10 @@ public class StoichiometryState {
      * Remaps a constraint from one variable indexing to another.
      */
     private LinearConstraint remapConstraint(
-            LinearConstraint constraint,
-            Map<Material, Integer> oldIndices,
-            Map<Material, Integer> newIndices,
-            int newVariableCount) {
-
+                                             LinearConstraint constraint,
+                                             Map<Material, Integer> oldIndices,
+                                             Map<Material, Integer> newIndices,
+                                             int newVariableCount) {
         double[] oldCoeffs = constraint.getCoefficients().toArray();
         double[] newCoeffs = new double[newVariableCount];
 
@@ -425,8 +426,7 @@ public class StoichiometryState {
         return new LinearConstraint(
                 newCoeffs,
                 constraint.getRelationship(),
-                constraint.getValue()
-        );
+                constraint.getValue());
     }
 
     /**
@@ -460,10 +460,10 @@ public class StoichiometryState {
                     objective,
                     new LinearConstraintSet(allConstraints),
                     GoalType.MINIMIZE,
-                    new NonNegativeConstraint(true)
-            );
+                    new NonNegativeConstraint(true));
         } catch (NoFeasibleSolutionException e) {
-            StringBuilder msg = new StringBuilder("No feasible solution found for unknown materials in element " + element.getSymbol());
+            StringBuilder msg = new StringBuilder(
+                    "No feasible solution found for unknown materials in element " + element.getSymbol());
             msg.append("\nLocal constraints (all greater than 0):");
             // Display all linear constraints
             for (LinearConstraint constraint : allConstraints) {
@@ -482,7 +482,8 @@ public class StoichiometryState {
             for (int i = 0; i < component.localVariableCount; i++) {
                 msg.append("\n").append((char) ('a' + i)).append(": ").append(unknowns[i]);
             }
-            msg.append("\nUse this information to find the other offending lines. The latest constraint will now be removed");
+            msg.append(
+                    "\nUse this information to find the other offending lines. The latest constraint will now be removed");
             allConstraints.remove(allConstraints.size() - 1);
             throw new StoichiometryViolationException(msg.toString());
         } catch (TooManyIterationsException e) {
@@ -554,14 +555,14 @@ public class StoichiometryState {
                 elementSolvers.size(),
                 totalComponents,
                 totalVariables,
-                totalConstraints
-        );
+                totalConstraints);
     }
 
     /**
      * Debugging state information.
      */
     public static class VerificationState {
+
         private final int groupCount;
         private final int elementCount;
         private final int componentCount;
@@ -577,18 +578,31 @@ public class StoichiometryState {
             this.constraintCount = constraintCount;
         }
 
-        public int getGroupCount() { return groupCount; }
-        public int getElementCount() { return elementCount; }
-        public int getComponentCount() { return componentCount; }
-        public int getVariableCount() { return variableCount; }
-        public int getConstraintCount() { return constraintCount; }
+        public int getGroupCount() {
+            return groupCount;
+        }
+
+        public int getElementCount() {
+            return elementCount;
+        }
+
+        public int getComponentCount() {
+            return componentCount;
+        }
+
+        public int getVariableCount() {
+            return variableCount;
+        }
+
+        public int getConstraintCount() {
+            return constraintCount;
+        }
 
         @Override
         public String toString() {
             return String.format(
                     "Groups: %d, Elements: %d, Components: %d, Variables: %d, Constraints: %d",
-                    groupCount, elementCount, componentCount, variableCount, constraintCount
-            );
+                    groupCount, elementCount, componentCount, variableCount, constraintCount);
         }
     }
 }

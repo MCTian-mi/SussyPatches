@@ -1,5 +1,10 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.server.MinecraftServer;
@@ -10,11 +15,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.StartupQuery;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 final class TestSidedHandler implements IFMLSidedHandler {
 
@@ -34,8 +34,7 @@ final class TestSidedHandler implements IFMLSidedHandler {
     }
 
     @Override
-    public void showGuiScreen(Object clientGuiElement) {
-    }
+    public void showGuiScreen(Object clientGuiElement) {}
 
     @Override
     public void queryUser(StartupQuery query) {
@@ -43,12 +42,10 @@ final class TestSidedHandler implements IFMLSidedHandler {
     }
 
     @Override
-    public void beginServerLoading(MinecraftServer server) {
-    }
+    public void beginServerLoading(MinecraftServer server) {}
 
     @Override
-    public void finishServerLoading() {
-    }
+    public void finishServerLoading() {}
 
     @Override
     public File getSavesDirectory() {
@@ -81,8 +78,7 @@ final class TestSidedHandler implements IFMLSidedHandler {
     }
 
     @Override
-    public void serverStopped() {
-    }
+    public void serverStopped() {}
 
     @Override
     public NetworkManager getClientToServerNetworkManager() {
@@ -106,8 +102,7 @@ final class TestSidedHandler implements IFMLSidedHandler {
     }
 
     @Override
-    public void allowLogins() {
-    }
+    public void allowLogins() {}
 
     @Override
     public IThreadListener getWorldThread(INetHandler net) {
@@ -115,8 +110,7 @@ final class TestSidedHandler implements IFMLSidedHandler {
     }
 
     @Override
-    public void processWindowMessages() {
-    }
+    public void processWindowMessages() {}
 
     @Override
     public String stripSpecialChars(String message) {
@@ -124,12 +118,10 @@ final class TestSidedHandler implements IFMLSidedHandler {
     }
 
     @Override
-    public void reloadRenderers() {
-    }
+    public void reloadRenderers() {}
 
     @Override
-    public void fireSidedRegistryEvents() {
-    }
+    public void fireSidedRegistryEvents() {}
 
     @Override
     public CompoundDataFixer getDataFixer() {

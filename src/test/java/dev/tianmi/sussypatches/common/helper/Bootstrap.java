@@ -1,5 +1,22 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import static gregtech.api.unification.material.Materials.BandedIron;
+import static gregtech.api.unification.material.Materials.Ice;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.Locale;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.relauncher.CoreModManager;
+import net.minecraftforge.oredict.OreDictionary;
+
 import dev.tianmi.sussypatches.api.unification.SusMaterialFlags;
 import dev.tianmi.sussypatches.api.unification.material.properties.MolarProperty;
 import gregtech.api.GTValues;
@@ -15,28 +32,12 @@ import gregtech.api.unification.material.registry.MarkerMaterialRegistry;
 import gregtech.common.items.MetaItems;
 import gregtech.core.unification.material.internal.MaterialRegistryManager;
 import gregtech.modules.ModuleManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.Locale;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.DummyModContainer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.relauncher.CoreModManager;
-import net.minecraftforge.oredict.OreDictionary;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import static gregtech.api.unification.material.Materials.BandedIron;
-import static gregtech.api.unification.material.Materials.Ice;
 
 public class Bootstrap {
+
     public static MaterialRegistryManager managerInternal;
     public static final String TEST_MOD = "sussypatches_test";
     public static final String TEST_MAP_NAME = "test_map";
-
 
     public static Material Wastewater;
     public static Material Brubium;
@@ -115,7 +116,6 @@ public class Bootstrap {
             }
         }
 
-        TEST_MAP =
-                new RecipeMap<>(TEST_MAP_NAME, 4, 4, 4, 4, new TestRecipeBuilder(), false);
+        TEST_MAP = new RecipeMap<>(TEST_MAP_NAME, 4, 4, 4, 4, new TestRecipeBuilder(), false);
     }
 }

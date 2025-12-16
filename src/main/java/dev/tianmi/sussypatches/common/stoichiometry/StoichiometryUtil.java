@@ -5,6 +5,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.math3.fraction.Fraction;
+import org.jetbrains.annotations.Nullable;
+
 import dev.tianmi.sussypatches.api.unification.SusMaterialFlags;
 import dev.tianmi.sussypatches.api.unification.material.properties.MolarProperty;
 import gregtech.api.GTValues;
@@ -14,13 +22,6 @@ import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.material.properties.PropertyKey;
 import gregtech.api.unification.stack.MaterialStack;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-
-import org.apache.commons.math3.fraction.Fraction;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Helper methods shared by stoichiometry tooling.
@@ -153,5 +154,4 @@ public final class StoichiometryUtil {
     public static Fraction getMolesFromItem(Fraction amount, Material mat) {
         return amount.divide(getItemsPerMole(mat));
     }
-
 }

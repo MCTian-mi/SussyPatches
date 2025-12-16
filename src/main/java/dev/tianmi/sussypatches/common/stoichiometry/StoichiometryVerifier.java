@@ -1,7 +1,17 @@
 package dev.tianmi.sussypatches.common.stoichiometry;
 
+import static gregtech.api.unification.OreDictUnifier.getMaterial;
+import static gregtech.api.unification.OreDictUnifier.getMaterialInfo;
+
 import java.util.*;
 import java.util.stream.Collectors;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.math3.fraction.Fraction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
@@ -18,8 +28,6 @@ import gregtech.api.recipes.chance.output.impl.ChancedFluidOutput;
 import gregtech.api.recipes.chance.output.impl.ChancedItemOutput;
 import gregtech.api.recipes.ingredients.GTRecipeFluidInput;
 import gregtech.api.recipes.ingredients.GTRecipeInput;
-import gregtech.api.recipes.ingredients.GTRecipeItemInput;
-import gregtech.api.recipes.ingredients.GTRecipeOreInput;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.registry.IMaterialRegistryManager;
@@ -27,19 +35,12 @@ import gregtech.api.unification.stack.ItemMaterialInfo;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.core.unification.material.internal.MaterialRegistryManager;
 import gregtech.integration.groovy.GroovyScriptModule;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.math3.fraction.Fraction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import static gregtech.api.unification.OreDictUnifier.getMaterial;
-import static gregtech.api.unification.OreDictUnifier.getMaterialInfo;
 
 /**
  * Debug-only stoichiometry verifier to ensure scripted recipes conserve elements.
  */
 public final class StoichiometryVerifier {
+
     public static final int CHANCE_DENOMINATOR = 10000;
     public static final StoichiometryState stoichiometryState = new StoichiometryState();
     private static final MaterialGraph graph = MaterialGraph.build();
@@ -106,9 +107,8 @@ public final class StoichiometryVerifier {
         }
     }
 
-
     private static Aggregation aggregateInputBounds(List<GTRecipeInput> itemInputs,
-                                             List<GTRecipeInput> fluidInputs) {
+                                                    List<GTRecipeInput> fluidInputs) {
         Map<Material, Fraction> composition = new HashMap<>();
         boolean unboundedAbove = false;
         for (GTRecipeInput input : itemInputs) {
@@ -129,7 +129,7 @@ public final class StoichiometryVerifier {
     }
 
     private static Aggregation aggregateOutputBounds(List<ItemStack> itemOutputs,
-                                              List<FluidStack> fluidOutputs,
+                                                     List<FluidStack> fluidOutputs,
                                                      ChancedOutputList<ItemStack, ChancedItemOutput> chancedItemOutputs,
                                                      ChancedOutputList<FluidStack, ChancedFluidOutput> chancedFluidOutputs) {
         Map<Material, Fraction> composition = new HashMap<>();
@@ -223,7 +223,6 @@ public final class StoichiometryVerifier {
         return combineAlternatives(altResults);
     }
 
-
     private static Result decomposeFluidInput(GTRecipeInput input) {
         if (input.isNonConsumable() || !(input instanceof GTRecipeFluidInput fluidInput)) {
             return Result.empty();
@@ -242,8 +241,8 @@ public final class StoichiometryVerifier {
         Map<Material, Fraction> composition = new HashMap<>();
         MaterialStack unmultipliedMaterialStack = getMaterial(stack);
         if (unmultipliedMaterialStack != null) {
-            MaterialStack materialStack =
-                    new MaterialStack(unmultipliedMaterialStack.material, unmultipliedMaterialStack.amount * stack.getCount());
+            MaterialStack materialStack = new MaterialStack(unmultipliedMaterialStack.material,
+                    unmultipliedMaterialStack.amount * stack.getCount());
             return decomposeOrePrefixItem(materialStack, composition);
         }
         ItemMaterialInfo info = getMaterialInfo(stack);
@@ -253,7 +252,8 @@ public final class StoichiometryVerifier {
         return Result.of(composition, false);
     }
 
-    private static @NotNull Result decomposeItemMaterialInfo(ItemMaterialInfo info, Map<Material, Fraction> composition) {
+    private static @NotNull Result decomposeItemMaterialInfo(ItemMaterialInfo info,
+                                                             Map<Material, Fraction> composition) {
         boolean unboundedAbove = false;
         for (MaterialStack component : info.getMaterials()) {
             Material material = component.material;
@@ -267,7 +267,8 @@ public final class StoichiometryVerifier {
         return Result.of(composition, unboundedAbove);
     }
 
-    private static @NotNull Result decomposeOrePrefixItem(MaterialStack materialStack, Map<Material, Fraction> composition) {
+    private static @NotNull Result decomposeOrePrefixItem(MaterialStack materialStack,
+                                                          Map<Material, Fraction> composition) {
         Material material = materialStack.material;
 
         if (material.hasFlag(SusMaterialFlags.NON_STOICHIOMETRIC)) {
@@ -275,7 +276,8 @@ public final class StoichiometryVerifier {
         }
 
         Map<Material, Fraction> decomposition = decomposeMaterial(material,
-                StoichiometryUtil.getMolesFromItem(new Fraction((int) materialStack.amount, (int) GTValues.M), material));
+                StoichiometryUtil.getMolesFromItem(new Fraction((int) materialStack.amount, (int) GTValues.M),
+                        material));
 
         mergeCompositions(composition, decomposition);
         return Result.of(composition, false);
@@ -287,7 +289,8 @@ public final class StoichiometryVerifier {
         if (material == null || material.hasFlag(SusMaterialFlags.NON_STOICHIOMETRIC)) {
             unboundedAbove = true;
         }
-        Map<Material, Fraction> composition = decomposeMaterial(material, StoichiometryUtil.getMolesFromFluid(stack.amount, material));
+        Map<Material, Fraction> composition = decomposeMaterial(material,
+                StoichiometryUtil.getMolesFromFluid(stack.amount, material));
         return Result.of(composition, unboundedAbove);
     }
 
@@ -312,12 +315,10 @@ public final class StoichiometryVerifier {
         boolean hasStacks = false;
         Map<Material, Fraction> composition = new HashMap<>();
         // Take the minimum of everything for the worst possible input case
-        alternatives.forEach((result) ->
-                result.composition.forEach((material, amount) ->
-                        composition.merge(material, amount, (x, y) -> x.compareTo(y) < 0 ? x : y)));
+        alternatives.forEach((result) -> result.composition.forEach(
+                (material, amount) -> composition.merge(material, amount, (x, y) -> x.compareTo(y) < 0 ? x : y)));
         return Result.of(composition, hasStacks);
     }
-
 
     private static List<ElementViolation> diff(Aggregation inputs, Aggregation outputs, boolean lossy) {
         Map<Material, Fraction> inputComp = inputs.composition;
@@ -381,9 +382,7 @@ public final class StoichiometryVerifier {
                 elementDetails;
     }
 
-    private record ElementViolation(Element element, Fraction input, Fraction output) {
-    }
-
+    private record ElementViolation(Element element, Fraction input, Fraction output) {}
 
     private static final class MaterialGraph {
 
@@ -442,8 +441,7 @@ public final class StoichiometryVerifier {
                 }
                 Map<Material, Fraction> scaled = new HashMap<>();
                 Fraction multiplier = materialAmount(component);
-                childBounds.forEach((element, fraction) ->
-                        scaled.put(element, fraction.multiply(multiplier)));
+                childBounds.forEach((element, fraction) -> scaled.put(element, fraction.multiply(multiplier)));
                 mergeCompositions(totals, scaled);
             }
 
@@ -484,5 +482,4 @@ public final class StoichiometryVerifier {
         IMaterialRegistryManager manager = MaterialRegistryManager.getInstance();
         return manager.getRegisteredMaterials();
     }
-
 }

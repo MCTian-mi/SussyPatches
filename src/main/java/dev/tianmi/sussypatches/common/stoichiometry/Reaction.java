@@ -1,16 +1,18 @@
 package dev.tianmi.sussypatches.common.stoichiometry;
 
-import gregtech.api.unification.material.Material;
-import org.apache.commons.math3.fraction.Fraction;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.math3.fraction.Fraction;
+
+import gregtech.api.unification.material.Material;
 
 /**
  * Represents a reaction with materials and their quantities.
  * Supports both perfect (equality) and lossy (inequality) reactions.
  */
 public class Reaction {
+
     private final Map<Material, Fraction> inputs;
     private final Map<Material, Fraction> outputs;
     private final boolean isLossy;
