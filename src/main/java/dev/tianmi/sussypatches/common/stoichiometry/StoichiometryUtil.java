@@ -10,11 +10,11 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.Nullable;
 
 import dev.tianmi.sussypatches.api.unification.SusMaterialFlags;
 import dev.tianmi.sussypatches.api.unification.material.properties.MolarProperty;
-import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.GTValues;
 import gregtech.api.unification.FluidUnifier;
 import gregtech.api.unification.OreDictUnifier;
@@ -115,7 +115,7 @@ public final class StoichiometryUtil {
         if (material.hasProperty(MolarProperty.MOLAR)) {
             return material.getProperty(MolarProperty.MOLAR).itemToMole;
         }
-        return new Fraction(getItemsPerMoleRecurse(material));
+        return Fraction.getFraction(getItemsPerMoleRecurse(material));
     }
 
     private static int getItemsPerMoleRecurse(Material material) {
@@ -142,16 +142,16 @@ public final class StoichiometryUtil {
             return material.getProperty(MolarProperty.MOLAR).fluidToMole;
         }
         if (material.hasProperty(PropertyKey.DUST)) {
-            return getItemsPerMole(material).multiply(new Fraction(GTValues.L));
+            return getItemsPerMole(material).multiplyBy(Fraction.getFraction(GTValues.L));
         }
-        return new Fraction(1000);
+        return Fraction.getFraction(1000);
     }
 
     public static Fraction getMolesFromFluid(int amount, Material mat) {
-        return new Fraction(amount).divide(getFluidPerMole(mat));
+        return Fraction.getFraction(amount).divideBy(getFluidPerMole(mat));
     }
 
     public static Fraction getMolesFromItem(Fraction amount, Material mat) {
-        return amount.divide(getItemsPerMole(mat));
+        return amount.divideBy(getItemsPerMole(mat));
     }
 }

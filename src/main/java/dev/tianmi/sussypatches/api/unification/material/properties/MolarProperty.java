@@ -1,10 +1,10 @@
 package dev.tianmi.sussypatches.api.unification.material.properties;
 
-import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.properties.IMaterialProperty;
 import gregtech.api.unification.material.properties.MaterialProperties;
 import gregtech.api.unification.material.properties.PropertyKey;
+import org.apache.commons.lang3.math.Fraction;
 
 public class MolarProperty implements IMaterialProperty {
 
@@ -23,7 +23,7 @@ public class MolarProperty implements IMaterialProperty {
     }
 
     public static MolarProperty fromItemConversion(int itemToMole, int fluidToItem) {
-        return new MolarProperty(new Fraction(itemToMole, 1), new Fraction(itemToMole * fluidToItem, 1));
+        return new MolarProperty(Fraction.getFraction(itemToMole, 1), Fraction.getFraction(itemToMole * fluidToItem, 1));
     }
 
     public static MolarProperty fromFluidConversion(int fluidToMole) {
@@ -31,7 +31,7 @@ public class MolarProperty implements IMaterialProperty {
     }
 
     public static MolarProperty fromFluidConversion(int fluidToMole, int fluidToItem) {
-        return new MolarProperty(new Fraction(fluidToMole, fluidToItem), new Fraction(fluidToMole, 1));
+        return new MolarProperty(Fraction.getFraction(fluidToMole, fluidToItem), Fraction.getFraction(fluidToMole, 1));
     }
 
     @Override

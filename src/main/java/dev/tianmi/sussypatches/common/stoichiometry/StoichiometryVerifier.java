@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +19,6 @@ import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.api.recipe.property.StoichiometryProperty;
 import dev.tianmi.sussypatches.api.unification.SusMaterialFlags;
 import dev.tianmi.sussypatches.common.SusConfig;
-import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;
@@ -76,7 +76,7 @@ public final class StoichiometryVerifier {
     }
 
     private static Fraction materialAmount(MaterialStack stack) {
-        return new Fraction((int) stack.amount, 1);
+        return Fraction.getFraction((int) stack.amount);
     }
 
     private static void run(Recipe recipe, boolean lossy) {
@@ -158,10 +158,10 @@ public final class StoichiometryVerifier {
                 unboundedAbove = true;
             }
             // Scale the bounds by the chance (chance is out of 10000)
-            Fraction chance = new Fraction(chancedOutput.getChance(), CHANCE_DENOMINATOR);
+            Fraction chance = Fraction.getFraction(chancedOutput.getChance(), CHANCE_DENOMINATOR);
             Map<Material, Fraction> scaledComp = new HashMap<>();
             for (Map.Entry<Material, Fraction> entry : contribution.composition.entrySet()) {
-                scaledComp.put(entry.getKey(), entry.getValue().multiply(chance));
+                scaledComp.put(entry.getKey(), entry.getValue().multiplyBy(chance));
             }
             mergeCompositions(composition, scaledComp);
 
@@ -190,10 +190,10 @@ public final class StoichiometryVerifier {
                     unboundedAbove = true;
                 }
                 // Scale the bounds by the chance (chance is out of 10000)
-                Fraction chance = new Fraction(chancedOutput.getChance(), CHANCE_DENOMINATOR);
+                Fraction chance = Fraction.getFraction(chancedOutput.getChance(), CHANCE_DENOMINATOR);
                 Map<Material, Fraction> scaledComp = new HashMap<>();
                 for (Map.Entry<Material, Fraction> entry : contribution.composition.entrySet()) {
-                    scaledComp.put(entry.getKey(), entry.getValue().multiply(chance));
+                    scaledComp.put(entry.getKey(), entry.getValue().multiplyBy(chance));
                 }
                 mergeCompositions(composition, scaledComp);
 
@@ -276,7 +276,7 @@ public final class StoichiometryVerifier {
         }
 
         Map<Material, Fraction> decomposition = decomposeMaterial(material,
-                StoichiometryUtil.getMolesFromItem(new Fraction((int) materialStack.amount, (int) GTValues.M),
+                StoichiometryUtil.getMolesFromItem(Fraction.getFraction((int) materialStack.amount, (int) GTValues.M),
                         material));
 
         mergeCompositions(composition, decomposition);
@@ -302,7 +302,7 @@ public final class StoichiometryVerifier {
         Map<Material, Fraction> inferred = INFERRED_BOUNDS.get(material);
         if (inferred != null) {
             Map<Material, Fraction> scaled = new HashMap<>();
-            inferred.forEach((element, fraction) -> scaled.put(element, fraction.multiply(amount)));
+            inferred.forEach((element, fraction) -> scaled.put(element, fraction.multiplyBy(amount)));
             return scaled;
         }
         return Map.of();
@@ -410,7 +410,7 @@ public final class StoichiometryVerifier {
                 return perUnit;
             }
             Map<Material, Fraction> scaled = new HashMap<>();
-            perUnit.forEach((element, quantity) -> scaled.put(element, quantity.multiply(amount)));
+            perUnit.forEach((element, quantity) -> scaled.put(element, quantity.multiplyBy(amount)));
             return scaled;
         }
 
@@ -441,7 +441,7 @@ public final class StoichiometryVerifier {
                 }
                 Map<Material, Fraction> scaled = new HashMap<>();
                 Fraction multiplier = materialAmount(component);
-                childBounds.forEach((element, fraction) -> scaled.put(element, fraction.multiply(multiplier)));
+                childBounds.forEach((element, fraction) -> scaled.put(element, fraction.multiplyBy(multiplier)));
                 mergeCompositions(totals, scaled);
             }
 

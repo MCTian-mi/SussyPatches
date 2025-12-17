@@ -2,12 +2,10 @@ package dev.tianmi.sussypatches.common.stoichiometry;
 
 import java.util.*;
 
-import dev.tianmi.sussypatches.common.stoichiometry.apachemath.exception.TooManyIterationsException;
-import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
-import dev.tianmi.sussypatches.common.stoichiometry.apachemath.optim.linear.*;
-import dev.tianmi.sussypatches.common.stoichiometry.apachemath.optim.nonlinear.scalar.GoalType;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.Material;
+import org.apache.commons.lang3.math.Fraction;
+import static dev.tianmi.sussypatches.common.stoichiometry.SimplexPhaseI.*;
 
 public class StoichiometryState {
 
@@ -19,12 +17,12 @@ public class StoichiometryState {
 
         final Map<Material, Fraction> coefficients;  // Only for unknowns
         final Map<Element, Fraction> elementOverrides;  // Constant term per element
-        final Relationship relationship;
+        final SimplexPhaseI.ConstraintType constraintType;
 
-        GeneralConstraint(Relationship relationship) {
+        GeneralConstraint(SimplexPhaseI.ConstraintType constraintType) {
             this.coefficients = new HashMap<>();
             this.elementOverrides = new HashMap<>();
-            this.relationship = relationship;
+            this.constraintType = constraintType;
         }
     }
 
@@ -193,7 +191,7 @@ public class StoichiometryState {
     private GeneralConstraint createGeneralConstraint(Map<Material, Fraction> inputs, Map<Material, Fraction> outputs,
                                                       boolean lossy) {
         GeneralConstraint gc = new GeneralConstraint(
-                lossy ? Relationship.LEQ : Relationship.EQ);
+                lossy ? ConstraintType.LEQ : ConstraintType.EQ);
 
         // Process all materials in the reaction
         Set<Material> allMaterials = new HashSet<>();
@@ -298,7 +296,7 @@ public class StoichiometryState {
         // Add constraint
         LinearConstraint constraint = new LinearConstraint(
                 coefficients,
-                gc.relationship,
+                gc.constraintType,
                 constantTerm.doubleValue()  // Already negated and moved to RHS
         );
         targetComponent.constraints.add(constraint);
@@ -400,7 +398,7 @@ public class StoichiometryState {
                                              Map<Material, Integer> oldIndices,
                                              Map<Material, Integer> newIndices,
                                              int newVariableCount) {
-        double[] oldCoeffs = constraint.getCoefficients().toArray();
+        double[] oldCoeffs = constraint.coefficients;
         double[] newCoeffs = new double[newVariableCount];
 
         // Create reverse mapping
@@ -424,8 +422,8 @@ public class StoichiometryState {
 
         return new LinearConstraint(
                 newCoeffs,
-                constraint.getRelationship(),
-                constraint.getValue());
+                constraint.type,
+                constraint.rhs);
     }
 
     /**
@@ -436,65 +434,62 @@ public class StoichiometryState {
             return;
         }
 
-        // Add non-negativity constraints
-        List<LinearConstraint> allConstraints = new ArrayList<>(component.constraints);
+        // Build constraint list for simplex solver
+        List<LinearConstraint> constraints = new ArrayList<>();
+
+        // Add the component's constraints
+        for (LinearConstraint c : component.constraints) {
+            constraints.add(new LinearConstraint(c.coefficients, c.type, c.rhs));
+        }
+
+        // Add non-negativity constraints for all variables
         for (Material unknown : component.unknowns) {
             Integer index = component.localIndices.get(unknown);
             if (index != null) {
                 double[] coeffs = new double[component.localVariableCount];
                 coeffs[index] = 1.0;
-                allConstraints.add(new LinearConstraint(coeffs, Relationship.GEQ, 0));
+                constraints.add(new LinearConstraint(
+                        coeffs,
+                        SimplexPhaseI.ConstraintType.GEQ,
+                        0.0
+                ));
             }
         }
 
-        try {
-            // Dummy objective: minimize sum of variables
-            double[] objectiveCoeffs = new double[component.localVariableCount];
-            Arrays.fill(objectiveCoeffs, 1.0);
-
-            LinearObjectiveFunction objective = new LinearObjectiveFunction(objectiveCoeffs, 0);
-            SimplexSolver solver = new SimplexSolver();
-
-            solver.optimize(
-                    objective,
-                    new LinearConstraintSet(allConstraints),
-                    GoalType.MINIMIZE,
-                    new NonNegativeConstraint(true));
-        } catch (NoFeasibleSolutionException e) {
-            StringBuilder msg = new StringBuilder(
-                    "No feasible solution found for unknown materials in element " + element.getSymbol());
-            msg.append("\nLocal constraints (all greater than 0):");
-            // Display all linear constraints
-            for (LinearConstraint constraint : allConstraints) {
-                if (constraint.getRelationship() == Relationship.GEQ) {
-                    continue; // Don't use non-negativity constraints
-                }
-                msg.append("\n").append(formatConstraint(constraint, element));
-            }
-            // Display index information in order
-            msg.append("\nCoefficient labels:");
-            // Reverse the index map:
-            Material[] unknowns = new Material[component.localVariableCount];
-            for (Map.Entry<Material, Integer> entry : component.localIndices.entrySet()) {
-                unknowns[entry.getValue()] = entry.getKey();
-            }
-            for (int i = 0; i < component.localVariableCount; i++) {
-                msg.append("\n").append((char) ('a' + i)).append(": ").append(unknowns[i]);
-            }
-            msg.append(
-                    "\nUse this information to find the other offending lines. The latest constraint will now be removed");
-            allConstraints.remove(allConstraints.size() - 1);
-            throw new StoichiometryViolationException(msg.toString());
-        } catch (TooManyIterationsException e) {
-            throw new StoichiometryViolationException("Too many iterations :(");
+        if (SimplexPhaseI.isFeasible(constraints, component.localVariableCount)) {
+            return;
         }
+        StringBuilder msg = new StringBuilder(
+                "No feasible solution found for unknown materials in element " + element.getSymbol());
+        msg.append("\nLocal constraints (all greater than 0):");
+        // Display all linear constraints
+        for (LinearConstraint constraint : constraints) {
+            if (constraint.type == ConstraintType.GEQ) {
+                continue; // Don't use non-negativity constraints
+            }
+            msg.append("\n").append(formatConstraint(constraint, element));
+        }
+        // Display index information in order
+        msg.append("\nCoefficient labels:");
+        // Reverse the index map:
+        Material[] unknowns = new Material[component.localVariableCount];
+        for (Map.Entry<Material, Integer> entry : component.localIndices.entrySet()) {
+            unknowns[entry.getValue()] = entry.getKey();
+        }
+        for (int i = 0; i < component.localVariableCount; i++) {
+            msg.append("\n").append((char) ('a' + i)).append(": ").append(unknowns[i]);
+        }
+        msg.append(
+                "\nUse this information to find the other offending lines. The latest constraint will now be removed");
+        constraints.remove(constraints.size() - 1);
+        throw new StoichiometryViolationException(msg.toString());
     }
 
     private String formatConstraint(LinearConstraint constraint, Element element) {
         StringBuilder left = new StringBuilder();
         StringBuilder right = new StringBuilder();
 
-        double[] coeffs = constraint.getCoefficients().toArray();
+        double[] coeffs = constraint.coefficients;
         for (int i = 0; i < coeffs.length; i++) {
             double coeff = coeffs[i];
             if (coeff > 0) {
@@ -503,10 +498,10 @@ public class StoichiometryState {
                 left.append(-coeff).append((char) ('a' + i)).append(" + ");
             }
         }
-        if (constraint.getValue() < 0) {
-            right.append(-constraint.getValue()).append(element.getSymbol()).append(" + ");
-        } else if (constraint.getValue() > 0) {
-            left.append(constraint.getValue()).append(element.getSymbol()).append(" + ");
+        if (constraint.rhs < 0) {
+            right.append(-constraint.rhs).append(element.getSymbol()).append(" + ");
+        } else if (constraint.rhs > 0) {
+            left.append(constraint.rhs).append(element.getSymbol()).append(" + ");
         }
         // Both now have to have " + " at the end if they're not empty
         if (!right.isEmpty()) {
@@ -523,7 +518,7 @@ public class StoichiometryState {
             left.append("nothing ");
         }
         return left.toString() +
-                constraint.getRelationship().oppositeRelationship() + " " + // <= -> >=
+                constraint.type.oppositeType() + " " + // <= -> >=
                 right.toString();
     }
 
