@@ -1,7 +1,6 @@
 package dev.tianmi.sussypatches.api.unification.material.properties;
 
-import org.apache.commons.math3.fraction.Fraction;
-
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.properties.IMaterialProperty;
 import gregtech.api.unification.material.properties.MaterialProperties;

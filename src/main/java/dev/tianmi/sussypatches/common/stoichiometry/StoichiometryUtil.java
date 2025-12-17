@@ -10,11 +10,11 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.jetbrains.annotations.Nullable;
 
 import dev.tianmi.sussypatches.api.unification.SusMaterialFlags;
 import dev.tianmi.sussypatches.api.unification.material.properties.MolarProperty;
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.GTValues;
 import gregtech.api.unification.FluidUnifier;
 import gregtech.api.unification.OreDictUnifier;

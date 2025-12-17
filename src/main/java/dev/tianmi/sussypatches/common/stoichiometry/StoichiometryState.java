@@ -2,11 +2,10 @@ package dev.tianmi.sussypatches.common.stoichiometry;
 
 import java.util.*;
 
-import org.apache.commons.math3.exception.TooManyIterationsException;
-import org.apache.commons.math3.fraction.Fraction;
-import org.apache.commons.math3.optim.linear.*;
-import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
-
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.exception.TooManyIterationsException;
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.optim.linear.*;
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.optim.nonlinear.scalar.GoalType;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.Material;
 

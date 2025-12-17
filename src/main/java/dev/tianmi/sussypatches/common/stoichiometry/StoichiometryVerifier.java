@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +18,7 @@ import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.api.recipe.property.StoichiometryProperty;
 import dev.tianmi.sussypatches.api.unification.SusMaterialFlags;
 import dev.tianmi.sussypatches.common.SusConfig;
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;

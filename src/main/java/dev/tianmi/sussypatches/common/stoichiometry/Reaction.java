@@ -3,8 +3,7 @@ package dev.tianmi.sussypatches.common.stoichiometry;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.math3.fraction.Fraction;
-
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.unification.material.Material;
 
 /**

@@ -2,13 +2,13 @@ package dev.tianmi.sussypatches.common.helper;
 
 import java.util.*;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryState;
 import dev.tianmi.sussypatches.common.stoichiometry.StoichiometryViolationException;
+import dev.tianmi.sussypatches.common.stoichiometry.apachemath.fraction.Fraction;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.Materials;
 
