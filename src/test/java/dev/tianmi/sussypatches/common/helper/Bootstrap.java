@@ -35,6 +35,8 @@ import gregtech.modules.ModuleManager;
 
 public class Bootstrap {
 
+    private static boolean bootstrapped = false;
+
     public static MaterialRegistryManager managerInternal;
     public static final String TEST_MOD = "sussypatches_test";
     public static final String TEST_MAP_NAME = "test_map";
@@ -47,6 +49,10 @@ public class Bootstrap {
     public static RecipeMap<TestRecipeBuilder> TEST_MAP;
 
     public static void init() {
+        if (bootstrapped) {
+            return;
+        }
+        bootstrapped = true;
         try {
             Field deobfuscatedEnvironment = CoreModManager.class.getDeclaredField("deobfuscatedEnvironment");
             deobfuscatedEnvironment.setAccessible(true);
