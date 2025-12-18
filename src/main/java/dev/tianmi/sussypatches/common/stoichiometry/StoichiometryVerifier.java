@@ -65,11 +65,9 @@ public final class StoichiometryVerifier {
         if (!SusConfig.DEBUG.enableStoichiometryVerifier) return false;
         if (!recipe.isGroovyRecipe() && !GroovyScriptModule.isCurrentlyRunning()) return false;
         String name = map.unlocalizedName;
-        SussyPatches.LOGGER.debug("Checking if {} should be verified", name);
         for (String allowed : SusConfig.DEBUG.stoichiometryRecipeMaps) {
             if (allowed.equalsIgnoreCase(name)) return true;
         }
-        SussyPatches.LOGGER.debug("Nope");
         return false;
     }
 
@@ -251,6 +249,8 @@ public final class StoichiometryVerifier {
         if (info != null) {
             return decomposeItemMaterialInfo(info, composition);
         }
+        Material mat = ItemDummyMaterial.get(stack);
+        composition.put(mat, Fraction.getFraction(stack.getCount()));
         return Result.of(composition, false);
     }
 
