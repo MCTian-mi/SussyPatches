@@ -97,8 +97,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK,
         COMPAT,
         API,
-        DEBUG
-        ;
+        DEBUG;
 
         private static final String ROOT = Tags.MODID + "/";
         private static final String MIXINS = "mixins.";
