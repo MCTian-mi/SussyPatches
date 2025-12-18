@@ -22,6 +22,7 @@ public abstract class RecipeBuilderMixin {
     @Inject(method = "build", at = @At("RETURN"))
     private void sus$runStoichiometryCheck(CallbackInfoReturnable<ValidationResult<Recipe>> cir) {
         ValidationResult<Recipe> validation = cir.getReturnValue();
+
         if (validation == null || validation.getType() != EnumValidationResult.VALID) {
             return;
         }
@@ -34,7 +35,6 @@ public abstract class RecipeBuilderMixin {
         if (recipe == null) {
             return;
         }
-
         StoichiometryVerifier.verify(recipe, recipeMap);
     }
 }

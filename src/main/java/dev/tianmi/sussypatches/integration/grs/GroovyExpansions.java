@@ -11,8 +11,8 @@ public final class GroovyExpansions {
         return builder;
     }
 
-    public static <R extends RecipeBuilder<R>> R lossy(R builder) {
-        builder.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.lossy());
+    public static <R extends RecipeBuilder<R>> R exact(R builder) {
+        builder.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
         return builder;
     }
 

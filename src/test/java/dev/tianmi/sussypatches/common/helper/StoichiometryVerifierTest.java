@@ -44,6 +44,7 @@ public class StoichiometryVerifierTest {
                 .fluidInputs(Hydrogen.getFluid(2000))
                 .fluidInputs(Oxygen.getFluid(1000))
                 .fluidOutputs(Water.getFluid(1000));
+        rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
 
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
@@ -55,6 +56,8 @@ public class StoichiometryVerifierTest {
                     .input(dust, Zalgonium)
                     .fluidOutputs(Zalgonium.getFluid(GTValues.L));
 
+            rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+
             assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
         }
         {
@@ -63,6 +66,7 @@ public class StoichiometryVerifierTest {
                     .fluidInputs(Water.getFluid(1000))
                     .fluidOutputs(Zalgonium.getFluid(GTValues.L))
                     .fluidOutputs(Ice.getFluid(1000));
+            rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
 
             assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
         }
@@ -75,6 +79,8 @@ public class StoichiometryVerifierTest {
                 .fluidInputs(Oxygen.getFluid(1000))
                 .fluidOutputs(Hydrogen.getFluid(1000));
 
+        rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+
         assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
@@ -84,8 +90,6 @@ public class StoichiometryVerifierTest {
                 .fluidInputs(Hydrogen.getFluid(2000))
                 .fluidInputs(Oxygen.getFluid(1000))
                 .fluidOutputs(Hydrogen.getFluid(1000));
-
-        rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.lossy());
 
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
@@ -127,6 +131,8 @@ public class StoichiometryVerifierTest {
 
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
+        rb.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+
         assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb), TEST_MAP));
     }
 
@@ -143,6 +149,9 @@ public class StoichiometryVerifierTest {
                 .fluidOutputs(Oxygen.getFluid(1000));
 
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
+
+        rb1.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+        rb2.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
 
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
@@ -161,6 +170,9 @@ public class StoichiometryVerifierTest {
                 .fluidOutputs(Oxygen.getFluid(1000));
 
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
+
+        rb1.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+        rb2.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
 
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
         assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
@@ -184,6 +196,10 @@ public class StoichiometryVerifierTest {
 
         SusConfig.DEBUG.stoichiometryThrowOnViolation = true;
 
+        rb1.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+        rb2.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+        rb3.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb1), TEST_MAP));
         assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(rb2), TEST_MAP));
         assertThrows(StoichiometryViolationException.class, () -> StoichiometryVerifier.verify(groovy(rb3), TEST_MAP));
@@ -199,6 +215,8 @@ public class StoichiometryVerifierTest {
                     .fluidOutputs(Methane.getFluid(1000))
                     .chancedFluidOutput(Hydrogen.getFluid(1000), 5000, 0);
 
+            builder.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
+
             assertDoesNotThrow(() -> StoichiometryVerifier.verify(groovy(builder), TEST_MAP));
         }
         // Test an unbalanced version that should fail
@@ -207,6 +225,8 @@ public class StoichiometryVerifierTest {
                 .fluidInputs(Hydrogen.getFluid(4500))
                 .fluidOutputs(Methane.getFluid(1000))
                 .chancedFluidOutput(Hydrogen.getFluid(1000), 500, 0);
+
+        builder.applyProperty(StoichiometryProperty.getInstance(), StoichiometryProperty.exact());
 
         assertThrows(
                 StoichiometryViolationException.class,

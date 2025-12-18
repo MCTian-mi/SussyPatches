@@ -1,10 +1,11 @@
 package dev.tianmi.sussypatches.api.unification.material.properties;
 
+import org.apache.commons.lang3.math.Fraction;
+
 import gregtech.api.GTValues;
 import gregtech.api.unification.material.properties.IMaterialProperty;
 import gregtech.api.unification.material.properties.MaterialProperties;
 import gregtech.api.unification.material.properties.PropertyKey;
-import org.apache.commons.lang3.math.Fraction;
 
 public class MolarProperty implements IMaterialProperty {
 
@@ -23,7 +24,8 @@ public class MolarProperty implements IMaterialProperty {
     }
 
     public static MolarProperty fromItemConversion(int itemToMole, int fluidToItem) {
-        return new MolarProperty(Fraction.getFraction(itemToMole, 1), Fraction.getFraction(itemToMole * fluidToItem, 1));
+        return new MolarProperty(Fraction.getFraction(itemToMole, 1),
+                Fraction.getFraction(itemToMole * fluidToItem, 1));
     }
 
     public static MolarProperty fromFluidConversion(int fluidToMole) {

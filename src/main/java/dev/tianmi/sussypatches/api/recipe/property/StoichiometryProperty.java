@@ -21,10 +21,10 @@ public final class StoichiometryProperty extends RecipeProperty<StoichiometryPro
         return INSTANCE;
     }
 
-    public static final Settings DEFAULT_SETTINGS = new Settings(false, false);
+    public static final Settings DEFAULT_SETTINGS = new Settings(true, false);
 
-    public static Settings lossy() {
-        return new Settings(true, false);
+    public static Settings exact() {
+        return new Settings(false, false);
     }
 
     public static Settings disableVerifier() {

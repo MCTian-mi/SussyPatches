@@ -819,14 +819,15 @@ if (usesShadowedDependencies.toBoolean()) {
             dependsOn('shadowJar')
         }
     }
-}
 
-afterEvaluate {
-    AdhocComponentWithVariants javaComponent = (AdhocComponentWithVariants) project.components.findByName('java')
-    javaComponent.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
-        skip()
+    afterEvaluate {
+        AdhocComponentWithVariants javaComponent = (AdhocComponentWithVariants) project.components.findByName('java')
+        javaComponent.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
+            skip()
+        }
     }
 }
+
 
 def getManifestAttributes() {
     def attributes = [:]

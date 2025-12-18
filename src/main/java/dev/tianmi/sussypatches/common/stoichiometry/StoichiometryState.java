@@ -1,11 +1,13 @@
 package dev.tianmi.sussypatches.common.stoichiometry;
 
+import static dev.tianmi.sussypatches.common.stoichiometry.SimplexPhaseI.*;
+
 import java.util.*;
+
+import org.apache.commons.lang3.math.Fraction;
 
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.Material;
-import org.apache.commons.lang3.math.Fraction;
-import static dev.tianmi.sussypatches.common.stoichiometry.SimplexPhaseI.*;
 
 public class StoichiometryState {
 
@@ -451,8 +453,7 @@ public class StoichiometryState {
                 constraints.add(new LinearConstraint(
                         coeffs,
                         SimplexPhaseI.ConstraintType.GEQ,
-                        0.0
-                ));
+                        0.0));
             }
         }
 

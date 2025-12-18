@@ -11,6 +11,7 @@ public class SimplexPhaseI {
     private static final double EPSILON = 1e-10;
 
     public enum ConstraintType {
+
         LEQ,  // <=
         EQ,   // =
         GEQ;   // >=
@@ -28,6 +29,7 @@ public class SimplexPhaseI {
      * Represents a linear constraint: sum(coefficients[i] * x[i]) {type} rhs
      */
     public static class LinearConstraint {
+
         final double[] coefficients;
         final ConstraintType type;
         final double rhs;
@@ -39,12 +41,11 @@ public class SimplexPhaseI {
         }
     }
 
-
     /**
      * Checks if a system of linear constraints is feasible.
      * All variables are assumed to have non-negativity constraints (x >= 0).
      *
-     * @param constraints List of constraints to check
+     * @param constraints  List of constraints to check
      * @param numVariables Number of decision variables
      * @return true if the system is feasible, false otherwise
      */
@@ -336,6 +337,7 @@ public class SimplexPhaseI {
      * Internal representation of the simplex tableau.
      */
     private static class SimplexTableau {
+
         final double[][] table;
         final int[] basis; // Index of basic variable for each constraint
         final int numOriginalVars;
