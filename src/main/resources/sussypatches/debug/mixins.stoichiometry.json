@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.feature.stoichiometry",
+  "package": "dev.tianmi.sussypatches.core.mixin.debug.stoichiometry",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",

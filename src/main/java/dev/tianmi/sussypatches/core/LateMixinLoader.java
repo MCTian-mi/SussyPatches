@@ -27,7 +27,6 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE.add("deepmaintenance", SusConfig.FEAT.deepMaintenance);
         FEATURE.add("coverretainexact", SusConfig.FEAT.coverRetainExact);
         FEATURE.add("visiblefluidcell", SusConfig.FEAT.visibleFluidCell);
-        FEATURE.add("stoichiometry", SusConfig.DEBUG.enableStoichiometryVerifier);
 
         COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemandAnimation, SusMods.LoliASM,
                 SusMods.OptiFine.negate());
@@ -77,6 +76,8 @@ public class LateMixinLoader implements ILateMixinLoader {
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
         API.add("pipeicontypes", SusConfig.API.pipeIconTypes);
+
+        DEBUG.add("stoichiometry", SusConfig.DEBUG.enableStoichiometryVerifier);
     }
 
     @Override
@@ -96,6 +97,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK,
         COMPAT,
         API,
+        DEBUG
         ;
 
         private static final String ROOT = Tags.MODID + "/";

@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.feature.stoichiometry;
+package dev.tianmi.sussypatches.core.mixin.debug.stoichiometry;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
