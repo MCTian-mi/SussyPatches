@@ -26,7 +26,7 @@ import gregtech.api.metatileentity.interfaces.INeighborCache;
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2828")
 @Mixin(value = NeighborCacheTileEntityBase.class, remap = false)
 public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityBase
-                                                       implements NeighborCacheExtension, INeighborCache {
+        implements NeighborCacheExtension, INeighborCache {
 
     @Mutable
     @Final
@@ -47,8 +47,8 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
 
     // This is a hard rewrite, any conflict should result in a hard crash
     @Redirect(method = "invalidateNeighbors",
-              at = @At(value = "INVOKE",
-                       target = "Ljava/util/Arrays;fill([Ljava/lang/Object;Ljava/lang/Object;)V"))
+            at = @At(value = "INVOKE",
+                    target = "Ljava/util/Arrays;fill([Ljava/lang/Object;Ljava/lang/Object;)V"))
     private void invalidateWeakRefs(Object[] _null, Object _this) {
         for (var facing : EnumFacing.values()) {
             this.sus$neighbors.set(facing.getIndex(), INVALID);
@@ -103,9 +103,7 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
         WeakReference<TileEntity> ref = sus$getRef(facing);
         if (ref == INVALID) return true;
         TileEntity te = ref.get();
-        if (te == null) {
-            return isAdjacentChunkUnloaded(world, pos, facing);
-        }
-        return te.isInvalid();
+        if (isAdjacentChunkUnloaded(world, pos, facing)) return true;
+        return te != null && te.isInvalid();
     }
 }
