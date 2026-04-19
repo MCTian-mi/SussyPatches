@@ -478,7 +478,7 @@ public class StoichiometryState {
             unknowns[entry.getValue()] = entry.getKey();
         }
         for (int i = 0; i < component.localVariableCount; i++) {
-            msg.append("\n").append((char) ('a' + i)).append(": ").append(unknowns[i]);
+            msg.append("\n").append(getStringForElementNumber(i)).append(": ").append(unknowns[i]);
         }
         msg.append(
                 "\nUse this information to find the other offending lines. The latest constraint will now be removed");
@@ -494,9 +494,9 @@ public class StoichiometryState {
         for (int i = 0; i < coeffs.length; i++) {
             double coeff = coeffs[i];
             if (coeff > 0) {
-                right.append(coeff).append((char) ('a' + i)).append(" + ");
+                right.append(coeff).append(getStringForElementNumber(i)).append(" + ");
             } else if (coeff < 0) {
-                left.append(-coeff).append((char) ('a' + i)).append(" + ");
+                left.append(-coeff).append(getStringForElementNumber(i)).append(" + ");
             }
         }
         if (constraint.rhs < 0) {
@@ -521,6 +521,19 @@ public class StoichiometryState {
         return left.toString() +
                 constraint.type.oppositeType() + " " + // <= -> >=
                 right.toString();
+    }
+
+    private String getStringForElementNumber(int i) {
+        if (i < 26) {
+            return String.valueOf((char) ('a' + i));
+        }
+        StringBuilder chars = new StringBuilder();
+        while (i > 25) {
+            chars.append((char) ('a' + i % 26));
+            i /= 26;
+        }
+        chars.append((char) ('a' + i % 26));
+        return chars.toString();
     }
 
     public void clear() {

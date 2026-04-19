@@ -34,7 +34,6 @@ import gregtech.api.unification.material.registry.IMaterialRegistryManager;
 import gregtech.api.unification.stack.ItemMaterialInfo;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.core.unification.material.internal.MaterialRegistryManager;
-import gregtech.integration.groovy.GroovyScriptModule;
 
 /**
  * Debug-only stoichiometry verifier to ensure scripted recipes conserve elements.
@@ -63,7 +62,7 @@ public final class StoichiometryVerifier {
 
     private static boolean shouldVerify(RecipeMap<?> map, Recipe recipe) {
         if (!SusConfig.DEBUG.enableStoichiometryVerifier) return false;
-        if (!recipe.isGroovyRecipe() && !GroovyScriptModule.isCurrentlyRunning()) return false;
+        if (!recipe.isGroovyRecipe()) return false;
         String name = map.unlocalizedName;
         for (String allowed : SusConfig.DEBUG.stoichiometryRecipeMaps) {
             if (allowed.equalsIgnoreCase(name)) return true;
@@ -103,6 +102,15 @@ public final class StoichiometryVerifier {
                 throw e;
             } else {
                 SussyPatches.LOGGER.error(e);
+                StackTraceElement[] elements = e.getStackTrace();
+                for (int i = 0; i < Math.min(elements.length, 20); i++) {
+                    if (elements[i].getMethodName().equals("buildAndRegister")) {
+                        SussyPatches.LOGGER.error("at " + elements[i + 1]);
+                        SussyPatches.LOGGER.error("at " + elements[i + 2]);
+                        SussyPatches.LOGGER.error("at " + elements[i + 3]);
+                        SussyPatches.LOGGER.error("at " + elements[i + 4]);
+                    }
+                }
             }
         }
     }
@@ -240,7 +248,8 @@ public final class StoichiometryVerifier {
         }
         Map<Material, Fraction> composition = new HashMap<>();
         MaterialStack unmultipliedMaterialStack = getMaterial(stack);
-        if (unmultipliedMaterialStack != null) {
+        if (unmultipliedMaterialStack != null && unmultipliedMaterialStack.material != null) {
+            // yes you really need that second condition
             MaterialStack materialStack = new MaterialStack(unmultipliedMaterialStack.material,
                     unmultipliedMaterialStack.amount * stack.getCount());
             return decomposeOrePrefixItem(materialStack, composition);
@@ -380,7 +389,7 @@ public final class StoichiometryVerifier {
                         v.element.getSymbol(), v.input, v.output))
                 .collect(Collectors.joining("\n"));
 
-        return "Stoichiometry violation detected: '" + "'\n" +
+        return "Stoichiometry violation detected: \n" +
                 elementDetails;
     }
 
