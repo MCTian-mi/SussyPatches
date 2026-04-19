@@ -87,15 +87,18 @@ public final class StoichiometryVerifier {
             return;
         }
         lossy |= output.unboundedAbove;
-        boolean hasUnknowns;
         try {
-            hasUnknowns = stoichiometryState.addReaction(input.composition, output.composition, lossy);
-            if (!hasUnknowns) {
-                List<ElementViolation> violations = diff(input, output, lossy);
-                if (violations.isEmpty()) return;
-
-                String message = format(violations);
-                throw new StoichiometryViolationException(message);
+            boolean hasInputUnknowns = hasUnknowns(input.composition);
+            boolean hasOutputUnknowns = hasUnknowns(output.composition);
+            if (!hasInputUnknowns) {
+                List<ElementViolation> violations = diff(input, output, lossy | hasOutputUnknowns);
+                if (!violations.isEmpty()) {
+                    String message = format(violations);
+                    throw new StoichiometryViolationException(message);
+                }
+            }
+            if (hasInputUnknowns || hasOutputUnknowns) {
+                stoichiometryState.addReaction(input.composition, output.composition, lossy);
             }
         } catch (StoichiometryViolationException e) {
             if (SusConfig.DEBUG.stoichiometryThrowOnViolation) {
@@ -105,14 +108,22 @@ public final class StoichiometryVerifier {
                 StackTraceElement[] elements = e.getStackTrace();
                 for (int i = 0; i < Math.min(elements.length, 20); i++) {
                     if (elements[i].getMethodName().equals("buildAndRegister")) {
-                        SussyPatches.LOGGER.error("at " + elements[i + 1]);
-                        SussyPatches.LOGGER.error("at " + elements[i + 2]);
-                        SussyPatches.LOGGER.error("at " + elements[i + 3]);
-                        SussyPatches.LOGGER.error("at " + elements[i + 4]);
+                        SussyPatches.LOGGER.error("at {}\n{}\n{}\n{}", elements[i + 1], elements[i + 2],
+                                elements[i + 3], elements[i + 4]);
+                        return;
                     }
                 }
             }
         }
+    }
+
+    private static boolean hasUnknowns(Map<Material, Fraction> set) {
+        for (Material m : set.keySet()) {
+            if (!m.isElement()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static Aggregation aggregateInputBounds(List<GTRecipeInput> itemInputs,
@@ -248,11 +259,14 @@ public final class StoichiometryVerifier {
         }
         Map<Material, Fraction> composition = new HashMap<>();
         MaterialStack unmultipliedMaterialStack = getMaterial(stack);
-        if (unmultipliedMaterialStack != null && unmultipliedMaterialStack.material != null) {
-            // yes you really need that second condition
-            MaterialStack materialStack = new MaterialStack(unmultipliedMaterialStack.material,
-                    unmultipliedMaterialStack.amount * stack.getCount());
-            return decomposeOrePrefixItem(materialStack, composition);
+        if (unmultipliedMaterialStack != null) {
+            Material mat = unmultipliedMaterialStack.material;
+            // Catches things like marker materials
+            if (mat.isElement() || mat.getMaterialComponents() != null) {
+                MaterialStack materialStack = new MaterialStack(unmultipliedMaterialStack.material,
+                        unmultipliedMaterialStack.amount * stack.getCount());
+                return decomposeOrePrefixItem(materialStack, composition);
+            }
         }
         ItemMaterialInfo info = getMaterialInfo(stack);
         if (info != null) {

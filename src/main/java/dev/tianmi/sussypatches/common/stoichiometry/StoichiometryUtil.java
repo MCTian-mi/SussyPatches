@@ -115,6 +115,9 @@ public final class StoichiometryUtil {
         if (material.hasProperty(MolarProperty.MOLAR)) {
             return material.getProperty(MolarProperty.MOLAR).itemToMole;
         }
+        if (material.hasProperty(PropertyKey.ORE)) {
+            return Fraction.ONE;
+        }
         return Fraction.getFraction(getItemsPerMoleRecurse(material));
     }
 

@@ -23,6 +23,14 @@ public class SimplexPhaseI {
                 case GEQ -> LEQ;
             };
         }
+
+        public String toString() {
+            return switch (this) {
+                case LEQ -> "<=";
+                case EQ -> "=";
+                case GEQ -> ">=";
+            };
+        }
     }
 
     /**
