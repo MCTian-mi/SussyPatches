@@ -1,5 +1,7 @@
 apply plugin: 'xyz.wagyourtail.jvmdowngrader'
 
+import xyz.wagyourtail.jvmdg.gradle.task.files.DowngradeFiles
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(22))
@@ -36,4 +38,13 @@ reobfJar {
 tasks.withType(JavaExec).named { it.contains('runClient') || it.contains('runServer') }.configureEach {
     dependsOn(shadeDowngradedApi)
     classpath = classpath - layout.files(jar) + layout.files(shadeDowngradedApi)
+}
+
+def downgradeTestClasses = tasks.register('downgradeTestClasspaths', DowngradeFiles) {
+    inputCollection = sourceSets.test.output + sourceSets.api.output
+}
+
+test {
+    dependsOn(shadeDowngradedApi, downgradeTestClasses)
+    classpath = classpath - sourceSets.main.output - sourceSets.test.output - sourceSets.api.output + layout.files(downgradeTestClasses) + layout.files(shadeDowngradedApi)
 }

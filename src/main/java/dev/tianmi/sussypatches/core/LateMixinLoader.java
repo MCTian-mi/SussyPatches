@@ -76,6 +76,8 @@ public class LateMixinLoader implements ILateMixinLoader {
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
         API.add("pipeicontypes", SusConfig.API.pipeIconTypes);
+
+        DEBUG.add("stoichiometry", SusConfig.DEBUG.enableStoichiometryVerifier);
     }
 
     @Override
@@ -95,7 +97,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK,
         COMPAT,
         API,
-        ;
+        DEBUG;
 
         private static final String ROOT = Tags.MODID + "/";
         private static final String MIXINS = "mixins.";

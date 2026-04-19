@@ -7,10 +7,10 @@ import com.cleanroommc.groovyscript.compat.mods.GroovyContainer;
 import com.cleanroommc.groovyscript.sandbox.expand.ExpansionHelper;
 
 import dev.tianmi.sussypatches.Tags;
-import dev.tianmi.sussypatches.common.SusConfig;
 import dev.tianmi.sussypatches.modules.SusModules;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.recipes.RecipeBuilder;
+import gregtech.api.unification.material.Material;
 import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
 
@@ -35,8 +35,12 @@ public class GrSModule extends IntegrationSubmodule implements GroovyPlugin {
 
     @Override
     public void onCompatLoaded(GroovyContainer<?> container) {
-        if (SusConfig.API.recipeInfo) {
-            ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "info");
-        }
+        ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "info");
+        ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "lossy");
+        ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "nonStoichiometric");
+        ExpansionHelper.mixinMethod(Material.class, GroovyExpansions.class, "itemMolar");
+        ExpansionHelper.mixinMethod(Material.class, GroovyExpansions.class, "fluidMolar");
+        ExpansionHelper.mixinMethod(Material.class, GroovyExpansions.class, "itemMolarFluidSize");
+        ExpansionHelper.mixinMethod(Material.class, GroovyExpansions.class, "fluidMolarFluidSize");
     }
 }
