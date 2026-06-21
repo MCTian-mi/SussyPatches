@@ -1,4 +1,4 @@
-//version: 1762213476
+//version: 1777224609
 /*
  * DO NOT CHANGE THIS FILE!
  * Also, you may replace this file at any time if there is an update available.
@@ -27,6 +27,15 @@ import javax.inject.Inject
 
 import static org.gradle.internal.logging.text.StyledTextOutput.Style
 
+buildscript {
+    ext.kotlin_version = '2.3.20'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
 plugins {
     id 'java'
     id 'java-library'
@@ -45,6 +54,7 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.0-1.0.9' apply false
     id 'de.undercouch.download' version '5.6.0' apply false
 }
+apply plugin: 'kotlin'
 
 def out = services.get(StyledTextOutputFactory).create('an-output')
 
@@ -481,7 +491,8 @@ repositories {
             }
         }
     }
-    mavenLocal() // Must be last for caching to work
+    mavenLocal()
+    mavenCentral() // Must be last for caching to work
 }
 
 
@@ -562,7 +573,7 @@ dependencies {
 
     compileOnlyApi 'org.jetbrains:annotations:24.1.0'
     annotationProcessor 'org.jetbrains:annotations:24.1.0'
-    patchedMinecraft('net.minecraft:launchwrapper:1.17.2') {
+    patchedMinecraft('net.minecraft:launchwrapper:1.17.4') {
         transitive = false
     }
 
@@ -579,6 +590,7 @@ dependencies {
             implementation rfg.deobf('curse.maven:top-245211:2667280') // TOP 1.4.28
         }
     }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 pluginManager.withPlugin('org.jetbrains.kotlin.kapt') {
