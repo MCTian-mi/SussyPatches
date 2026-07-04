@@ -37,6 +37,6 @@ public class SusModules implements IModuleContainer {
 
     @Override
     public String getID() {
-        return Tags.MODID;
+        return Tags.MOD_ID;
     }
 }

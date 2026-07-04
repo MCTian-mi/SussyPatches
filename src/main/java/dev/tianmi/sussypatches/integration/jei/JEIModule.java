@@ -1,7 +1,5 @@
 package dev.tianmi.sussypatches.integration.jei;
 
-import org.jetbrains.annotations.NotNull;
-
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.common.SusConfig;
 import dev.tianmi.sussypatches.modules.SusModules;
@@ -12,10 +10,11 @@ import gregtech.integration.IntegrationSubmodule;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
+import org.jetbrains.annotations.NotNull;
 
 @JEIPlugin
 @GregTechModule(moduleID = SusModules.JEI_ID,
-                containerID = Tags.MODID,
+                containerID = Tags.MOD_ID,
                 modDependencies = Mods.Names.CONNECTED_TEXTURES_MOD,
                 name = SusModules.JEI_NAME,
                 description = SusModules.JEI_DESC)

@@ -1,9 +1,6 @@
 package dev.tianmi.sussypatches.integration.modularui;
 
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
 import com.cleanroommc.modularui.factory.GuiManager;
-
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.mui2.factory.CoverGuiFactory;
 import dev.tianmi.sussypatches.api.mui2.factory.MTEGuiFactory;
@@ -13,9 +10,10 @@ import dev.tianmi.sussypatches.common.SusConfig;
 import dev.tianmi.sussypatches.modules.SusModules;
 import gregtech.api.modules.GregTechModule;
 import gregtech.integration.IntegrationSubmodule;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @GregTechModule(moduleID = SusModules.MUI_ID,
-                containerID = Tags.MODID,
+                containerID = Tags.MOD_ID,
                 modDependencies = SusMods.Names.MODULARUI,
                 name = SusModules.MUI_NAME,
                 description = SusModules.MUI_DESC)

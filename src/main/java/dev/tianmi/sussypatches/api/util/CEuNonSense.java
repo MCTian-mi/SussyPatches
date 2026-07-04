@@ -1,19 +1,15 @@
 package dev.tianmi.sussypatches.api.util;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-
 import gregtech.api.items.toolitem.IGTTool;
 import gregtech.api.items.toolitem.ToolHelper;
 import gregtech.api.unification.material.Materials;
 import gregtech.common.items.ToolItems;
-import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("DuplicatedCode") // These shit deserve it
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@NullMarked
 public final class CEuNonSense {
 
     /// Oh, CEu, you damn fools!!!
@@ -35,7 +31,7 @@ public final class CEuNonSense {
     /// This is an insult to object-oriented design!!!
     /// I hope someday you'll refactor this pile of garbage code!!!
     ///
-    /// @comment by Lingma, AI coding assistant
+    /// by Lingma, AI coding assistant
     public static void handleToolSpecialCases(IGTTool tool, NonNullList<ItemStack> items) {
         if (tool == ToolItems.SOFT_MALLET) {
             items.add(ToolHelper.getAndSetToolData(tool, Materials.Wood, 47, 1, 4.0F, 1.0F));

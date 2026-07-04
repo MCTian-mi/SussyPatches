@@ -1,25 +1,21 @@
 package dev.tianmi.sussypatches.api.util;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
+import gregtech.client.utils.BloomEffectUtil;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.BlockRenderLayer;
 import net.optifine.shaders.Shaders;
 import net.optifine.shaders.ShadersRender;
+import org.jspecify.annotations.NullMarked;
 
-import gregtech.client.utils.BloomEffectUtil;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
-import mcp.MethodsReturnNonnullByDefault;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 
 @UtilityClass
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@NullMarked
 @SuppressWarnings("JavaLangInvokeHandleSignature")
 public class OptiFineHelper {
 

@@ -1,18 +1,21 @@
 package dev.tianmi.sussypatches.core;
 
-import static dev.tianmi.sussypatches.core.LoadingPlugin.Type.*;
-
-import java.util.*;
-
+import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.api.core.ILoadingPlugin;
+import dev.tianmi.sussypatches.api.util.BoolSupplier;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
-
-import dev.tianmi.sussypatches.Tags;
-import dev.tianmi.sussypatches.api.core.ILoadingPlugin;
-import dev.tianmi.sussypatches.api.util.BoolSupplier;
 import zone.rong.mixinbooter.IEarlyMixinLoader;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static dev.tianmi.sussypatches.core.LoadingPlugin.Type.API;
+import static dev.tianmi.sussypatches.core.LoadingPlugin.Type.COMPAT;
 
 @Name("SussyPatchesPlugin")
 @MCVersion(ForgeVersion.mcVersion)
@@ -47,7 +50,7 @@ public class LoadingPlugin implements ILoadingPlugin, IEarlyMixinLoader {
         API,
         ;
 
-        private static final String ROOT = Tags.MODID + "/";
+        private static final String ROOT = Tags.MOD_ID + "/";
         private static final String MIXINS = "mixins.";
         private static final String JSON = ".json";
 

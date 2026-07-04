@@ -1,5 +1,9 @@
 package dev.tianmi.sussypatches;
 
+import dev.tianmi.sussypatches.api.util.SusMods;
+import dev.tianmi.sussypatches.common.CommonProxy;
+import gregtech.GTInternalTags;
+import gregtech.api.util.Mods;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -8,18 +12,12 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import dev.tianmi.sussypatches.api.util.SusMods;
-import dev.tianmi.sussypatches.common.CommonProxy;
-import gregtech.GTInternalTags;
-import gregtech.api.util.Mods;
-
-@Mod(modid = Tags.MODID,
-     version = Tags.VERSION,
-     name = Tags.MODNAME,
+@Mod(modid = Tags.MOD_ID,
+     version = Tags.MOD_VERSION,
+     name = Tags.MOD_NAME,
      dependencies = SussyPatches.DEP_STRING,
      acceptedMinecraftVersions = ForgeVersion.mcVersion)
 public class SussyPatches {
@@ -30,14 +28,14 @@ public class SussyPatches {
             AFTER + Mods.Names.CONNECTED_TEXTURES_MOD +
             AFTER + SusMods.Names.CONFIGANYTIME;
 
-    public static final Logger LOGGER = LogManager.getLogger(Tags.MODID);
+    public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_ID);
 
-    @SidedProxy(modId = Tags.MODID,
+    @SidedProxy(modId = Tags.MOD_ID,
                 clientSide = "dev.tianmi.sussypatches.client.ClientProxy",
                 serverSide = "dev.tianmi.sussypatches.common.CommonProxy")
     public static CommonProxy proxy;
 
-    @Instance(Tags.MODID)
+    @Instance(Tags.MOD_ID)
     public static SussyPatches instance;
 
     @EventHandler

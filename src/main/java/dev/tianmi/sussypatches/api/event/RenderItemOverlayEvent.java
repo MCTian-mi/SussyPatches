@@ -1,7 +1,6 @@
 package dev.tianmi.sussypatches.api.event;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
+import lombok.Getter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -10,12 +9,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.jetbrains.annotations.Nullable;
 
-import mcp.MethodsReturnNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
+@Getter
+@NullMarked
 @Cancelable
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class RenderItemOverlayEvent extends Event {
 
     protected RenderOperation operation;
@@ -26,10 +25,6 @@ public class RenderItemOverlayEvent extends Event {
 
     public void enqueue(RenderOperation operation) {
         this.operation = this.operation.andThen(operation);
-    }
-
-    public RenderOperation getOperation() {
-        return operation;
     }
 
     public void reset() {

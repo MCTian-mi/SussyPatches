@@ -1,26 +1,5 @@
 package dev.tianmi.sussypatches.client.renderer.textures;
 
-import static dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer.from;
-import static gregtech.api.util.GTUtility.gregtechId;
-import static gregtech.common.blocks.BlockCleanroomCasing.CasingType.PLASCRETE;
-import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.*;
-import static gregtech.common.blocks.BlockMachineCasing.MachineCasingType.ULV;
-import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.*;
-import static gregtech.common.blocks.BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING;
-import static gregtech.common.blocks.BlockTurbineCasing.TurbineCasingType.*;
-import static gregtech.common.blocks.MetaBlocks.*;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import net.minecraft.util.ResourceLocation;
-
-import org.jetbrains.annotations.Nullable;
-
 import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
 import gregtech.api.capability.IDataAccessHatch;
@@ -36,10 +15,28 @@ import gregtech.common.blocks.BlockSteamCasing;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockPart;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+
+import static dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer.from;
+import static gregtech.api.util.GTUtility.gregtechId;
+import static gregtech.common.blocks.BlockCleanroomCasing.CasingType.PLASCRETE;
+import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.*;
+import static gregtech.common.blocks.BlockMachineCasing.MachineCasingType.ULV;
+import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.*;
+import static gregtech.common.blocks.BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING;
+import static gregtech.common.blocks.BlockTurbineCasing.TurbineCasingType.*;
+import static gregtech.common.blocks.MetaBlocks.*;
 
 /// Holds the default connected textures for GregTechCEu
 /// See [GCyMConnectedTextures] for how to impl it for your own GT addon
-@ParametersAreNonnullByDefault
+@NullMarked
 public class ConnectedTextures {
 
     /// Fixing Z-fighting issues with overlays.

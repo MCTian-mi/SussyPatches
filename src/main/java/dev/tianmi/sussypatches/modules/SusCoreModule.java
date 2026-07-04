@@ -1,11 +1,5 @@
 package dev.tianmi.sussypatches.modules;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.common.SusConfig;
@@ -14,9 +8,14 @@ import dev.tianmi.sussypatches.common.helper.QChestInteractions;
 import dev.tianmi.sussypatches.common.helper.VisibleFluidCell;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.modules.IGregTechModule;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @GregTechModule(moduleID = SusModules.CORE_ID,
-                containerID = Tags.MODID,
+                containerID = Tags.MOD_ID,
                 name = SusModules.CORE_NAME,
                 description = SusModules.CORE_DESC,
                 coreModule = true)

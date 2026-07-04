@@ -1,19 +1,5 @@
 package dev.tianmi.sussypatches.integration.vintagefix;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.embeddedt.vintagefix.dynamicresources.model.DynamicBakedModelProvider;
-import org.embeddedt.vintagefix.event.DynamicModelBakeEvent;
-import org.jetbrains.annotations.NotNull;
-
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.SusMods;
 import dev.tianmi.sussypatches.common.SusConfig;
@@ -24,9 +10,21 @@ import dev.tianmi.sussypatches.modules.SusModules;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.embeddedt.vintagefix.dynamicresources.model.DynamicBakedModelProvider;
+import org.embeddedt.vintagefix.event.DynamicModelBakeEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @GregTechModule(moduleID = SusModules.ViF_ID,
-                containerID = Tags.MODID,
+                containerID = Tags.MOD_ID,
                 modDependencies = SusMods.Names.VINTAGE_FIX,
                 name = SusModules.ViF_NAME,
                 description = SusModules.ViF_DESC)

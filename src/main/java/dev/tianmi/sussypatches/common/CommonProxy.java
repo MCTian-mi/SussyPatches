@@ -1,10 +1,9 @@
 package dev.tianmi.sussypatches.common;
 
+import dev.tianmi.sussypatches.Tags;
 import net.minecraftforge.fml.common.Mod;
 
-import dev.tianmi.sussypatches.Tags;
-
-@Mod.EventBusSubscriber(modid = Tags.MODID)
+@Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public class CommonProxy {
 
     public void onPreInit() {}

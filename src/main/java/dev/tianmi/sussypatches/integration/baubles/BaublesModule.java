@@ -1,17 +1,16 @@
 package dev.tianmi.sussypatches.integration.baubles;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.items.IItemHandler;
-
 import baubles.api.cap.BaublesCapabilities;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.modules.SusModules;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.items.IItemHandler;
 
 @GregTechModule(moduleID = SusModules.BAUBLES_ID,
-                containerID = Tags.MODID,
+                containerID = Tags.MOD_ID,
                 modDependencies = Mods.Names.BAUBLES,
                 name = SusModules.BAUBLES_NAME,
                 description = SusModules.BAUBLES_DESC)
