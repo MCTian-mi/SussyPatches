@@ -58,6 +58,7 @@ dependencies {
 
     implementation(deps.hei)
     runtimeOnly(deps.theOneProbe)
+    annotationProcessor(libs.mixinbooter) // Mixinbooter 10.x contains a java agent
 
     // Mod dependencies
     api(deps.codeChickenLib) { isTransitive = false }
