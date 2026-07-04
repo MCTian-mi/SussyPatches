@@ -1,7 +1,5 @@
 package dev.tianmi.sussypatches.integration.ctm;
 
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
 import dev.tianmi.sussypatches.common.SusConfig;
@@ -9,9 +7,10 @@ import dev.tianmi.sussypatches.modules.SusModules;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.util.Mods;
 import gregtech.integration.IntegrationSubmodule;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 @GregTechModule(moduleID = SusModules.CTM_ID,
-                containerID = Tags.MODID,
+                containerID = Tags.MOD_ID,
                 modDependencies = Mods.Names.CONNECTED_TEXTURES_MOD,
                 name = SusModules.CTM_NAME,
                 description = SusModules.CTM_DESC)

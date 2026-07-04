@@ -1,0 +1,71 @@
+[versions]
+annotations = "26.1.0"
+jspecify = "1.0.0"
+lombok = "1.18.46"
+
+hei = "4.31.2"
+theOneProbe = "1.12-1.4.28"
+codeChickenLib = "3.2.3.358"
+
+# Mod dependencies
+gregtech = "2.8.10-beta"
+gregicalityMultiblocks = "1.2.11"
+craftTweaker = "1.12-4.1.20.700"
+ae2Uel = "v0.56.7"
+groovyscript = "1.3.1"
+configanytime = "3.0"
+modularui = "3.0.2"
+
+# Optional mod dependencies
+ctm = "MC1.12.2-1.0.2.31"
+supercritical = "6793777"
+fluidloggedApi3 = "3.1.1"
+fluidloggedApi2 = "2.2.4"
+lolasm = "6333774"
+flare = "0.7.0"
+vintagefix = "0.6.2"
+alfheimLightingEngine = "1.6"
+redCoreMc = "1.8-1.12-0.7-Dev-1"
+zbgt = "0.16.1"
+mcjtylibRefilmed = "Tlunl1cN"
+refinedtools = "7.77"
+toolBelt = "3459767"
+baublesLts = "3916343"
+xaerosWorldMap = "1.39.12_Forge_1.12"
+xaerosMinimap = "25.2.10_Forge_1.12"
+
+[libraries]
+annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+hei = { module = "mezz:jei", version.ref = "hei" }
+theOneProbe = { module = "maven.modrinth:the-one-probe", version.ref = "theOneProbe" }
+codeChickenLib = { module = "codechicken:codechickenlib", version.ref = "codeChickenLib" }
+
+# Mod dependencies
+gregtech = { module = "gregtech:gregtech", version.ref = "gregtech" }
+gregicalityMultiblocks = { module = "gregicality:GregicalityMultiblocks", version.ref = "gregicalityMultiblocks" }
+craftTweaker = { module = "CraftTweaker2:CraftTweaker2-MC1120-Main", version.ref = "craftTweaker" }
+ae2Uel = { module = "appeng:ae2-uel", version.ref = "ae2Uel" }
+groovyscript = { module = "com.cleanroommc:groovyscript", version.ref = "groovyscript" }
+configanytime = { module = "com.cleanroommc:configanytime", version.ref = "configanytime" }
+modularui = { module = "com.cleanroommc:modularui", version.ref = "modularui" }
+
+# Optional mod dependencies
+ctm = { module = "team.chisel.ctm:CTM", version.ref = "ctm" }
+supercritical = { module = "curse.maven:supercritical-1185871", version.ref = "supercritical" }
+fluidloggedApi3 = { module = "maven.modrinth:fluidlogged-api", version.ref = "fluidloggedApi3" }
+fluidloggedApi2 = { module = "maven.modrinth:fluidlogged-api", version.ref = "fluidloggedApi2" }
+lolasm = { module = "curse.maven:lolasm-460609", version.ref = "lolasm" }
+flare = { module = "maven.modrinth:flare", version.ref = "flare" }
+vintagefix = { module = "maven.modrinth:vintagefix", version.ref = "vintagefix" }
+alfheimLightingEngine = { module = "maven.modrinth:alfheim-lighting-engine", version.ref = "alfheimLightingEngine" }
+redCoreMc = { module = "dev.redstudio:Red-Core-MC", version.ref = "redCoreMc" }
+zbgt = { module = "maven.modrinth:zbgt", version.ref = "zbgt" }
+mcjtylibRefilmed = { module = "maven.modrinth:mcjtylib-refilmed", version.ref = "mcjtylibRefilmed" }
+refinedtools = { module = "maven.modrinth:refinedtools", version.ref = "refinedtools" }
+toolBelt = { module = "curse.maven:tool-belt-260262", version.ref = "toolBelt" }
+baublesLts = { module = "curse.maven:baubles-lts-655747", version.ref = "baublesLts" }
+xaerosWorldMap = { module = "maven.modrinth:xaeros-world-map", version.ref = "xaerosWorldMap" }
+xaerosMinimap = { module = "maven.modrinth:xaeros-minimap", version.ref = "xaerosMinimap" }

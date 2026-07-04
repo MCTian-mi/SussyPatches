@@ -1,18 +1,18 @@
 package dev.tianmi.sussypatches.api.core.mixin.extension;
 
-import java.util.*;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import dev.tianmi.sussypatches.api.annotation.MixinExtension;
 import gregtech.api.items.toolitem.IGTTool;
 import gregtech.api.unification.material.Material;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import mcp.MethodsReturnNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
 
 @MixinExtension(IGTTool.class)
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@NullMarked
 public interface GTToolExtension {
 
     Map<String, Collection<Material>> TOOL_MATERIALS = new Object2ObjectArrayMap<>();

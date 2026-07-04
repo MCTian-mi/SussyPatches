@@ -1,21 +1,22 @@
 package dev.tianmi.sussypatches.common;
 
-import java.util.function.Predicate;
-
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.Config.*;
-
 import com.cleanroommc.configanytime.ConfigAnytime;
 import com.google.common.base.Predicates;
-
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.util.FilterMode;
 import dev.tianmi.sussypatches.api.util.ItemAndMeta;
 import dev.tianmi.sussypatches.api.util.SusMods;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.Ignore;
+import net.minecraftforge.common.config.Config.Name;
+import net.minecraftforge.common.config.Config.RequiresMcRestart;
 
-@Config(modid = Tags.MODID)
+import java.util.function.Predicate;
+
+@Config(modid = Tags.MOD_ID)
 public class SusConfig {
 
     @Comment("Config options for additional features")

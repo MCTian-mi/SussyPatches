@@ -1,18 +1,18 @@
 package dev.tianmi.sussypatches.core;
 
-import static dev.tianmi.sussypatches.core.LateMixinLoader.Type.*;
-import static gregtech.api.util.Mods.*;
+import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.api.util.BoolSupplier;
+import dev.tianmi.sussypatches.api.util.SusMods;
+import dev.tianmi.sussypatches.common.SusConfig;
+import zone.rong.mixinbooter.ILateMixinLoader;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import dev.tianmi.sussypatches.Tags;
-import dev.tianmi.sussypatches.api.util.BoolSupplier;
-import dev.tianmi.sussypatches.api.util.SusMods;
-import dev.tianmi.sussypatches.common.SusConfig;
-import zone.rong.mixinbooter.ILateMixinLoader;
+import static dev.tianmi.sussypatches.core.LateMixinLoader.Type.*;
+import static gregtech.api.util.Mods.*;
 
 @SuppressWarnings("unused")
 public class LateMixinLoader implements ILateMixinLoader {
@@ -97,7 +97,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         API,
         ;
 
-        private static final String ROOT = Tags.MODID + "/";
+        private static final String ROOT = Tags.MOD_ID + "/";
         private static final String MIXINS = "mixins.";
         private static final String JSON = ".json";
 

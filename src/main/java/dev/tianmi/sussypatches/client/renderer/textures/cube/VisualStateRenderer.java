@@ -1,12 +1,19 @@
 package dev.tianmi.sussypatches.client.renderer.textures.cube;
 
-import static gregtech.api.block.VariantActiveBlock.ACTIVE;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.render.pipeline.IVertexOperation;
+import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Matrix4;
+import dev.tianmi.sussypatches.api.core.mixin.extension.CRSExtension;
+import dev.tianmi.sussypatches.client.model.QuadWrapper;
+import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
+import gregtech.client.renderer.CubeRendererState;
+import gregtech.client.renderer.ICubeRenderer;
+import gregtech.client.renderer.cclop.ColourOperation;
+import gregtech.client.renderer.cclop.LightMapOperation;
+import gregtech.client.renderer.texture.Textures;
+import gregtech.client.utils.BloomEffectUtil;
+import lombok.Getter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -22,32 +29,26 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.apache.commons.lang3.ArrayUtils;
-
-import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.pipeline.IVertexOperation;
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Matrix4;
-import dev.tianmi.sussypatches.api.core.mixin.extension.CRSExtension;
-import dev.tianmi.sussypatches.client.model.QuadWrapper;
-import dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures;
-import gregtech.client.renderer.CubeRendererState;
-import gregtech.client.renderer.ICubeRenderer;
-import gregtech.client.renderer.cclop.ColourOperation;
-import gregtech.client.renderer.cclop.LightMapOperation;
-import gregtech.client.renderer.texture.Textures;
-import gregtech.client.utils.BloomEffectUtil;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import team.chisel.ctm.client.state.CTMExtendedState;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static gregtech.api.block.VariantActiveBlock.ACTIVE;
 
 // TODO: fix z-fighting properly
 // TODO: investigate lighting issue
-@ParametersAreNonnullByDefault
+@NullMarked
 public class VisualStateRenderer implements ICubeRenderer {
 
+    @Getter
     protected final IBlockState visualState;
     protected final boolean isActive;
 
+    @Nullable
     protected TextureAtlasSprite particleSprite;
 
     public VisualStateRenderer(IBlockState visualState) {
@@ -65,10 +66,6 @@ public class VisualStateRenderer implements ICubeRenderer {
 
     public static VisualStateRenderer from(IBlockState visualState, boolean isActive) {
         return new VisualStateRenderer(visualState, isActive);
-    }
-
-    public IBlockState getVisualState() {
-        return visualState;
     }
 
     @Override

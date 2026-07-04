@@ -1,20 +1,19 @@
 package dev.tianmi.sussypatches.client.renderer.textures;
 
+import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
+import gregicality.multiblocks.api.render.GCYMTextures;
+import gregtech.api.capability.IMufflerHatch;
+import org.jspecify.annotations.NullMarked;
+
+import java.util.Arrays;
+
 import static dev.tianmi.sussypatches.client.renderer.textures.ConnectedTextures.*;
 import static dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer.from;
 import static gregicality.multiblocks.api.utils.GCYMUtil.gcymId;
 import static gregicality.multiblocks.common.block.GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING;
 import static gregicality.multiblocks.common.block.blocks.BlockLargeMultiblockCasing.CasingType.*;
 
-import java.util.Arrays;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import dev.tianmi.sussypatches.client.renderer.textures.cube.VisualStateRenderer;
-import gregicality.multiblocks.api.render.GCYMTextures;
-import gregtech.api.capability.IMufflerHatch;
-
-@ParametersAreNonnullByDefault
+@NullMarked
 public class GCyMConnectedTextures {
 
     // GCyM

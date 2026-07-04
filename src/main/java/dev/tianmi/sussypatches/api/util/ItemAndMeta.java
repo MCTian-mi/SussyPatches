@@ -1,21 +1,17 @@
 package dev.tianmi.sussypatches.api.util;
 
-import java.util.Objects;
-import java.util.function.Predicate;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-
 import dev.tianmi.sussypatches.api.util.Result.Err;
 import dev.tianmi.sussypatches.api.util.Result.Ok;
 import gregtech.api.GTValues;
-import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import org.jspecify.annotations.NullMarked;
+
+import java.util.Objects;
+import java.util.function.Predicate;
 
 /// A re-implementation of [ItemAndMetadata] but more powerful
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
+@NullMarked
 public record ItemAndMeta(Item item, int meta) implements Predicate<ItemStack> {
 
     public static final ItemAndMeta EMPTY = new ItemAndMeta(ItemStack.EMPTY);

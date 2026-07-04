@@ -1,23 +1,18 @@
 package dev.tianmi.sussypatches.api.util;
 
+import dev.tianmi.sussypatches.api.util.Result.Err;
+import dev.tianmi.sussypatches.api.util.Result.Ok;
+import org.jspecify.annotations.NullMarked;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import dev.tianmi.sussypatches.api.util.Result.Err;
-import dev.tianmi.sussypatches.api.util.Result.Ok;
-import mcp.MethodsReturnNonnullByDefault;
-
 // TODO)) UnwrappingException
 /// Basically a re-impl of Result ADT from Rust
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
-// spotless:off
+@NullMarked
 public sealed interface Result<T, E> extends Iterable<T> permits Err, Ok {
-// spotless:on
 
     record Ok<T, Nothing> (T t) implements Result<T, Nothing> {}
 

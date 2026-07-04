@@ -1,24 +1,20 @@
 package dev.tianmi.sussypatches.api.util;
 
-import java.util.function.Function;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
+import gregtech.api.util.Mods;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.lwjgl.opengl.GLContext;
 
-import gregtech.api.util.Mods;
+import java.util.function.Function;
 
 /// Mods that are :sus:
 /// Basically a re-implementation of [Mods]
-@ParametersAreNonnullByDefault
+@NullMarked
 public enum SusMods implements BoolSupplier {
 
     GCyM(Names.GCYM),
@@ -84,7 +80,6 @@ public enum SusMods implements BoolSupplier {
         return isLoaded();
     }
 
-    @NotNull
     public String version() {
         if (this.ID == null) return "";
         ModContainer container = Loader.instance().getIndexedModList().get(this.ID);
