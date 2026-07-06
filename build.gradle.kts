@@ -58,7 +58,10 @@ dependencies {
 
     implementation(deps.hei)
     runtimeOnly(deps.theOneProbe)
-    annotationProcessor(libs.mixinbooter) // Mixinbooter 10.x contains a java agent
+
+    // Mixinbooter 11.x breaks runtime (mixins with type-parameters, FMLDeobfuscatingRemapper)
+    // So we use Mixinbooter 10.x here, which contains the mixin annotation processor.
+    annotationProcessor(libs.mixinbooter)
 
     // Mod dependencies
     api(deps.codeChickenLib) { isTransitive = false }

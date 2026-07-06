@@ -18,7 +18,7 @@ val modernJavaAsmBootstrap = configurations.create("modernJavaAsmBootstrap") {
 
 // Most RFG configuration lives here, see the Javadoc for com.gtnewhorizons.retrofuturagradle.MinecraftExtension
 minecraft {
-    mcVersion = minecraftVersion
+    mcVersion = project.mcVersion
 
     // Username for client run configurations
     username = devUserName
@@ -68,7 +68,7 @@ if (generateTags) {
         buildConfigField("MOD_ID", modId)
         buildConfigField("MOD_NAME", modName)
         buildConfigField("MOD_VERSION", modVersion)
-        buildConfigField("MC_VERSION", "[$minecraftVersion]")
+        buildConfigField("MC_VERSION", "[$mcVersion]")
     }
 }
 
@@ -91,7 +91,7 @@ tasks.processResources {
         "mod_id" to modId,
         "mod_name" to modName,
         "mod_version" to modVersion,
-        "mc_version" to minecraftVersion,
+        "mc_version" to mcVersion,
         "mod_group" to modGroup,
         "mixin_package" to mixinPackage,
         "mixin_refmap" to mixinRefmap,

@@ -15,8 +15,15 @@ val releaseName: String = versionDisplayFormat
     .replace($$"$MOD_NAME", modName)
     .replace($$"$VERSION", modVersion)
 
-require(releaseType in CurseForge.VALID_RELEASE_TYPES) {
-    "Release type invalid! Found \"$releaseType\", allowed: ${CurseForge.VALID_RELEASE_TYPES.joinToString { "\"$it\"" }}."
+require(releaseChannel in CurseForge.VALID_RELEASE_TYPES) {
+    "Release type invalid! Found \"$releaseChannel\", allowed: ${CurseForge.VALID_RELEASE_TYPES.joinToString { "\"$it\"" }}."
+}
+
+val logicalSide = when (environment.lowercase()) {
+    "client" -> arrayOf("Client")
+    "server" -> arrayOf("Server")
+    "both" -> arrayOf("Client", "Server")
+    else -> throw GradleException("Mod environment must be on of \"client\", \"server\", or \"both\", but \"$environment\" was found!")
 }
 
 java {
@@ -58,8 +65,8 @@ modrinth {
     projectId = modrinthProjectId
     versionName = releaseName
     versionNumber = modVersion
-    versionType = releaseType
-    gameVersions = listOf(minecraftVersion)
+    versionType = releaseChannel
+    gameVersions = listOf(mcVersion)
     loaders = listOf("Forge")
     detectLoaders = false
     debugMode = deploymentDebug
@@ -100,11 +107,12 @@ val publishToCurseForgeTask = tasks.register<TaskPublishCurseForge>("curseforge"
 
     with(upload(curseForgeProjectId, tasks.reobfJar)) {
         displayName = releaseName
-        releaseType = releaseType
+        releaseType = releaseChannel
         changelogType = CurseForge.CHANGELOG_MARKDOWN
         changelog = readChangelog()
         addModLoader("Forge")
-        addGameVersion(minecraftVersion)
+        addEnvironment(*logicalSide)
+        addGameVersion(mcVersion)
         withAdditionalFile(tasks.jar)
         withAdditionalFile(tasks.named("sourcesJar"))
 
@@ -153,8 +161,8 @@ private fun gitVersion(): Provider<String> = providers.exec {
     .orElse("NO-GIT-VERSION")
 
 private object ModRelations {
-    val REQ = listOf("req", "required", "requiredDependency")
-    val OPT = listOf("opt", "optional", "optionalDependency")
-    val EMB = listOf("emb", "embedded", "embeddedLibrary")
-    val INC = listOf("incomp", "fail", "incompatible")
+    val REQ = arrayOf("req", "required", "requiredDependency")
+    val OPT = arrayOf("opt", "optional", "optionalDependency")
+    val EMB = arrayOf("emb", "embedded", "embeddedLibrary")
+    val INC = arrayOf("incomp", "fail", "incompatible")
 }

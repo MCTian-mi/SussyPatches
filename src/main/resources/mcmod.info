@@ -1,18 +1,20 @@
-[{
-    "modid": "${modid}",
-    "name": "${modname}",
+[
+  {
+    "modid": "@mod_id@",
+    "name": "@mod_name@",
+    "version": "@mod_version@",
+    "mcversion": "@mc_version@",
     "description": "A sussy mod that patches GregTechCEu for ya",
-    "version": "${version}",
-    "mcversion": "${mcversion}",
-    "logoFile": "assets/sussypatches/textures/logo.png",
-    "url": "https://github.com/MCTian-mi/SussyPatches",
     "authorList": [
-        "Tian_mi"
+      "Tian_mi"
     ],
     "credits": "",
+    "url": "https://github.com/MCTian-mi/SussyPatches",
     "dependencies": [
-        "gregtech",
-        "mixinbooter",
-        "configanytime"
-    ]
-}]
+      "gregtech",
+      "mixinbooter",
+      "configanytime"
+    ],
+    "logoFile": "assets/sussypatches/textures/logo.png"
+  }
+]
