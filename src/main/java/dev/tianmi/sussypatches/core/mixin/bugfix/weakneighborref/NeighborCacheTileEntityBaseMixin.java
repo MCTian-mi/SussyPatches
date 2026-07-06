@@ -1,14 +1,12 @@
 package dev.tianmi.sussypatches.core.mixin.bugfix.weakneighborref;
 
-import static dev.tianmi.sussypatches.api.core.mixin.extension.NeighborCacheExtension.isAdjacentChunkUnloaded;
-
-import java.lang.ref.WeakReference;
-import java.util.Arrays;
-import java.util.List;
-
+import dev.tianmi.sussypatches.api.annotation.Implemented;
+import dev.tianmi.sussypatches.api.core.mixin.extension.NeighborCacheExtension;
+import gregtech.api.metatileentity.NeighborCacheTileEntityBase;
+import gregtech.api.metatileentity.SyncedTileEntityBase;
+import gregtech.api.metatileentity.interfaces.INeighborCache;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -17,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import dev.tianmi.sussypatches.api.annotation.Implemented;
-import dev.tianmi.sussypatches.api.core.mixin.extension.NeighborCacheExtension;
-import gregtech.api.metatileentity.NeighborCacheTileEntityBase;
-import gregtech.api.metatileentity.SyncedTileEntityBase;
-import gregtech.api.metatileentity.interfaces.INeighborCache;
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.List;
+
+import static dev.tianmi.sussypatches.api.core.mixin.extension.NeighborCacheExtension.isAdjacentChunkUnloaded;
 
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2828")
 @Mixin(value = NeighborCacheTileEntityBase.class, remap = false)
@@ -55,10 +53,8 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
         }
     }
 
-    /**
-     * @author Ghzdude, Tian_mi
-     * @reason This is a hard rewrite, any conflict should result in a hard crash
-     */
+    /// @author Ghzdude, Tian_mi
+    /// @reason This is a hard rewrite, any conflict should result in a hard crash
     @Nullable
     @Override
     @Overwrite
@@ -69,10 +65,8 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
         return ref.get();
     }
 
-    /**
-     * @author Ghzdude, Tian_mi
-     * @reason This is a hard rewrite, any conflict should result in a hard crash
-     */
+    /// @author Ghzdude, Tian_mi
+    /// @reason This is a hard rewrite, any conflict should result in a hard crash
     @Overwrite
     public void onNeighborChanged(@NotNull EnumFacing facing) {
         this.sus$neighbors.set(facing.getIndex(), INVALID);

@@ -396,7 +396,8 @@ public class SusConfig {
 
         @Comment({
                 "Fixes quadruple and nonuple pipes have rendering issues, like weird lighting, etc.",
-                "Note: this fix simply shrinks their thickness from 0.95 to 0.9375, a magic number that just works."
+                "Fixes CCL's LightMatrix packing sky-light interpolation error into the block-light byte,",
+                "which showed up as phantom lighting on thick (0.95) pipe faces."
         })
         @Name("Fix quad/nonuple pipes rendering")
         @RequiresMcRestart

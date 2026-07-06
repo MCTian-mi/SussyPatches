@@ -1,20 +1,7 @@
 package dev.tianmi.sussypatches.core.mixin.tweak.nomuffler;
 
-import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.api.annotation.Implemented;
 import gregtech.api.gui.GuiTextures;
@@ -26,6 +13,16 @@ import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.client.particle.VanillaParticleEffects;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMufflerHatch;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockPart;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2799")
 @Mixin(value = MetaTileEntityMufflerHatch.class, remap = false)
@@ -63,20 +60,18 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
                             target = "Lnet/minecraft/client/resources/I18n;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
                             remap = true),
                    require = -1)
-    private String replaceWithRemovalLine(String translateKey, Object[] args, Operation<String> method) {
+    private String replaceWithRemovalLine(String translateKey, Object[] parameters, Operation<String> method) {
         return switch (translateKey) {
             case "gregtech.machine.muffler_hatch.tooltip1" -> method
                     .call("sussypatches.muffler.recovery_removed.tooltip", new Object[0]);
             case "gregtech.muffler.recovery_tooltip" -> method.call("sussypatches.muffler.recovery_removed.tooltip.1",
                     new Object[0]);
-            default -> method.call(translateKey, args);
+            default -> method.call(translateKey, parameters);
         };
     }
 
-    /**
-     * @author Tian_mi
-     * @reason A hard removal of original logic
-     */
+    /// @author Tian_mi
+    /// @reason A hard removal of original logic
     @Override
     @Overwrite
     public void update() {
@@ -90,20 +85,16 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
         }
     }
 
-    /**
-     * @author Tian_mi
-     * @reason A hard removal of original logic
-     */
+    /// @author Tian_mi
+    /// @reason A hard removal of original logic
     @Override
     @Overwrite
     public void clearMachineInventory(NonNullList<ItemStack> itemBuffer) {
         super.clearMachineInventory(itemBuffer);
     }
 
-    /**
-     * @author Tian_mi
-     * @reason A hard removal of original logic
-     */
+    /// @author Tian_mi
+    /// @reason A hard removal of original logic
     @Overwrite
     public void recoverItemsTable(List<ItemStack> recoveryItems) {
         SussyPatches.LOGGER.error("Class {} is trying to call \"recoverItemsTable(List<ItemStack> recoveryItems)\", " +
@@ -111,10 +102,8 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
         throw new UnsupportedOperationException("Muffler logic has been removed!");
     }
 
-    /**
-     * @author Tian_mi
-     * @reason A hard removal of original logic
-     */
+    /// @author Tian_mi
+    /// @reason A hard removal of original logic
     @Overwrite
     private boolean calculateChance() {
         SussyPatches.LOGGER.error("Class {} is trying to call \"calculateChance()\", " + "please report to the author!",
@@ -122,30 +111,24 @@ public abstract class MufflerHatchMixin extends MetaTileEntityMultiblockPart {
         throw new UnsupportedOperationException("Muffler logic has been removed!");
     }
 
-    /**
-     * @author Tian_mi
-     * @reason A hard removal of original logic
-     */
+    /// @author Tian_mi
+    /// @reason A hard removal of original logic
     @Override
     @Overwrite
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         return super.writeToNBT(data);
     }
 
-    /**
-     * @author Tian_mi
-     * @reason A hard removal of original logic
-     */
+    /// @author Tian_mi
+    /// @reason A hard removal of original logic
     @Override
     @Overwrite
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
     }
 
-    /**
-     * @author IntegerLimit, Tian_mi
-     * @reason Add warning GUI. Copied from Nomi-Libs
-     */
+    /// @author IntegerLimit, Tian_mi
+    /// @reason Add warning GUI. Copied from Nomi-Libs
     @Override
     @Overwrite
     protected ModularUI createUI(EntityPlayer player) {
