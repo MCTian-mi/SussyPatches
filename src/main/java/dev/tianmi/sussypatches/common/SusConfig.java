@@ -524,6 +524,15 @@ public class SusConfig {
         @Name("Improve ore vein info page in JEI")
         @RequiresMcRestart
         public boolean betterOreInfo = false;
+
+        @Comment({
+                "Collapses all material variants of each MetaPrefixItem (dusts, ingots, plates, etc.)",
+                "into a single collapsible group per ore prefix in the JEI ingredient list overlay.",
+                "Only works with Had Enough Items; does nothing on vanilla JEI."
+        })
+        @Name("Collapse MetaPrefixItems into JEI groups")
+        @RequiresMcRestart
+        public boolean collapseGTItems = true;
     }
 
     public static final class Api {
