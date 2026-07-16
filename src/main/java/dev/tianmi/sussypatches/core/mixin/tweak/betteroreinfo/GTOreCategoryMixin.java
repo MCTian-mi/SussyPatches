@@ -1,8 +1,17 @@
 package dev.tianmi.sussypatches.core.mixin.tweak.betteroreinfo;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import dev.tianmi.sussypatches.common.helper.DimDisplayRegistry;
+import gregtech.integration.jei.basic.BasicRecipeCategory;
+import gregtech.integration.jei.basic.GTOreCategory;
+import gregtech.integration.jei.basic.GTOreInfo;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import mezz.jei.api.gui.IGuiItemStackGroup;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -11,17 +20,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-
-import gregtech.integration.jei.basic.BasicRecipeCategory;
-import gregtech.integration.jei.basic.GTOreCategory;
-import gregtech.integration.jei.basic.GTOreInfo;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.ingredients.VanillaTypes;
+import static gregtech.integration.jei.utils.JEIResourceDepositCategoryUtils.getAllRegisteredDimensions;
 
 @Mixin(value = GTOreCategory.class, remap = false)
 public abstract class GTOreCategoryMixin extends BasicRecipeCategory<GTOreInfo, GTOreInfo> {
@@ -115,16 +114,20 @@ public abstract class GTOreCategoryMixin extends BasicRecipeCategory<GTOreInfo, 
                                           @NotNull IIngredients ingredients, CallbackInfo ci,
                                           @Local(name = "itemStackGroup") IGuiItemStackGroup itemStackGroup) {
         int initialized = 2 + recipeWrapper.getOutputCount();
-        int size = ingredients.getInputs(VanillaTypes.ITEM).size() - 2;
         int height = 19 + (((initialized - 2 - 1) / NUM_OF_SLOTS) + 1) * SLOT_HEIGHT + 4 * FONT_HEIGHT +
                 FONT_HEIGHT / 2;
 
         final int dimDisplayLineCount = 7;
 
-        for (int j = 0; j < size; j++) {
-            itemStackGroup.init(j + initialized, true,
+        int j = 0;
+        for (int dimId : getAllRegisteredDimensions(recipeWrapper.getDefinition().getDimensionFilter())) {
+            var displayStack = DimDisplayRegistry.getDisplayItem(dimId);
+            if (displayStack.isEmpty()) continue;
+            itemStackGroup.init(initialized + j, true,
                     22 + (j % dimDisplayLineCount) * SLOT_WIDTH,
                     height + (j / dimDisplayLineCount) * SLOT_HEIGHT);
+            itemStackGroup.set(initialized + j, displayStack);
+            j++;
         }
     }
 }

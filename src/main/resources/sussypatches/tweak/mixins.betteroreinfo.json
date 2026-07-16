@@ -9,7 +9,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "GTOreCategoryMixin",
-    "GTOreInfoMixin"
+    "GTOreCategoryMixin"
   ]
 }
