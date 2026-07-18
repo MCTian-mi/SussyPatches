@@ -1,10 +1,12 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import dev.tianmi.sussypatches.api.util.ItemAndMeta;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.RegistryDefaulted;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
@@ -19,9 +21,10 @@ public class DimDisplayRegistry extends RegistryDefaulted<Integer, ItemAndMeta> 
         super(ItemAndMeta.EMPTY);
     }
 
-    @Override
-    protected Map<Integer, ItemAndMeta> createUnderlyingMap() {
-        return new Int2ObjectArrayMap<>();
+    @Nullable
+    public static Integer getDimension(ItemStack stack) {
+        if (stack.isEmpty()) return null;
+        return INSTANCE.inverse().get(new ItemAndMeta(stack));
     }
 
     public static ItemStack getDisplayItem(int dimId) {
@@ -30,5 +33,14 @@ public class DimDisplayRegistry extends RegistryDefaulted<Integer, ItemAndMeta> 
 
     public static void setDisplayItem(int dimId, ItemStack itemStack) {
         INSTANCE.putObject(dimId, new ItemAndMeta(itemStack));
+    }
+
+    @Override
+    protected Map<Integer, ItemAndMeta> createUnderlyingMap() {
+        return HashBiMap.create();
+    }
+
+    private Map<ItemAndMeta, Integer> inverse() {
+        return ((BiMap<Integer, ItemAndMeta>) registryObjects).inverse();
     }
 }

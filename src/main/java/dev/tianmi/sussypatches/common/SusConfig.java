@@ -482,7 +482,7 @@ public class SusConfig {
         })
         @Name("Show all GT tools in JEI")
         @RequiresMcRestart
-        public boolean showAllToolItems = false;
+        public boolean showAllToolItems = true;
 
         @Comment({
                 "Replaces the text for Creative Chest/Tanks.",
@@ -518,12 +518,11 @@ public class SusConfig {
 
         @Comment({
                 "Cleans-up the CEu ore vein info page.",
-                "Adds an api to add display items for dimensions the vein could spawn in.",
-                "Note: has an issue with AdvancedRocketory due to its dimensions being registered too late."
+                "Adds an api to add display items for dimensions the vein could spawn in."
         })
         @Name("Improve ore vein info page in JEI")
         @RequiresMcRestart
-        public boolean betterOreInfo = false;
+        public boolean betterOreInfo = true;
 
         @Comment({
                 "Collapses all material variants of each MetaPrefixItem (dusts, ingots, plates, etc.)",

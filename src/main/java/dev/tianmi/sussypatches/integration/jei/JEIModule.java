@@ -8,10 +8,7 @@ import gregtech.api.modules.GregTechModule;
 import gregtech.api.util.Mods;
 import gregtech.common.items.ToolItems;
 import gregtech.integration.IntegrationSubmodule;
-import mezz.jei.api.ICollapsibleGroupRegistry;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.ISubtypeRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 import org.jetbrains.annotations.NotNull;
 
 @JEIPlugin
@@ -35,5 +32,12 @@ public class JEIModule extends IntegrationSubmodule implements IModPlugin {
     @Override
     public void registerCollapsibleGroups(@NotNull ICollapsibleGroupRegistry registry) {
         CollapsibleGroups.registerGroups(registry);
+    }
+
+    @Override
+    public void register(@NotNull IModRegistry registry) {
+        if (SusConfig.TWEAK.betterOreInfo) {
+            registry.addRecipeRegistryPlugin(new OreVeinInfoPlugin());
+        }
     }
 }
