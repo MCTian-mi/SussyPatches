@@ -98,9 +98,13 @@ tasks.processResources {
         "mixinextras_min_version" to libs.versions.mixinExtras.get(),
     )
 
+    val refmap = mixinRefmap
+
     // Template files
     filesMatching(listOf("mcmod.info", "pack.mcmeta", "*mixin*.json")) {
-        expand(templateTokens)
+        if (name != refmap) {
+            expand(templateTokens)
+        }
     }
 
     // Copy AT files to where it should be
