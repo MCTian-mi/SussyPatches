@@ -1,9 +1,9 @@
 [
   {
-    "modid": "@mod_id@",
-    "name": "@mod_name@",
-    "version": "@mod_version@",
-    "mcversion": "@mc_version@",
+    "modid": "${mod_id}",
+    "name": "${mod_name}",
+    "version": "${mod_version}",
+    "mcversion": "${mc_version}",
     "description": "A sussy mod that patches GregTechCEu for ya",
     "authorList": [
       "Tian_mi"

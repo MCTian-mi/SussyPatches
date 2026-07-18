@@ -1,6 +1,5 @@
 import com.gtnewhorizons.retrofuturagradle.minecraft.RunMinecraftTask
 import com.gtnewhorizons.retrofuturagradle.util.Distribution
-import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     alias(libs.plugins.accesstransformers)
@@ -101,7 +100,7 @@ tasks.processResources {
 
     // Template files
     filesMatching(listOf("mcmod.info", "pack.mcmeta", "*mixin*.json")) {
-        filter<ReplaceTokens>("tokens" to templateTokens)
+        expand(templateTokens)
     }
 
     // Copy AT files to where it should be
