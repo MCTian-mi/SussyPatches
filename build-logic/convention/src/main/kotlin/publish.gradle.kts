@@ -67,7 +67,7 @@ modrinth {
     versionNumber = modVersion
     versionType = releaseChannel
     gameVersions = listOf(mcVersion)
-    loaders = listOf("Forge")
+    loaders = listOf("forge")
     detectLoaders = false
     debugMode = deploymentDebug
     uploadFile.set(tasks.reobfJar)
