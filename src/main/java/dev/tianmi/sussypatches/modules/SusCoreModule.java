@@ -3,6 +3,7 @@ package dev.tianmi.sussypatches.modules;
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.common.SusConfig;
+import dev.tianmi.sussypatches.common.helper.ChunkTracker;
 import dev.tianmi.sussypatches.common.helper.FluidBarRenderer;
 import dev.tianmi.sussypatches.common.helper.QChestInteractions;
 import dev.tianmi.sussypatches.common.helper.VisibleFluidCell;
@@ -34,6 +35,7 @@ public class SusCoreModule implements IGregTechModule {
         if (SusConfig.FEAT.interactiveStorage) list.add(QChestInteractions.class);
         if (SusConfig.FEAT.fluidBarRenderer.enabled && SusConfig.API.itemOverlayEvent) list.add(FluidBarRenderer.class);
         if (SusConfig.FEAT.visibleFluidCell) list.add(VisibleFluidCell.class);
+        if (SusConfig.BUGFIX.weakNeighborRef) list.add(ChunkTracker.class);
         return list;
     }
 }
