@@ -113,8 +113,8 @@ val publishToCurseForgeTask = tasks.register<TaskPublishCurseForge>("curseforge"
         addModLoader("Forge")
         addEnvironment(*logicalSide)
         addGameVersion(mcVersion)
-        withAdditionalFile(tasks.jar)
-        withAdditionalFile(tasks.named("sourcesJar"))
+//        withAdditionalFile(tasks.jar)
+//        withAdditionalFile(tasks.named("sourcesJar"))
 
         curseForgeRelations.takeIf { it.isNotBlank() }?.let { str ->
             str.split(";")
