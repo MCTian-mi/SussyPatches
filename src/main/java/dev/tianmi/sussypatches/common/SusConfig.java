@@ -247,6 +247,13 @@ public class SusConfig {
         @RequiresMcRestart
         @Ignore // TODO: fix early config
         public boolean realTimeShaderCheck = true;
+
+        @Comment({
+                "Make GT frames water-loggable."
+        })
+        @Name("Water-Loggable GT frames")
+        @RequiresMcRestart
+        public boolean waterLoggableFrames = true;
     }
 
     public static final class Bugfix {

@@ -1,18 +1,17 @@
 package dev.tianmi.sussypatches.core.mixin.tweak.toolsubitems;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import dev.tianmi.sussypatches.api.core.mixin.extension.GTToolExtension;
 import gregtech.api.items.toolitem.IGTTool;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.loaders.recipe.handlers.ToolRecipeHandler;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ToolRecipeHandler.class, remap = false)
-public class ToolRecipeHandlerMixin {
+public abstract class ToolRecipeHandlerMixin {
 
     @Inject(method = "addToolRecipe", at = @At("TAIL"))
     private static void registerMaterial(Material material, IGTTool tool,

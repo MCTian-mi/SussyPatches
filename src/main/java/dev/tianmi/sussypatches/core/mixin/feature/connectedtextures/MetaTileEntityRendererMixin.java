@@ -1,20 +1,17 @@
 package dev.tianmi.sussypatches.core.mixin.feature.connectedtextures;
 
-import net.minecraft.util.math.BlockPos;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-
 import dev.tianmi.sussypatches.api.core.mixin.extension.CRSExtension;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.client.renderer.CubeRendererState;
 import gregtech.client.renderer.handler.MetaTileEntityRenderer;
+import net.minecraft.util.math.BlockPos;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = MetaTileEntityRenderer.class, remap = false)
-public class MetaTileEntityRendererMixin {
+public abstract class MetaTileEntityRendererMixin {
 
     @ModifyExpressionValue(method = "renderBlock",
                            at = @At(value = "NEW",

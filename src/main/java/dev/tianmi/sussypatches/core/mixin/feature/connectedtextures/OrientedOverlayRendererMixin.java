@@ -1,14 +1,13 @@
 package dev.tianmi.sussypatches.core.mixin.feature.connectedtextures;
 
+import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
-
 // A dirty workaround
 @Mixin(value = OrientedOverlayRenderer.class, remap = false)
-public class OrientedOverlayRendererMixin {
+public abstract class OrientedOverlayRendererMixin {
 
     @ModifyArg(method = "renderOrientedState",
                at = @At(value = "INVOKE",

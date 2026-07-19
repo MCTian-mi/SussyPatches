@@ -1,23 +1,20 @@
 package dev.tianmi.sussypatches.core.mixin.compat.grsinlineicon;
 
-import net.minecraft.item.ItemStack;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-
 import com.cleanroommc.groovyscript.compat.mods.GroovyContainer;
 import com.cleanroommc.groovyscript.mapper.ObjectMapper;
 import com.cleanroommc.groovyscript.mapper.TextureBinder;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-
 import dev.tianmi.sussypatches.api.annotation.Compat;
 import gregtech.api.util.Mods;
 import gregtech.integration.groovy.GroovyScriptModule;
+import net.minecraft.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Compat(mod = Mods.GroovyScript)
 @Mixin(value = GroovyScriptModule.class, remap = false)
-public class GroovyScriptModuleMixin {
+public abstract class GroovyScriptModuleMixin {
 
     // TODO: more impl
     @SuppressWarnings({ "UnstableApiUsage", "DuplicateBranchesInSwitch" })

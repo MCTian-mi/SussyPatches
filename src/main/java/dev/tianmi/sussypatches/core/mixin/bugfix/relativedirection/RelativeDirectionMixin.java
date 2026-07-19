@@ -1,21 +1,18 @@
 package dev.tianmi.sussypatches.core.mixin.bugfix.relativedirection;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import dev.tianmi.sussypatches.api.annotation.Implemented;
+import gregtech.api.util.RelativeDirection;
 import net.minecraft.util.EnumFacing;
-
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
-
-import dev.tianmi.sussypatches.api.annotation.Implemented;
-import gregtech.api.util.RelativeDirection;
-
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2848")
 @Mixin(value = RelativeDirection.class, remap = false)
-public class RelativeDirectionMixin {
+public abstract class RelativeDirectionMixin {
 
     @ModifyExpressionValue(method = "getRelativeFacing",
                            at = @At(value = "INVOKE",
