@@ -39,6 +39,7 @@ public class LateMixinLoader implements ILateMixinLoader {
                 .or(SusMods.of(CraftTweaker)), SusMods.of(JustEnoughItems));
         COMPAT.add("nopipeforscanner", SusConfig.COMPAT.noPipeForScanner, SusMods.RFTools);
         COMPAT.add("smartanimation", SusConfig.COMPAT.fixSmartAnimation, SusMods.OptiFine);
+        COMPAT.add("waterloggableframes", SusConfig.COMPAT.waterLoggableFrames, SusMods.FluidloggedAPI_3.or(SusMods.FluidloggedAPI_2));
 
         BUGFIX.add("clipboardlighting", SusConfig.BUGFIX.clipboardLighting);
         BUGFIX.add("facadelighting", SusConfig.BUGFIX.facadeLighting);

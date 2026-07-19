@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 import org.lwjgl.opengl.GLContext;
@@ -23,6 +24,8 @@ public enum SusMods implements BoolSupplier {
     Lwjgl3ify(Names.LWJGL3IFY),
     ConfigAnytime(Names.CONFIGANYTIME),
     Cleanroom(Names.CLEANROOM),
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.11.x")
     FluidloggedAPI_2(Names.FLUIDLOGGED_API, self -> self.version().startsWith("2")),
     FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     Celeritas(Names.CELERITAS),

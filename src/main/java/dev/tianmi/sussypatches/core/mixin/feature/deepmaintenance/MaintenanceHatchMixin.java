@@ -1,19 +1,17 @@
 package dev.tianmi.sussypatches.core.mixin.feature.deepmaintenance;
 
+import dev.tianmi.sussypatches.api.util.SusUtil;
+import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMaintenanceHatch;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import dev.tianmi.sussypatches.api.util.SusUtil;
-import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMaintenanceHatch;
-
 @Mixin(value = MetaTileEntityMaintenanceHatch.class, remap = false)
-public class MaintenanceHatchMixin {
+public abstract class MaintenanceHatchMixin {
 
     // This is a hard rewrite, any conflict should result in a hard crash
     @Redirect(method = { "fixProblemsWithTools", "fixMaintenanceProblems" },
