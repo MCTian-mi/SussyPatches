@@ -410,6 +410,13 @@ public class SusConfig {
         @Name("Make surface populators populate the whole chunk")
         @RequiresMcRestart
         public boolean fullChunkPopulator = true;
+
+        @Comment({
+                "Fixes issues where custom fluid attributes not synced to pipes."
+        })
+        @Name("Make fluid pipes actually inherit material's pipe property")
+        @RequiresMcRestart
+        public boolean syncPipeProperties = true;
     }
 
     public static final class Tweaks {
