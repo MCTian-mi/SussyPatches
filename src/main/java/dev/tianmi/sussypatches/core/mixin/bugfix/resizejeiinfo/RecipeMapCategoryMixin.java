@@ -31,31 +31,21 @@ public class RecipeMapCategoryMixin {
                                      GTRecipeCategory category,
                                      IGuiHelper guiHelper,
                                      CallbackInfo ci,
-                                     @Share("width") LocalIntRef width,
-                                     @Share("height") LocalIntRef height) {
+                                     @Share("width") LocalIntRef width) {
         int maxRight = 0;
-        int maxHeight = 0;
 
         for (Widget widget : modularUI.guiWidgets.values()) {
             Position pos = widget.getPosition();
             Size size = widget.getSize();
             maxRight = Math.max(maxRight, pos.x + size.width);
-            maxHeight = Math.max(maxHeight, pos.y + size.height);
         }
 
         width.set(Math.max(modularUI.getWidth(), maxRight));
-        height.set(Math.max(modularUI.getHeight(), maxHeight));
     }
 
     // This is a hard rewrite, any conflict should result in a hard crash
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lgregtech/api/gui/ModularUI;getWidth()I"))
     private int sus$useActualWidth(ModularUI ignored, @Share("width") LocalIntRef width) {
         return width.get();
-    }
-
-    // This is a hard rewrite, any conflict should result in a hard crash
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lgregtech/api/gui/ModularUI;getHeight()I"))
-    private int sus$useActualHeight(ModularUI ignored, @Share("height") LocalIntRef height) {
-        return height.get();
     }
 }
