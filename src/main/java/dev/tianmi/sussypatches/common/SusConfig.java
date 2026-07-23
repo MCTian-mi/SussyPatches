@@ -424,6 +424,14 @@ public class SusConfig {
         @Name("Make fluid pipes actually inherit material's pipe property")
         @RequiresMcRestart
         public boolean syncPipeProperties = true;
+
+        @Comment({
+                "Widens the JEI recipe category background for recipe maps with many outputs.",
+                "Prevents item/fluid slots from rendering outside the dark background."
+        })
+        @Name("Widen JEI recipe category background")
+        @RequiresMcRestart
+        public boolean resizeJeiInfo = true;
     }
 
     public static final class Tweaks {
