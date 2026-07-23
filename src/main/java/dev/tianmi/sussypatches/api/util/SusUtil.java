@@ -1,15 +1,5 @@
 package dev.tianmi.sussypatches.api.util;
 
-import java.util.Arrays;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-
 import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import dev.tianmi.sussypatches.integration.baubles.BaublesModule;
 import gregtech.api.GTValues;
@@ -20,6 +10,15 @@ import gregtech.api.util.Mods;
 import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+
+import java.util.Arrays;
 
 public class SusUtil {
 
