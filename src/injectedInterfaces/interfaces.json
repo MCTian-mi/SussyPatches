@@ -1,0 +1,5 @@
+{
+  "net/minecraft/world/World": [
+    "dev/tianmi/sussypatches/core/mixin/api/statechangenotifier/WorldAccessor"
+  ]
+}
