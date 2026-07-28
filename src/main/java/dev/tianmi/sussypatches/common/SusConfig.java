@@ -434,6 +434,51 @@ public class SusConfig {
         public boolean resizeJeiInfo = true;
     }
 
+    static {
+        try {
+            ConfigAnytime.register(SusConfig.class);
+        } catch (Throwable _) {
+            SussyPatches.LOGGER.error("ConfigAnytime not found! Configurations may not work!");
+        }
+    }
+
+    public static final class Api {
+
+        @Comment({
+                "Supports using ModularUI2 for GT MTEs, metaitems, and covers.",
+                "Backported from GregTechCEu#2264 & #2281"
+        })
+        @Name("Enable ModularUI2 support")
+        @RequiresMcRestart
+        public boolean useMui2 = SusMods.DevEnv.isLoaded();
+
+        @Comment({
+                "Basically just added an event for handle item overlay rendering.",
+                "Technically this isn't anything strictly bounded to GregTech, you can use it wherever you want.",
+                "But well this is needed for the 'Draw fluid bar for drums' feature."
+        })
+        @Name("Enable RenderItemOverlayEvent")
+        @RequiresMcRestart
+        @Ignore // TODO: fix early config
+        public boolean itemOverlayEvent = true;
+
+        @Comment({
+                "Let all material cable and pipe textures be configurable with its icon set texture.",
+                "Note: if this option is enabled, then the correspondence textures in default path will invalid,",
+                "only the textures in its icon set path will be rendered."
+        })
+        @Name("Render cable and pipe textures from its icon set")
+        @RequiresMcRestart
+        public boolean pipeIconTypes = true;
+
+        @Comment({
+                "Supports documentation being attached to GT recipes that can be shown in JEI."
+        })
+        @Name("Enable Recipe Info")
+        @RequiresMcRestart
+        public boolean recipeInfo = true;
+    }
+
     public static final class Tweaks {
 
         @Comment({
@@ -539,6 +584,14 @@ public class SusConfig {
         public boolean betterAutoBuilding = true;
 
         @Comment({
+                "Checks formed multiblocks only when a structure block changes instead of once per second.",
+                "Reduces steady-state structure checking."
+        })
+        @Name("Passive multiblock structure checking")
+        @RequiresMcRestart
+        public boolean passiveStructureChecking = true;
+
+        @Comment({
                 "Cleans-up the CEu ore vein info page.",
                 "Adds an api to add display items for dimensions the vein could spawn in."
         })
@@ -554,50 +607,5 @@ public class SusConfig {
         @Name("Collapse MetaPrefixItems into JEI groups")
         @RequiresMcRestart
         public boolean collapseGTItems = true;
-    }
-
-    public static final class Api {
-
-        @Comment({
-                "Supports using ModularUI2 for GT MTEs, metaitems, and covers.",
-                "Backported from GregTechCEu#2264 & #2281"
-        })
-        @Name("Enable ModularUI2 support")
-        @RequiresMcRestart
-        public boolean useMui2 = SusMods.DevEnv.isLoaded();
-
-        @Comment({
-                "Basically just added an event for handle item overlay rendering.",
-                "Technically this isn't anything strictly bounded to GregTech, you can use it wherever you want.",
-                "But well this is needed for the 'Draw fluid bar for drums' feature."
-        })
-        @Name("Enable RenderItemOverlayEvent")
-        @RequiresMcRestart
-        @Ignore // TODO: fix early config
-        public boolean itemOverlayEvent = true;
-
-        @Comment({
-                "Let all material cable and pipe textures be configurable with its icon set texture.",
-                "Note: if this option is enabled, then the correspondence textures in default path will invalid,",
-                "only the textures in its icon set path will be rendered."
-        })
-        @Name("Render cable and pipe textures from its icon set")
-        @RequiresMcRestart
-        public boolean pipeIconTypes = true;
-
-        @Comment({
-                "Supports documentation being attached to GT recipes that can be shown in JEI."
-        })
-        @Name("Enable Recipe Info")
-        @RequiresMcRestart
-        public boolean recipeInfo = true;
-    }
-
-    static {
-        if (SusMods.ConfigAnytime.isLoaded()) {
-            ConfigAnytime.register(SusConfig.class);
-        } else if (!SusMods.Lwjgl3ify.isLoaded()) { // Can't run ConfigAnytime on Lwjgl3ify environment
-            SussyPatches.LOGGER.error("ConfigAnytime not found! Configurations may not work!");
-        }
     }
 }

@@ -2,13 +2,13 @@ package dev.tianmi.sussypatches.modules;
 
 import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
+import dev.tianmi.sussypatches.api.capability.IMultiblockStateManager;
 import dev.tianmi.sussypatches.common.SusConfig;
-import dev.tianmi.sussypatches.common.helper.ChunkTracker;
-import dev.tianmi.sussypatches.common.helper.FluidBarRenderer;
-import dev.tianmi.sussypatches.common.helper.QChestInteractions;
-import dev.tianmi.sussypatches.common.helper.VisibleFluidCell;
+import dev.tianmi.sussypatches.common.helper.*;
+import gregtech.api.capability.SimpleCapabilityManager;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.modules.IGregTechModule;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +28,13 @@ public class SusCoreModule implements IGregTechModule {
         return SussyPatches.LOGGER;
     }
 
+    @Override
+    public void init(FMLInitializationEvent event) {
+        if (SusConfig.TWEAK.passiveStructureChecking) {
+            SimpleCapabilityManager.registerCapabilityWithNoDefault(IMultiblockStateManager.class);
+        }
+    }
+
     @NotNull
     @Override
     public List<Class<?>> getEventBusSubscribers() {
@@ -36,6 +43,7 @@ public class SusCoreModule implements IGregTechModule {
         if (SusConfig.FEAT.fluidBarRenderer.enabled && SusConfig.API.itemOverlayEvent) list.add(FluidBarRenderer.class);
         if (SusConfig.FEAT.visibleFluidCell) list.add(VisibleFluidCell.class);
         if (SusConfig.BUGFIX.weakNeighborRef) list.add(ChunkTracker.class);
+        if (SusConfig.TWEAK.passiveStructureChecking) list.add(PassiveStructureCheck.class);
         return list;
     }
 }

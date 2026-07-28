@@ -3,6 +3,7 @@ package dev.tianmi.sussypatches.core;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.core.ILoadingPlugin;
 import dev.tianmi.sussypatches.api.util.BoolSupplier;
+import dev.tianmi.sussypatches.common.SusConfig;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
@@ -25,10 +26,9 @@ public class LoadingPlugin implements ILoadingPlugin, IEarlyMixinLoader {
     private static final Map<String, BoolSupplier> MIXIN_CONFIGS = new LinkedHashMap<>();
 
     static {
-        // TODO: fix early config
-        API.add("itemoverlayevent"/* , SusConfig.API.itemOverlayEvent */);
-
-        COMPAT.add("realtimeshadercheck"/* , SusConfig.COMPAT.realTimeShaderCheck, SusMods.OptiFine */);
+        API.add("itemoverlayevent", SusConfig.API.itemOverlayEvent);
+        API.add("statechangenotifier", SusConfig.TWEAK.passiveStructureChecking);
+        COMPAT.add("realtimeshadercheck", SusConfig.COMPAT.realTimeShaderCheck);
     }
 
     @Override

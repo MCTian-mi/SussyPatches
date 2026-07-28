@@ -21,9 +21,6 @@ public enum SusMods implements BoolSupplier {
     GCyM(Names.GCYM),
     LoliASM(Names.LOLIASM),
     VintageFix(Names.VINTAGE_FIX),
-    Lwjgl3ify(Names.LWJGL3IFY),
-    ConfigAnytime(Names.CONFIGANYTIME),
-    Cleanroom(Names.CLEANROOM),
     @Deprecated
     @ApiStatus.ScheduledForRemoval(inVersion = "1.11.x")
     FluidloggedAPI_2(Names.FLUIDLOGGED_API, self -> self.version().startsWith("2")),
