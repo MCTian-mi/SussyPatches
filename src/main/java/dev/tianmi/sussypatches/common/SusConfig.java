@@ -419,9 +419,9 @@ public class SusConfig {
         public boolean fullChunkPopulator = true;
 
         @Comment({
-                "Fixes issues where custom fluid attributes not synced to pipes."
+                "Fixes issues where custom fluid attributes are not inherited by pipes and material-backed containers."
         })
-        @Name("Make fluid pipes actually inherit material's pipe property")
+        @Name("Make fluid pipes and containers inherit material fluid properties")
         @RequiresMcRestart
         public boolean syncPipeProperties = true;
 
