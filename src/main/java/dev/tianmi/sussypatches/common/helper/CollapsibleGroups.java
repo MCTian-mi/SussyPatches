@@ -1,5 +1,7 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.core.mixin.extension.GTToolExtension;
 import dev.tianmi.sussypatches.common.SusConfig;
@@ -7,6 +9,7 @@ import gregtech.api.GregTechAPI;
 import gregtech.api.items.materialitem.MetaPrefixItem;
 import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.items.metaitem.MetaItem.MetaValueItem;
+import gregtech.api.metatileentity.ITieredMetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.Materials;
@@ -24,6 +27,7 @@ import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.BlockItemPipe;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.val;
 import mezz.jei.api.ICollapsibleGroupRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -31,10 +35,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static gregtech.common.blocks.MetaBlocks.*;
 
@@ -56,7 +57,7 @@ public final class CollapsibleGroups {
         buildFluidCellGroup(registry);
         buildMoldGroup(registry);
         buildExtruderShapeGroup(registry);
-        buildMachineNamespaceGroups(registry);
+        buildTieredMTEGroups(registry);
         buildGlassLensGroup(registry);
         buildChemicalDyesGroup(registry);
 
@@ -194,15 +195,22 @@ public final class CollapsibleGroups {
         addGroup(registry, "chemical_dyes", MetaItems.DYE_ONLY_ITEMS);
     }
 
-    /// One group per mod namespace that registers [MetaTileEntity]s.
-    private static void buildMachineNamespaceGroups(ICollapsibleGroupRegistry registry) {
-        Map<String, List<ItemStack>> buckets = new Object2ObjectOpenHashMap<>();
-        for (var mte : GregTechAPI.MTE_REGISTRY) {
-            String namespace = mte.metaTileEntityId.getNamespace();
-            buckets.computeIfAbsent(namespace, _ -> new ArrayList<>()).add(mte.getStackForm());
+    /// One group per loaded tiered singleblock family.
+    private static void buildTieredMTEGroups(ICollapsibleGroupRegistry registry) {
+        ListMultimap<String, ITieredMetaTileEntity> groups = Multimaps.newListMultimap(new HashMap<>(), ArrayList::new);
+
+        for (val mte : GregTechAPI.MTE_REGISTRY) {
+            if (mte instanceof ITieredMetaTileEntity tiered) {
+                groups.put(tiered.getTierlessTooltipKey(), tiered);
+            }
         }
-        for (var entry : buckets.entrySet()) {
-            addGroup(registry, "machine." + entry.getKey(), entry.getValue());
+
+        for (val key : groups.keySet()) {
+            val group = groups.get(key);
+            group.sort(Comparator.comparingInt(ITieredMetaTileEntity::getTier));
+            registry.newGroup(Tags.MOD_ID + ":" + key, key)
+                    .add(group.stream().map(it -> ((MetaTileEntity) it).getStackForm()).toArray())
+                    .build();
         }
     }
 

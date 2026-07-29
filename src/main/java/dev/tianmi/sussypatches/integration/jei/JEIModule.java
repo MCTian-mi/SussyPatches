@@ -8,6 +8,7 @@ import gregtech.api.modules.GregTechModule;
 import gregtech.api.util.Mods;
 import gregtech.common.items.ToolItems;
 import gregtech.integration.IntegrationSubmodule;
+import lombok.val;
 import mezz.jei.api.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +23,8 @@ public class JEIModule extends IntegrationSubmodule implements IModPlugin {
     @Override
     public void registerSubtypes(@NotNull ISubtypeRegistry subtypeRegistry) {
         if (SusConfig.TWEAK.showAllToolItems) {
-            var handler = new GTToolSubtypeHandler();
-            for (var tool : ToolItems.getAllTools()) {
+            val handler = new GTToolSubtypeHandler();
+            for (val tool : ToolItems.getAllTools()) {
                 subtypeRegistry.registerSubtypeInterpreter(tool.get(), handler);
             }
         }
