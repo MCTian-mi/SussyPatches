@@ -4,12 +4,18 @@ import dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes;
 import dev.tianmi.sussypatches.integration.baubles.BaublesModule;
 import gregtech.api.GTValues;
 import gregtech.api.capability.impl.ItemHandlerList;
+import gregtech.api.capability.impl.PropertyFluidFilter;
+import gregtech.api.items.metaitem.FilteredFluidStats;
 import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.material.info.MaterialIconType;
+import gregtech.api.unification.material.properties.FluidPipeProperties;
+import gregtech.api.unification.material.properties.PropertyKey;
 import gregtech.api.util.Mods;
 import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
+import lombok.val;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,10 +23,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.Range;
 
 import java.util.Arrays;
 
 public class SusUtil {
+
+    public static FluidPipeProperties GLASS = new FluidPipeProperties(1000, 1200, false, true, false, false);
 
     public static String getPrefix(Material material) {
         return material.getModid().equals(GTValues.MODID) ? "" : material.getModid() + ":";
@@ -48,6 +57,28 @@ public class SusUtil {
         }
         assert playerInv != null;
         return addAll(NonNullList.create(), playerInv, true);
+    }
+
+    private static PropertyFluidFilter withMaxFluidTemperature(Material material, int maxFluidTemperature) {
+        val from = material.getProperty(PropertyKey.FLUID_PIPE);
+        val into = new PropertyFluidFilter(maxFluidTemperature, from.isGasProof(), false, from.isCryoProof(), from.isPlasmaProof());
+        for (val attribute : from.getContainedAttributes()) {
+            into.setCanContain(attribute, from.canContain(attribute));
+        }
+        return into;
+    }
+
+    public static FilteredFluidStats modifyFiltersByOrdinal(int capacity, int maxFluidTemperature, boolean allowPartialFill, @Range(from = 0, to = 7) int ordinal) {
+        return new FilteredFluidStats(capacity, allowPartialFill, switch (ordinal) {
+            case 0, 1, 2 -> withMaxFluidTemperature(Materials.Steel, maxFluidTemperature);
+            case 3 -> withMaxFluidTemperature(Materials.Aluminium, maxFluidTemperature);
+            case 4 -> withMaxFluidTemperature(Materials.StainlessSteel, maxFluidTemperature);
+            case 5 -> withMaxFluidTemperature(Materials.Titanium, maxFluidTemperature);
+            case 6 -> withMaxFluidTemperature(Materials.TungstenSteel, maxFluidTemperature);
+            case 7 -> GLASS;
+            default ->
+                    throw new RuntimeException("Detected more than 8 fluid cells in MetaItem1, this is insane..."); // Should never throw
+        });
     }
 
     // TODO: as a method extension

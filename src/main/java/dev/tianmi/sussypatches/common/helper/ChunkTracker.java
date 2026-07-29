@@ -1,5 +1,6 @@
 package dev.tianmi.sussypatches.common.helper;
 
+import lombok.val;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -17,18 +18,15 @@ import java.util.function.Function;
 public final class ChunkTracker {
     private static final Registry<World, Chunk> REGISTRY = new Registry<>();
 
-    private ChunkTracker() {
-    }
-
     @SubscribeEvent
     public static void onChunkLoad(ChunkEvent.Load event) {
-        Chunk chunk = event.getChunk();
+        val chunk = event.getChunk();
         REGISTRY.onLoad(chunk.getWorld(), chunk.x, chunk.z, chunk);
     }
 
     @SubscribeEvent
     public static void onChunkUnload(ChunkEvent.Unload event) {
-        Chunk chunk = event.getChunk();
+        val chunk = event.getChunk();
         REGISTRY.onUnload(chunk.getWorld(), chunk.x, chunk.z);
     }
 
