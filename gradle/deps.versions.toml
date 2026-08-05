@@ -3,7 +3,7 @@ annotations = "26.1.0"
 jspecify = "1.0.0"
 lombok = "1.18.46"
 
-hei = "4.31.2"
+hei = "4.33.0"
 theOneProbe = "1.12-1.4.28"
 codeChickenLib = "3.2.3.358"
 
@@ -14,7 +14,7 @@ craftTweaker = "1.12-4.1.20.700"
 ae2Uel = "v0.56.7"
 groovyscript = "1.3.1"
 configanytime = "3.0"
-modularui = "3.0.2"
+modularui = "3.1.6"
 
 # Optional mod dependencies
 ctm = "MC1.12.2-1.0.2.31"

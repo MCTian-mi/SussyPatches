@@ -74,7 +74,7 @@ dependencies {
     compileOnly(deps.groovyscript) { isTransitive = false }
 
     compileOnlyApi(deps.configanytime)
-    compileOnlyApi(deps.modularui) { isTransitive = false }
+    api(deps.modularui) { isTransitive = false }
 
     // Optional dependencies. Uncomment the ones you need
 //    runtimeOnly(deps.ctm) { isTransitive = false }
