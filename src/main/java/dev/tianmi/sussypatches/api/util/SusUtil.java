@@ -15,6 +15,7 @@ import gregtech.api.util.Mods;
 import gregtech.common.pipelike.cable.Insulation;
 import gregtech.common.pipelike.fluidpipe.FluidPipeType;
 import gregtech.common.pipelike.itempipe.ItemPipeType;
+import lombok.SneakyThrows;
 import lombok.val;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -24,10 +25,20 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Range;
+import sun.misc.Unsafe;
 
 import java.util.Arrays;
 
 public class SusUtil {
+
+    public static final Unsafe UNSAFE = initUnsafe();
+
+    @SneakyThrows
+    private static Unsafe initUnsafe() {
+        val field = Unsafe.class.getDeclaredField("theUnsafe");
+        field.setAccessible(true);
+        return (Unsafe) field.get(null);
+    }
 
     public static FluidPipeProperties GLASS = new FluidPipeProperties(1000, 1200, false, true, false, false);
 

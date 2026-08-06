@@ -22,7 +22,7 @@ public enum SusMods implements BoolSupplier {
     LoliASM(Names.LOLIASM),
     VintageFix(Names.VINTAGE_FIX),
     @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.11.x")
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.12.0")
     FluidloggedAPI_2(Names.FLUIDLOGGED_API, self -> self.version().startsWith("2")),
     FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     Celeritas(Names.CELERITAS),

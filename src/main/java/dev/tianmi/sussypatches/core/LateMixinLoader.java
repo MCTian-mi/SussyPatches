@@ -77,6 +77,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("betterautobuild", SusConfig.TWEAK.betterAutoBuilding);
         TWEAK.add("passivestructurechecking", SusConfig.TWEAK.passiveStructureChecking);
         TWEAK.add("betteroreinfo", SusConfig.TWEAK.betterOreInfo, SusMods.of(JustEnoughItems));
+        TWEAK.add("cachedstonetype", SusConfig.TWEAK.cachedStoneType);
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
         API.add("pipeicontypes", SusConfig.API.pipeIconTypes);

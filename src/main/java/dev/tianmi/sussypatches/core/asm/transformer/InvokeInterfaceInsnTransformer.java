@@ -1,14 +1,16 @@
 package dev.tianmi.sussypatches.core.asm.transformer;
 
+import dev.tianmi.sussypatches.api.annotation.Implemented;
+import dev.tianmi.sussypatches.api.core.asm.IExplicitTransformer;
+import org.jetbrains.annotations.ApiStatus;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
 
-import dev.tianmi.sussypatches.api.annotation.Implemented;
-import dev.tianmi.sussypatches.api.core.asm.IExplicitTransformer;
-
 /// see [FabricMC/Mixin#181](https://github.com/FabricMC/Mixin/issues/181)
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.12.0")
 @Implemented(in = "https://github.com/FabricMC/Mixin/pull/182")
 public abstract class InvokeInterfaceInsnTransformer implements IExplicitTransformer {
 

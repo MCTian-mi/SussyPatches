@@ -2,7 +2,10 @@ package dev.tianmi.sussypatches.core.asm.transformer;
 
 import dev.tianmi.sussypatches.api.annotation.Transformer;
 import gregtech.api.cover.CoverWithUI;
+import org.jetbrains.annotations.ApiStatus;
 
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.12.0")
 @Transformer(target = CoverWithUI.class)
 public class CoverWithUITransformer extends InvokeInterfaceInsnTransformer {
 

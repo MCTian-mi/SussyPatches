@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Deprecated
-@ApiStatus.ScheduledForRemoval(inVersion = "1.11")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.12.0")
 @Compat(mods = SusMods.FluidloggedAPI_2)
 @Mixin(targets = "gregtech.client.renderer.handler.MultiblockPreviewRenderer$TargetBlockAccess", remap = false)
 public abstract class TargetBlockAccessMixin implements IChunkProvider {
