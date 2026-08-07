@@ -607,5 +607,12 @@ public class SusConfig {
         @Name("Collapse MetaPrefixItems into JEI groups")
         @RequiresMcRestart
         public boolean collapseGTItems = true;
+
+        @Comment({
+                "Optimizes ore generation by caching the relevant StoneType."
+        })
+        @Name("Cache StoneType mappings")
+        @RequiresMcRestart
+        public boolean cachedStoneType = true;
     }
 }

@@ -2,7 +2,10 @@ package dev.tianmi.sussypatches.core.asm.transformer;
 
 import dev.tianmi.sussypatches.api.annotation.Transformer;
 import gregtech.api.items.toolitem.IGTTool;
+import org.jetbrains.annotations.ApiStatus;
 
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.12.0")
 @Transformer(target = IGTTool.class)
 public class IGTToolTransformer extends InvokeInterfaceInsnTransformer {
 
