@@ -81,7 +81,9 @@ public class SusUtil {
 
     public static FilteredFluidStats modifyFiltersByOrdinal(int capacity, int maxFluidTemperature, boolean allowPartialFill, @Range(from = 0, to = 7) int ordinal) {
         return new FilteredFluidStats(capacity, allowPartialFill, switch (ordinal) {
-            case 0, 1, 2 -> withMaxFluidTemperature(Materials.Steel, maxFluidTemperature);
+            case 0, 1 ->
+                    withMaxFluidTemperature(Materials.Iron.hasProperty(PropertyKey.FLUID_PIPE) ? Materials.Iron : Materials.Steel, maxFluidTemperature);
+            case 2 -> withMaxFluidTemperature(Materials.Steel, maxFluidTemperature);
             case 3 -> withMaxFluidTemperature(Materials.Aluminium, maxFluidTemperature);
             case 4 -> withMaxFluidTemperature(Materials.StainlessSteel, maxFluidTemperature);
             case 5 -> withMaxFluidTemperature(Materials.Titanium, maxFluidTemperature);
