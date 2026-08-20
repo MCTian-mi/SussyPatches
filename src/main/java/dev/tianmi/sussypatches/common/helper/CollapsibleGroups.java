@@ -201,7 +201,7 @@ public final class CollapsibleGroups {
 
         for (val mte : GregTechAPI.MTE_REGISTRY) {
             if (mte instanceof ITieredMetaTileEntity tiered) {
-                groups.put(tiered.getTierlessTooltipKey(), tiered);
+                groups.put(tiered.getTierlessTooltipKey() + ".jei.group", tiered);
             }
         }
 
