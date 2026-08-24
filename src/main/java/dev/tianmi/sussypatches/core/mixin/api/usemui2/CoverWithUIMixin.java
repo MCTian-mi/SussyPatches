@@ -1,25 +1,19 @@
 package dev.tianmi.sussypatches.core.mixin.api.usemui2;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
+import dev.tianmi.sussypatches.api.annotation.Implemented;
+import dev.tianmi.sussypatches.api.core.mixin.extension.mui2.CoverExtension;
+import dev.tianmi.sussypatches.api.mui2.factory.CoverGuiFactory;
+import gregtech.api.cover.Cover;
+import gregtech.api.cover.CoverWithUI;
 import net.minecraft.entity.player.EntityPlayerMP;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.cleanroommc.modularui.api.IGuiHolder;
-import com.cleanroommc.modularui.factory.SidedPosGuiData;
-
-import dev.tianmi.sussypatches.api.annotation.Implemented;
-import dev.tianmi.sussypatches.api.annotation.Transformer;
-import dev.tianmi.sussypatches.api.core.mixin.extension.mui2.CoverExtension;
-import dev.tianmi.sussypatches.api.mui2.factory.CoverGuiFactory;
-import dev.tianmi.sussypatches.core.asm.transformer.CoverWithUITransformer;
-import gregtech.api.cover.Cover;
-import gregtech.api.cover.CoverWithUI;
-
 @Implemented(in = "https://github.com/GregTechCEu/GregTech/pull/2264")
-@Transformer(clazz = CoverWithUITransformer.class)
 @Mixin(value = CoverWithUI.class, remap = false)
 public interface CoverWithUIMixin extends CoverExtension {
 
