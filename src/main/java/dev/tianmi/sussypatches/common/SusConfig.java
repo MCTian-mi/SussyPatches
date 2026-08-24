@@ -614,5 +614,12 @@ public class SusConfig {
         @Name("Cache StoneType mappings")
         @RequiresMcRestart
         public boolean cachedStoneType = true;
+
+        @Comment({
+                "Allow assigning custom names for gt material fluids."
+        })
+        @Name("Custom fluid names")
+        @RequiresMcRestart
+        public boolean customFluidName = true;
     }
 }

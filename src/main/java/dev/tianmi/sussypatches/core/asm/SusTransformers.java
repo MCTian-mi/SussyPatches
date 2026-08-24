@@ -1,15 +1,11 @@
 package dev.tianmi.sussypatches.core.asm;
 
-import org.objectweb.asm.tree.ClassNode;
-
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-
 import dev.tianmi.sussypatches.api.core.asm.IExplicitTransformer;
 import dev.tianmi.sussypatches.core.asm.transformer.BlockPatternTransformer;
-import dev.tianmi.sussypatches.core.asm.transformer.CoverWithUITransformer;
-import dev.tianmi.sussypatches.core.asm.transformer.IGTToolTransformer;
 import dev.tianmi.sussypatches.core.asm.transformer.MBPRTransformer;
+import org.objectweb.asm.tree.ClassNode;
 
 public class SusTransformers {
 
@@ -20,9 +16,7 @@ public class SusTransformers {
 
     static {
         add(new MBPRTransformer());
-        add(new IGTToolTransformer());
         add(new BlockPatternTransformer());
-        add(new CoverWithUITransformer());
     }
 
     public static void transform(String targetClassName, ClassNode targetClass) {
