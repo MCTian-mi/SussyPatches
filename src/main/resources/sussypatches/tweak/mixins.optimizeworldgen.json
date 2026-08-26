@@ -1,5 +1,5 @@
 {
-  "package": "dev.tianmi.sussypatches.core.mixin.tweak.cachedstonetype",
+  "package": "dev.tianmi.sussypatches.core.mixin.tweak.optimizeworldgen",
   "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
   "refmap": "mixins.sussypatches.refmap.json",
   "target": "@env(DEFAULT)",
@@ -10,6 +10,7 @@
   },
   "mixins": [
     "BlockOreMixin",
+    "ChunkDataEntryMixin",
     "PropertyStoneTypeMixin",
     "StoneTypeMixin"
   ]

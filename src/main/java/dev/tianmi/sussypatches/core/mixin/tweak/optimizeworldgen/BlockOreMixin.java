@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.tweak.cachedstonetype;
+package dev.tianmi.sussypatches.core.mixin.tweak.optimizeworldgen;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

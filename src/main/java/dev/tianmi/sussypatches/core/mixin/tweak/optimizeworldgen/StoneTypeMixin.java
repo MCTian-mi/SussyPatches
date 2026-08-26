@@ -1,4 +1,4 @@
-package dev.tianmi.sussypatches.core.mixin.tweak.cachedstonetype;
+package dev.tianmi.sussypatches.core.mixin.tweak.optimizeworldgen;
 
 import com.google.common.base.Predicate;
 import dev.tianmi.sussypatches.common.helper.StoneTypeCache;
