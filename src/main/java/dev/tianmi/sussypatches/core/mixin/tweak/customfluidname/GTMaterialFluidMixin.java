@@ -53,7 +53,8 @@ public abstract class GTMaterialFluidMixin {
     @SideOnly(Side.CLIENT)
     @Inject(method = "getLocalizedName",
             at = @At(value = "INVOKE",
-                     target = "Lnet/minecraft/client/resources/I18n;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+                     target = "Lnet/minecraft/client/resources/I18n;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                     remap = true),
             slice = @Slice(from = @At(value = "FIELD",
                                       target = "Lgregtech/api/fluids/GTFluid$GTMaterialFluid;translationKey:Ljava/lang/String;",
                                       opcode = Opcodes.GETFIELD),
