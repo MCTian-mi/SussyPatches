@@ -609,11 +609,11 @@ public class SusConfig {
         public boolean collapseGTItems = true;
 
         @Comment({
-                "Optimizes ore generation by caching the relevant StoneType."
+                "Optimizes ore generation by caching hotspot calculation results."
         })
-        @Name("Cache StoneType mappings")
+        @Name("Optimizes GT world generation")
         @RequiresMcRestart
-        public boolean cachedStoneType = true;
+        public boolean optimizeWorldgen = true;
 
         @Comment({
                 "Allow assigning custom names for gt material fluids."
