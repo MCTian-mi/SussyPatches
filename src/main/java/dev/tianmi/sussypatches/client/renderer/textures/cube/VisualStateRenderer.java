@@ -101,7 +101,7 @@ public class VisualStateRenderer implements ICubeRenderer {
 
             quads.addAll(model.getQuads(state, null, 0));
 
-            for (var facing : EnumFacing.values()) {
+            for (var facing : EnumFacing.VALUES) {
                 quads.addAll(model.getQuads(state, facing, 0));
             }
 
@@ -137,7 +137,7 @@ public class VisualStateRenderer implements ICubeRenderer {
             long rand = MathHelper.getPositionRandom(pos);
             quads.addAll(model.getQuads(state, null, rand));
 
-            for (var facing : EnumFacing.values()) {
+            for (var facing : EnumFacing.VALUES) {
                 if (!crs.shouldSideBeRendered(facing, Cuboid6.full)) continue;
                 quads.addAll(model.getQuads(state, facing, rand));
             }

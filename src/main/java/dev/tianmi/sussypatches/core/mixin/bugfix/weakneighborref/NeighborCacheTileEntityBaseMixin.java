@@ -5,6 +5,7 @@ import dev.tianmi.sussypatches.common.helper.ChunkTracker;
 import gregtech.api.metatileentity.NeighborCacheTileEntityBase;
 import gregtech.api.metatileentity.SyncedTileEntityBase;
 import gregtech.api.metatileentity.interfaces.INeighborCache;
+import lombok.val;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.chunk.Chunk;
@@ -52,7 +53,7 @@ public abstract class NeighborCacheTileEntityBaseMixin extends SyncedTileEntityB
               at = @At(value = "INVOKE",
                        target = "Ljava/util/Arrays;fill([Ljava/lang/Object;Ljava/lang/Object;)V"))
     private void invalidateWeakRefs(Object[] $null, Object $this) {
-        for (EnumFacing facing : EnumFacing.values()) sus$invalidate(facing);
+        for (val facing : EnumFacing.VALUES) sus$invalidate(facing);
     }
 
     /// @author Ghzdude, Tian_mi

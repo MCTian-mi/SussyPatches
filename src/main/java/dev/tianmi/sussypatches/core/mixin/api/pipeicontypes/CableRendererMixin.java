@@ -1,25 +1,22 @@
 package dev.tianmi.sussypatches.core.mixin.api.pipeicontypes;
 
-import static dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes.*;
-
-import java.util.Arrays;
-
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import dev.tianmi.sussypatches.api.util.SusUtil;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.info.MaterialIconType;
+import gregtech.client.renderer.pipe.CableRenderer;
+import gregtech.common.pipelike.cable.Insulation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
+import java.util.Arrays;
 
-import dev.tianmi.sussypatches.api.util.SusUtil;
-import gregtech.api.unification.material.Material;
-import gregtech.api.unification.material.info.MaterialIconType;
-import gregtech.client.renderer.pipe.CableRenderer;
-import gregtech.common.pipelike.cable.Insulation;
+import static dev.tianmi.sussypatches.api.unification.material.info.SusIconTypes.*;
 
 @Mixin(value = CableRenderer.class, remap = false)
 public abstract class CableRendererMixin extends PipeRendererMixin {
@@ -54,7 +51,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
               require = 3)
     private TextureAtlasSprite getInsulationTextures(TextureAtlasSprite[] ignored, int insulationLevel,
                                                      @Local(argsOnly = true) Material material) {
-        var values = Insulation.values();
+        var values = Insulation.VALUES;
         return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
     }
 
@@ -74,7 +71,7 @@ public abstract class CableRendererMixin extends PipeRendererMixin {
                        args = "array=get"))
     public TextureAtlasSprite getInsulationSprite(TextureAtlasSprite[] ignored, int insulationLevel,
                                                   @Local(name = "material") Material material) {
-        var values = Insulation.values();
+        var values = Insulation.VALUES;
         return SusUtil.getBlockSprite(SusUtil.getIconType(values[(insulationLevel + 5) % values.length]), material);
     }
 }
