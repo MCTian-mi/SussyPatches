@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Range;
@@ -92,6 +93,10 @@ public class SusUtil {
             default ->
                     throw new RuntimeException("Detected more than 8 fluid cells in MetaItem1, this is insane..."); // Should never throw
         });
+    }
+
+    public static boolean isWorldClient(World world) {
+        return world.isRemote || world.getMinecraftServer() == null;
     }
 
     // TODO: as a method extension
