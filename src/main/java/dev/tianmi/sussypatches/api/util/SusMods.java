@@ -28,6 +28,7 @@ public enum SusMods implements BoolSupplier {
     Celeritas(Names.CELERITAS),
     ModularUI(Names.MODULARUI),
     RFTools(Names.RFTOOLS),
+    ProjectRedCore(Names.PROJECT_RED_CORE),
     /// Unlike [Mods#Optifine], this doesn't care about whether you use shaders or not.
     OptiFine(_ -> FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().hasOptifine()),
 
@@ -99,5 +100,6 @@ public enum SusMods implements BoolSupplier {
         public static final String MODULARUI = "modularui";
         public static final String CLEANROOM = "cleanroom";
         public static final String RFTOOLS = "rftools";
+        public static final String PROJECT_RED_CORE = "projectred-core";
     }
 }
