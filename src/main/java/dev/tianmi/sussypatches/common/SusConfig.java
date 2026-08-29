@@ -254,6 +254,13 @@ public class SusConfig {
         @Name("Water-Loggable GT frames")
         @RequiresMcRestart
         public boolean waterLoggableFrames = true;
+
+        @Comment({
+                "Allow using GT screwdrivers for ProjectRed redstone components."
+        })
+        @Name("Fix GT screwdriver not recognized by ProjectRed")
+        @RequiresMcRestart
+        public boolean prjrScrewdriver = true;
     }
 
     public static final class Bugfix {
