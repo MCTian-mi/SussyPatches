@@ -126,6 +126,7 @@ public class SusConfig {
             @RequiresMcRestart
             public String[] filterList = new String[] {
                     // Drums
+                    "gregtech:machine@1610", // Wooden
                     "gregtech:machine@1611", // Bronze
                     "gregtech:machine@1612", // Steel
                     "gregtech:machine@1613", // Aluminium

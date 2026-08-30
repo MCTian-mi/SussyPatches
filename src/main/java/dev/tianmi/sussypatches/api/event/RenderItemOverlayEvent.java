@@ -6,9 +6,8 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-
 import org.jspecify.annotations.NullMarked;
 
 @Getter
@@ -17,10 +16,12 @@ import org.jspecify.annotations.NullMarked;
 @SideOnly(Side.CLIENT)
 public class RenderItemOverlayEvent extends Event {
 
-    protected RenderOperation operation;
+    public static final RenderItemOverlayEvent INSTANCE = new RenderItemOverlayEvent();
 
+    protected RenderOperation operation = RenderOperation.EMPTY;
+
+    @ApiStatus.Internal
     public RenderItemOverlayEvent() {
-        reset();
     }
 
     public void enqueue(RenderOperation operation) {
@@ -29,6 +30,7 @@ public class RenderItemOverlayEvent extends Event {
 
     public void reset() {
         this.operation = RenderOperation.EMPTY;
+        this.phase = null;
     }
 
     @Override

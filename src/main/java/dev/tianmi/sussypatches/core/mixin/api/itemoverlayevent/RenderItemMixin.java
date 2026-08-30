@@ -16,14 +16,15 @@ public abstract class RenderItemMixin {
 
     @Inject(method = "renderItemOverlayIntoGUI", at = @At("HEAD"))
     private void postRenderItemOverlayEvent(FontRenderer fr, ItemStack stack,
-                                            int x, int y, @Nullable String text,
+                                            int xPosition, int yPosition, @Nullable String text,
                                             CallbackInfo ci) {
-        var event = new RenderItemOverlayEvent();
+        var event = RenderItemOverlayEvent.INSTANCE;
         if (!MinecraftForge.EVENT_BUS.post(event)) {
             var operation = event.getOperation();
             if (!operation.isEmpty()) {
-                operation.render(stack, x, y, text);
+                operation.render(stack, xPosition, yPosition, text);
             }
         }
+        event.reset();
     }
 }
