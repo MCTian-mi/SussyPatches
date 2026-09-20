@@ -29,7 +29,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         FEATURE.add("visiblefluidcell", SusConfig.FEAT.visibleFluidCell);
 
         COMPAT.add("ondemandanimation", SusConfig.COMPAT.fixOnDemandAnimation, SusMods.LoliASM,
-                SusMods.OptiFine.negate(), SusMods.Celeritas.negate());
+                SusMods.OptiFine.negate(), SusMods.Celeritas.negate(), SusMods.Actinium.negate());
         COMPAT.add("dummyworldcrash", SusConfig.COMPAT.fixDummyWorld, SusMods.of(Alfheim));
         COMPAT.add("lampbakedmodel", SusConfig.COMPAT.fixLampModel, SusMods.VintageFix, SusMods.of(CTM));
         COMPAT.add("inworldpreviewcrash", SusConfig.COMPAT.fixInworldPreview, SusMods.FluidloggedAPI_2);

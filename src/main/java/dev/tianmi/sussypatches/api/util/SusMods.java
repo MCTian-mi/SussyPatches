@@ -26,6 +26,7 @@ public enum SusMods implements BoolSupplier {
     FluidloggedAPI_2(Names.FLUIDLOGGED_API, self -> self.version().startsWith("2")),
     FluidloggedAPI_3(Names.FLUIDLOGGED_API, self -> self.version().startsWith("3")),
     Celeritas(Names.CELERITAS),
+    Actinium(Names.ACTINIUM),
     ModularUI(Names.MODULARUI),
     RFTools(Names.RFTOOLS),
     ProjectRedCore(Names.PROJECT_RED_CORE),
@@ -97,6 +98,7 @@ public enum SusMods implements BoolSupplier {
         public static final String CONFIGANYTIME = "configanytime";
         public static final String FLUIDLOGGED_API = "fluidlogged_api";
         public static final String CELERITAS = "celeritas";
+        public static final String ACTINIUM = "actinium";
         public static final String MODULARUI = "modularui";
         public static final String CLEANROOM = "cleanroom";
         public static final String RFTOOLS = "rftools";
