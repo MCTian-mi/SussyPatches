@@ -36,5 +36,8 @@ public class GrSModule extends IntegrationSubmodule implements GroovyPlugin {
         if (SusConfig.API.recipeInfo) {
             ExpansionHelper.mixinMethod(RecipeBuilder.class, GroovyExpansions.class, "info");
         }
+        if (SusConfig.FEAT.dagRecycling) {
+            container.addProperty(new SusRecyclingGroovyContainer());
+        }
     }
 }

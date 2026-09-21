@@ -4,11 +4,15 @@ import dev.tianmi.sussypatches.SussyPatches;
 import dev.tianmi.sussypatches.Tags;
 import dev.tianmi.sussypatches.api.capability.IMultiblockStateManager;
 import dev.tianmi.sussypatches.common.SusConfig;
+import dev.tianmi.sussypatches.common.command.RecyclingCommand;
 import dev.tianmi.sussypatches.common.helper.*;
+import dev.tianmi.sussypatches.loaders.recipes.RecyclingManager;
 import gregtech.api.capability.SimpleCapabilityManager;
 import gregtech.api.modules.GregTechModule;
 import gregtech.api.modules.IGregTechModule;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +36,20 @@ public class SusCoreModule implements IGregTechModule {
     public void init(FMLInitializationEvent event) {
         if (SusConfig.TWEAK.passiveStructureChecking) {
             SimpleCapabilityManager.registerCapabilityWithNoDefault(IMultiblockStateManager.class);
+        }
+    }
+
+    @Override
+    public void serverStarting(FMLServerStartingEvent event) {
+        if (SusConfig.FEAT.dagRecycling) {
+            event.registerServerCommand(new RecyclingCommand());
+        }
+    }
+
+    @Override
+    public void loadComplete(FMLLoadCompleteEvent event) {
+        if (SusConfig.FEAT.dagRecycling && RecyclingManager.isInitialized()) {
+            RecyclingManager.onLoadComplete();
         }
     }
 

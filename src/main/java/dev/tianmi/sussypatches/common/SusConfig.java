@@ -98,6 +98,15 @@ public class SusConfig {
         @RequiresMcRestart
         public boolean visibleFluidCell = true;
 
+        @Comment({
+                "Builds the recycling recipes of an item from a dependency graph, so that changing the recycling data",
+                "of an item also updates every item crafted from it.",
+                "Also lets scripts read and rewrite that data at runtime, and rebuild the affected recipes on reload.",
+        })
+        @Name("Recursive recycling data")
+        @RequiresMcRestart
+        public boolean dagRecycling = true;
+
         public static final class FluidBarRenderer {
 
             @Comment({

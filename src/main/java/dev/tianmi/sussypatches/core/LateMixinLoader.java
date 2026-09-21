@@ -80,6 +80,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         TWEAK.add("betteroreinfo", SusConfig.TWEAK.betterOreInfo, SusMods.of(JustEnoughItems));
         TWEAK.add("optimizeworldgen", SusConfig.TWEAK.optimizeWorldgen);
         TWEAK.add("customfluidname", SusConfig.TWEAK.customFluidName);
+        TWEAK.add("dagrecycling", SusConfig.FEAT.dagRecycling);
 
         API.add("usemui2", SusConfig.API.useMui2, SusMods.ModularUI);
         API.add("pipeicontypes", SusConfig.API.pipeIconTypes);

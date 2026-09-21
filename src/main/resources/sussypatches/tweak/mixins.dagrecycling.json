@@ -1,0 +1,22 @@
+{
+  "package": "dev.tianmi.sussypatches.core.mixin.tweak.dagrecycling",
+  "plugin": "dev.tianmi.sussypatches.core.MixinConfigPlugin",
+  "refmap": "mixins.sussypatches.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "ModHandlerMixin",
+    "OreDictUnifierAccessor",
+    "OreDictUnifierMixin",
+    "RecipeBuilderAccessor",
+    "RecipeMapsMixin",
+    "RecyclingRecipesMixin"
+  ]
+}

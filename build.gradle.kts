@@ -61,7 +61,7 @@ dependencies {
 
     // Mixinbooter 11.x breaks runtime (mixins with type-parameters, FMLDeobfuscatingRemapper)
     // So we use Mixinbooter 10.x here, which contains the mixin annotation processor.
-    annotationProcessor(libs.mixinbooter)
+//    annotationProcessor(libs.mixinbooter)
 
     // Mod dependencies
     api(deps.codeChickenLib) { isTransitive = false }
