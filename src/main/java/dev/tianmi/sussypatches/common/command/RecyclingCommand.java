@@ -5,6 +5,7 @@ import dev.tianmi.sussypatches.api.recycling.Recyclable;
 import dev.tianmi.sussypatches.api.util.ItemAndMeta;
 import dev.tianmi.sussypatches.api.util.Result;
 import dev.tianmi.sussypatches.loaders.recipes.RecyclingManager;
+import dev.tianmi.sussypatches.loaders.recipes.RecyclingRecipeWriter;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.stack.ItemMaterialInfo;
 import gregtech.api.unification.stack.MaterialStack;
@@ -43,8 +44,8 @@ public final class RecyclingCommand extends CommandBase {
         reply(sender, "nodes=" + graph.nodes().size() + " edges=" + graph.edges().size()
                 + " initialized=" + RecyclingManager.isInitialized()
                 + " pending=" + RecyclingManager.pendingCount());
-        reply(sender, "arc recipes=" + RecyclingManager.arcRecipes.size()
-                + " macerator recipes=" + RecyclingManager.maceratorRecipes.size());
+        reply(sender, "arc recipes=" + RecyclingRecipeWriter.arcRecipes.size()
+                + " macerator recipes=" + RecyclingRecipeWriter.maceratorRecipes.size());
     }
 
     private static void info(ICommandSender sender, String[] args) {
@@ -74,8 +75,8 @@ public final class RecyclingCommand extends CommandBase {
             reply(sender, "  recycling data: " + String.join(", ", materials));
         }
 
-        reply(sender, "  recipes: arc=" + yesNo(RecyclingManager.arcRecipes.containsKey(node))
-                + " macerator=" + yesNo(RecyclingManager.maceratorRecipes.containsKey(node)));
+        reply(sender, "  recipes: arc=" + yesNo(RecyclingRecipeWriter.arcRecipes.containsKey(node))
+                + " macerator=" + yesNo(RecyclingRecipeWriter.maceratorRecipes.containsKey(node)));
 
         if (!present) return;
 

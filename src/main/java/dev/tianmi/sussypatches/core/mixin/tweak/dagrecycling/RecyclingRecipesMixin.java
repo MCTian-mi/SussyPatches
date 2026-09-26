@@ -2,6 +2,7 @@ package dev.tianmi.sussypatches.core.mixin.tweak.dagrecycling;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.tianmi.sussypatches.loaders.recipes.RecyclingManager;
+import dev.tianmi.sussypatches.loaders.recipes.RecyclingRecipeWriter;
 import gregtech.api.recipes.RecipeBuilder;
 import gregtech.loaders.recipe.RecyclingRecipes;
 import net.minecraft.item.ItemStack;
@@ -28,6 +29,6 @@ public abstract class RecyclingRecipesMixin {
     @Redirect(method = {"registerMaceratorRecycling", "registerArcRecycling"},
               at = @At(target = "Lgregtech/api/recipes/RecipeBuilder;buildAndRegister()V", value = "INVOKE"))
     private static void registerRecyclingRecipe(RecipeBuilder<?> builder, @Local(argsOnly = true) ItemStack input) {
-        RecyclingManager.buildAndRegister(builder, input);
+        RecyclingRecipeWriter.buildAndRegister(builder, input);
     }
 }

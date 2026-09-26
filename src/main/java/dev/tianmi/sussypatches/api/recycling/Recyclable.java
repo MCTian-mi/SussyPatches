@@ -1,7 +1,7 @@
 package dev.tianmi.sussypatches.api.recycling;
 
 import dev.tianmi.sussypatches.api.util.ItemAndMeta;
-import dev.tianmi.sussypatches.loaders.recipes.RecyclingManager;
+import dev.tianmi.sussypatches.loaders.recipes.RecyclingDataPublisher;
 import gregtech.api.items.metaitem.MetaItem.MetaValueItem;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.Material;
@@ -71,6 +71,6 @@ public sealed interface Recyclable permits ItemRecyclable, MaterialRecyclable {
     /// Accumulates this node's material content into `mStacks`, weighted by `amount`.
     default void addToMStack(Object2ObjectMap<Material, Fraction> mStacks, Fraction amount) {
         if (Fraction.ZERO.equals(amount)) return;
-        RecyclingManager.addItemStackToMaterialStacks(asStack(), mStacks, amount);
+        RecyclingDataPublisher.addItemStackToMaterialStacks(asStack(), mStacks, amount);
     }
 }
