@@ -63,6 +63,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("fullchunkpopulator", SusConfig.BUGFIX.fullChunkPopulator);
         BUGFIX.add("syncpipeproperties", SusConfig.BUGFIX.syncPipeProperties);
         BUGFIX.add("resizejeiinfo", SusConfig.BUGFIX.resizeJeiInfo);
+        BUGFIX.add("fasttransferdesync", SusConfig.BUGFIX.fastTransferDesync);
 
         TWEAK.add("tabnosearchbars", SusConfig.TWEAK.noSearchBars);
         TWEAK.add("xoshiro256plusplus", SusConfig.TWEAK.xoShiRo256plusplus);
