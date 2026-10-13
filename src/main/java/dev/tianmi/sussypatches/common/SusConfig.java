@@ -440,6 +440,14 @@ public class SusConfig {
         @Name("Widen JEI recipe category background")
         @RequiresMcRestart
         public boolean resizeJeiInfo = true;
+
+        @Comment({
+                "Fixes fast-transfer desync in legacy GT ModularUI containers.",
+                "Budgets quick-move per click instead of per world tick and reports extraction to the transaction check."
+        })
+        @Name("Fix legacy GT container fast-transfer desync")
+        @RequiresMcRestart
+        public boolean fastTransferDesync = false;
     }
 
     static {
