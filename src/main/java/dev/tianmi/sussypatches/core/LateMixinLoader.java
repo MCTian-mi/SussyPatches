@@ -61,6 +61,7 @@ public class LateMixinLoader implements ILateMixinLoader {
         BUGFIX.add("workbenchvoidcontainers", SusConfig.BUGFIX.workbenchVoidContainers);
         BUGFIX.add("thickpiperender", SusConfig.BUGFIX.thickPipeRender);
         BUGFIX.add("fullchunkpopulator", SusConfig.BUGFIX.fullChunkPopulator);
+        BUGFIX.add("buildererrorserver", SusConfig.BUGFIX.builderErrorServer);
         BUGFIX.add("syncpipeproperties", SusConfig.BUGFIX.syncPipeProperties);
         BUGFIX.add("resizejeiinfo", SusConfig.BUGFIX.resizeJeiInfo);
         BUGFIX.add("fasttransferdesync", SusConfig.BUGFIX.fastTransferDesync);
