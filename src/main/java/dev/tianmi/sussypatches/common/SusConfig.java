@@ -448,6 +448,15 @@ public class SusConfig {
         @Name("Fix legacy GT container fast-transfer desync")
         @RequiresMcRestart
         public boolean fastTransferDesync = false;
+
+        @Comment({
+                "Fix long distance pipelines collapsing to 'Incomplete Pipeline'",
+                "after their chunks are reloaded, or on a neighbor update during a rebuild.",
+                "The network is rebuilt on the server thread instead of a new one."
+        })
+        @Name("Fix long distance pipeline collapse")
+        @RequiresMcRestart
+        public boolean ldPipelineCollapse = true;
     }
 
     static {
