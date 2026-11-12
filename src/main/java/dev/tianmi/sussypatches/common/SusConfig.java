@@ -427,6 +427,14 @@ public class SusConfig {
         public boolean fullChunkPopulator = true;
 
         @Comment({
+                "Fix the Multiblock Builder printing only 'Potential structure error:' on dedicated servers.",
+                "The error text is built with a client-only method there; this builds the same text on both sides."
+        })
+        @Name("Fix Multiblock Builder error info on dedicated servers")
+        @RequiresMcRestart
+        public boolean builderErrorServer = true;
+
+        @Comment({
                 "Fixes issues where custom fluid attributes are not inherited by pipes and material-backed containers."
         })
         @Name("Make fluid pipes and containers inherit material fluid properties")
